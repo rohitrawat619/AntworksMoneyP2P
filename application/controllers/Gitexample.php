@@ -1,4 +1,6 @@
 <?php
-class Gitexample extends Gitexample()
+class Gitexample extends CI_Controller
 {
+
 }
+?>
