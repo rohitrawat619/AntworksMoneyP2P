@@ -5,5 +5,6 @@ class Gitexample extends CI_Controller
   {
       parent::__construct();
   }
+  
 }
 ?>
