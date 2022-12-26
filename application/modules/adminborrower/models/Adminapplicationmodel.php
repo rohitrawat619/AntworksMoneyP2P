@@ -784,8 +784,5 @@ class Adminapplicationmodel extends CI_Model
             return false;
         }
     }
-	public test(){
-		echo 'test';
-	}
 }
 ?>
