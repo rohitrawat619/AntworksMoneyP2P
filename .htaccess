@@ -1,0 +1,23 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|resources|robots\.txt)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
+RewriteCond %{REQUEST_URI} !^/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+<IfModule mod_headers.c>
+  <filesmatch "\.(ico|flv|jpg|jpeg|png|gif|css|swf)$">
+  Header set Cache-Control "max-age=2678400, public"
+  </filesmatch>
+  <filesmatch "\.(html|htm)$">
+  Header set Cache-Control "max-age=7200, private, must-revalidate"
+  </filesmatch>
+  <filesmatch "\.(pdf)$">
+  Header set Cache-Control "max-age=86400, public"
+  </filesmatch>
+  <filesmatch "\.(js)$">
+  Header set Cache-Control "max-age=2678400, private"
+  </filesmatch>
+</IfModule>
+## EXPIRES CACHING ##
