@@ -1,0 +1,29 @@
+table {
+    border: 1px solid #ddd;
+    border-spacing: 0;
+    width: 100%;
+}
+table > tbody > tr > td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    line-height: 1.42857143;
+    vertical-align: middle;
+    border-top: 1px solid #968b8be6;
+    background: #000;
+    border-bottom: 1px solid #b1dbf2e6;
+    color: #fff;
+    table-layout: fixed;
+    padding: 8px;
+}
+
+td{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.blank-box{
+    min-height: 300px;
+}

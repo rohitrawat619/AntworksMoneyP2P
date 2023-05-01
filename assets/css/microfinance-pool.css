@@ -1,0 +1,23 @@
+body {font-family: 'Lato', sans-serif;}
+.banner img{max-width:100%;}
+.mainbox {padding:30px 0;}
+.page-hd {font-size:24px; font-weight:600; color:#000;}
+.top-hd {width: 250px; height: 45px; line-height:40px; padding:0 10px; margin-bottom:10px; background: #23476d; position: relative;}
+.top-hd:before {content: ''; position: absolute; top: 0; right: 0; border-top: 45px solid #fff; border-left: 45px solid #23476d; width: 0;}
+.top-hd img {border-right:1px solid #fff; margin-right:10px; padding-right:10px; max-width:40px;}
+.top-hd span {font-size:18px; color:#fff; font-weight:600;}
+.top-p {font-size:15px; color:#000; font-weight:400;}
+.footr-disclmr {background:#e8e8e8; margin-top:20px; padding:20px 0 10px 0;}
+.footr-disclmr p {font-size:12px;}
+.footr-disclmr span {font-weight:600;}
+.footr-disclmr a {color:#23476d;}
+.enquerybox {padding:30px; background:url(../img/formbg.jpg) center/cover; width:100%; float:left;}
+.enquerybox label {color:#fff;}
+.enquerybox-in {padding:30px; background:rgba(255,255,255,.2); border-radius:4px; margin:50px 0;}
+.micro-submit {margin-top:5px;}
+
+@media(max-width:767px){
+.top-p {margin-bottom:20px;}
+}
+
+

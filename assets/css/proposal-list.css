@@ -1,0 +1,171 @@
+
+.box {box-shadow: 0 0 10px #d5d5d5; padding: 30px; border: 1px solid #d5d5d5;}
+.proposal-h .tab-content {margin-top: 0; border: 1px solid #071b2f; width: 100%; float: left; padding: 15px; margin-top:-1px;}
+.proposal-h .nav-tabs > li > a {background:#071b2f; font-size:12px; color:#fff; padding: 5px 15px; border-radius: 5px 5px 0 0; overflow: hidden; border-color:#071b2f;}
+.proposal-h .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {background:#b51e37; border-color:#b51e37;}
+.kyc-main td {vertical-align: middle!important;}
+.btn-primary:hover, .btn-primary.disabled:hover, .btn-primary:focus, .btn-primary.disabled:focus, .btn-primary.focus, .btn-primary.disabled.focus {background: #003b57; opacity: .8; border: 1px solid #003b57;}
+.rateinfo {position:absolute; right:-8px; top:28px; cursor:pointer;}
+.myproposal-listing .box .name {position:relative; display:inline-block; margin-right:0; width: 50%; float:left;}
+.myproposal-listing .box .cscore {position:relative; font-size:12px; color:#000; margin-top:0px; display:inline-block; padding:0; width: 25%;}
+.myproposal-listing .box .cscore span {color: #9dcb3b; font-size:20px; font-weight: 400;}
+.cscore span {font-size:14px; font-weight:600; width:100%; float:left;}
+.myproposal-listing .box {color: #686868;}
+.myproposal-listing .box .count span {display:block; font-size:12px; color:#000;}
+.myproposal-listing .box .count {top: 10px; font-size:20px; line-height: 18px;}
+.myproposal-listing .loan .amount {display:inline-block; margin-right:10px; font-size:16px;}
+.proposal-listing .loan .amount:nth-last-child {margin:0;}
+.fund-grph {display:inline-block; width:120px;}
+.fund-grph p {font-size:11px; font-weight:300; position:relative; left:10px;}
+.fund-grph .peity {float:left; width:35px; height:35px; position:relative;}
+.lefttime {position: absolute; right: 0; line-height:14px; font-size: 11px; font-weight: 400; top: -5px;}
+.lefttime p {margin:0; font-size:11px; color: #686868; font-weight: bold;}
+.lefttime p span {color:#f20;}
+.btn-details {float:right;}
+.btn {border-radius: 20px;}
+.btn-success, .btn-success.disabled {padding: 10px 30px;}
+
+/*Proposal Listing Thumbs*/
+.proposal-listing {margin:0px; padding:30px; list-style:none;}
+.proposal-listing > li .disabled {opacity:0.5;}
+.proposal-listing > li .disabled .title a.status {display:none;}
+.proposal-listing > li .disabled .loan a.bid {background-color:#989898; cursor:default;}
+.proposal-listing > li .disabled .actions ul li a.express {background-color:#989898; cursor:default;}
+.proposal-listing > li .disabled .actions ul li a.info {background-color:#989898; cursor:default;}
+.proposal-listing > li .disabled .actions ul li a.star {background-color:#989898; color:#fff; border-color:#989898; cursor:default;}
+.proposal-listing > li .disabled .actions ul li a.video {background-color:#989898; color:#fff; border-color:#989898; cursor:default;}
+.proposal-listing > li {display:inline-block; margin-right:-4px; width:25%; vertical-align:top;}
+.proposal-listing > li > div {margin-right:40px; margin-bottom:40px;}
+.proposal-listing > li:nth-child(even) div {margin-right:0;}
+.proposal-listing .title {position:relative;}
+.proposal-listing .title .name {font-size:26px; margin-right:0px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.proposal-listing .title .count {position:absolute; right:0; top:4px; font-size:22px; line-height:26px; color:#9dcb3b;}
+.proposal-listing .title a.status {width:25px; color:#01adee; font-size:22px; position:absolute; top:0; right:0;}
+.proposal-listing .loan {position:relative; border-top:solid 1px #ccc; border-bottom:solid 1px #ccc; padding:10px 0px; margin:10px 0px;}
+.proposal-listing .loan .amount {font-size:22px;}
+.proposal-listing .loan .amount span {display:block; font-size:12px; font-weight:bold;}
+.proposal-listing .loan a.bid {position:absolute; right:0; background-color:#00adef; color:#fff; padding:5px 10px; font-size:12px; font-weight:bold; bottom:17px;}
+.proposal-listing .desc {border-bottom:solid 1px #ccc; padding-bottom:10px; margin-bottom:20px;}
+.proposal-listing .desc ul {margin:0px; padding:0px; list-style:none; font-size:12px;}
+.proposal-listing .desc ul li {margin-bottom:5px;}
+.proposal-listing .actions ul {margin:0px; padding:0px; list-style:none; display:inline-block;}
+.proposal-listing .actions ul li {display:inline-block; padding-right:5px;}
+.proposal-listing .actions ul li:last-child {padding-right:0px;}
+.proposal-listing .actions ul li a.express {background-color:#9dcb3b; color:#fff;font-size:12px; font-weight:bold;}
+.proposal-listing .actions ul li a.info {background-color:#00adef; color:#fff; padding:5px 10px; font-size:12px; font-weight:bold;}
+.proposal-listing .actions ul li a.star {background-color:#fff; color:#00adef; padding:5px 8px; font-size:12px; font-weight:bold; border:solid 1px #00adef;}
+.proposal-listing .actions ul li a.video {background-color:#fff; color:red; padding:5px 8px; font-size:12px; font-weight:bold; border:solid 1px red;}
+.panel-filter {width:100%;}
+.panel-filter .form-control {background-color:transparent; border:1px solid #fff; color:#fff; border-radius:5px;}
+.panel-filter select.form-control {background-color:transparent; border:1px solid #fff; color:#fff; border-radius:5px;}
+.panel-filter select.form-control:focus, .panel-filter select.form-control:active {color:#000;}
+.panel-filter .form-control::-webkit-input-placeholder {color:#fff;}
+.panel-filter .form-control::-moz-placeholder {color:#fff;}
+.panel-filter .form-control:-ms-input-placeholder {color:#fff;}
+.panel-filter .form-control:-moz-placeholder {color:#fff;}
+.panel-filter, .panel-filter label, .panel-filter h2, .panel-filter h5 {color:#fff;}
+.panel-filter hr {border-color:#fff;}
+.forbidnow .btn-success.btn-outline {color: #fff !important; background: transparent; border: none; padding: 4px 7px; font-size: 12px; font-weight: 600;}
+.forbidnow {position: absolute; right: 0; background-color: #00adef; color: #fff; font-size: 12px; font-weight: bold; bottom: 25px;}
+.express .btn.btn-block.btn-outline.btn-success {background-color: rgb(158,203,60);}
+.info-bidding .btn.btn-block.btn-outline.btn-primary {background-color:  rgb(0,173,239); color: #fff;}
+.element {}
+.star-shortlisted .btn.btn-block.btn-outline.btn-success {background-color: rgb(0,173,239); color: #fff;}
+/*Proposal Listing Thumbs End*/
+.shortlist.checkbox label::before {-o-transition: .3s ease-in-out; -webkit-transition: .3s ease-in-out; background-color: #ffffff; border-radius: 1px; border: 1px solid rgba(120,130,140,0.13); content: ""; display: inline-block; height: 34px; left:0; margin-left:-20px; position: absolute; transition: .3s ease-in-out; width: 40px; outline: none !important;}
+.shortlist.checkbox label::after {color: #2b2b2b; display: inline-block; font-size: 23px; height: 40px; left: 4px; margin-left: -20px; padding-left: 3px; padding-top: 1px; position: absolute; top: 0; width: 40px;}
+.shortlist.checkbox label {padding-left: 30px;}
+.shortlist.checkbox label span {line-height: 42px;}
+.m-b {margin-bottom: 10px;}
+.shortlist #themecolors li a.working::before {content: "\f006"; font-family: "FontAwesome"; font-size: 18px; line-height: 50px; width: 50px; height: 50px; position: absolute; top: 0; left: 0; color: #fff; text-align: center;}
+.shortlist.checkbox input[type="checkbox"]:checked+label::after {content: "\f006"; font-family: 'FontAwesome';}
+.borrower_img {position: relative; width: 100%; display: block;}
+.borrower_img .verified {position: absolute; top: -9px; left: -9px; z-index: 8;}
+.side-fixed {width: 340px; float: left; position: fixed; height: calc(100vh - 88px); overflow-y: auto; z-index: 1;}
+.side-fixed::-webkit-scrollbar {width:0 !important;}
+.side-fixed {-ms-overflow-style:none;}
+.side-fixed {overflow:-moz-scrollbars-none;}
+.side-fluid {margin-left: 340px; overflow: hidden;}
+.side-fixed-btn {position:fixed; bottom:0; float:left; width:10px; background-color:#82aa37; margin-left:330px; cursor:pointer; height:calc(100vh - 90px); z-index:2;}
+.side-fixed-btn:hover {background-color:#6f992a;}
+.side-fixed-btn i {color:#fff; margin-left:2px; top:50%; position:absolute;}
+.side-fixed-btn-active {position:fixed; bottom:0; float:left; width:10px; background-color:#82aa37; margin-left:330px; cursor:pointer; height:calc(100vh - 90px); z-index:2; display:none;}
+.side-fixed-btn-active:hover {background-color:#6f992a;}
+.side-fixed-btn-active i {color:#fff; margin-left:3px; top:50%; position:absolute;}
+body.sf-close .side-fixed {width:0px;}
+body.sf-close .side-fixed-btn {margin-left:7px; display:none;}
+body.sf-close .side-fixed-btn-active {margin-left:7px; display:block;}
+body.sf-close .side-fluid {margin-left:25px;}
+.box.fade-div {pointer-events: none; opacity: 0.4;}
+
+.proposal-listing .title .name {
+    font-size: 24px;}
+.myproposal-listing .box .cscore {padding: 0 0 0 8px;}
+.lefttime {
+    position: absolute;
+    right: 0;
+    line-height: 14px;
+    font-size: 11px;
+    font-weight: 400;
+    top: -25px;
+}
+.myproposal-listing .box .count {
+    top: 0px;}
+.prs-n-dtls {
+    margin: -15px 0 0 0;
+    padding: 0;
+}
+.prs-n-dtls li {
+    position: relative;
+    display: inline-block;
+    padding: 0 3px;
+    font-size: 12px;
+}
+.prs-n-dtls li:before {
+    position: absolute;
+    right: -4px;
+    background: #333;
+    width: 1px;
+    height: 10px;
+    content: "";
+    top: 2px;
+}
+.prs-n-dtls li:last-child::before {
+    background: transparent;
+}
+.purpose-loan {
+    width: 100%;
+    float: left;
+    border-top: solid 1px #ccc;
+    padding: 10px 0px 0 0;
+    font-size: 11px;
+    margin-top: 10px;
+}
+.purpose-loan span {
+    font-weight: 600;
+    padding-right: 5px;
+}
+.myproposal-listing .loan{
+    width: 100%;
+    float: left;
+}
+.myproposal-listing .title {
+    margin-top: 30px;
+}
+
+@media (max-width:1800px){
+    .proposal-listing > li {width:50% !important;}
+}
+
+@media (max-width:1150px){
+    .proposal-listing > li {width:50% !important;}
+}
+
+@media (max-width:769px){
+    body:not(.sf-close) .side-fixed {width:100%; padding-right:53px;}
+    body:not(.sf-close) .side-fixed-btn {margin-left:auto; right:0; display:block;}
+    .proposal-listing {padding:10px !important;}
+    .proposal-listing > li {width:100% !important;}
+    .proposal-listing > li > div {margin: 0px 10px 60px 10px !important;}
+    body.sf-close .side-fluid {margin-left:20px;}
+}

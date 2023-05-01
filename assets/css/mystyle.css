@@ -1,0 +1,412 @@
+/* Home Page */
+
+a {transition: all 0.5s ease-out;}
+a:focus, a:hover {text-decoration: none;}
+/*.header .header-navigation.navbar .nav>li:last-child a {padding-right: 0;}*/
+.single-service-box-two .icon-box-img .inner-box i {line-height:73px;}
+.main-bannerp2p {background: #004566 url("../img/p2pbannerbg.png") center bottom repeat-x; padding:50px 0; background-size:60%;}
+.banner-hd {color:#fff; font-size:30px; font-weight:bold; text-align:center;}
+.main-bannerp2p .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {background-color: #fff; color: #000;}
+.main-bannerp2p .nav > li > a {background-color: #1795be; color:#333;}
+.main-bannerp2p .tab-content > .tab-pane {background:#fff; padding:50px 15px; margin-bottom:60px; width:100%; float:left;}
+.banr-hd {color:#000 !important; font-size:24px; text-align:center; margin-bottom:30px; text-transform:inherit;}
+.btn-getstarted {background:#b41e37; padding:15px 15px; width:230px; float:right; text-align:center; font-size:18px; color:#fff; transition: all 0.5s ease-out; margin-top:15px;}
+.btn-getstarted:hover {color:#fff; background:#004566;}
+.main-bannerp2p .tab-content .col-md-4 input{background:none; border:none; margin-top:10px;}
+.main-bannerp2p .tab-content .slider_bg {background:#e6e6e6; margin-top:10px; padding:25px 40px 10px 20px;}
+.lender_benefits_main {background:#dedede; margin-top:50px;}
+.lender-mainbg {background: rgba(0, 0, 0, .6) url("../img/lendr-bg.png") no-repeat center; padding:199px 60px;}
+.lender-mainbg-hd {font-size:36px; color:#fff!important; text-transform:inherit; font-weight:100;}
+.lender-mainbg-hd span {font-size:60px; color:#fff; font-weight:600; margin-top:15px; display:inline-block;}
+.lender-befts-txt {font-size:22px; color:#fff; font-weight:300; margin-top:85px;}
+.btn-started {font-size:22px; color:#fff; font-weight:300; margin-top:30px; padding:2px 30px; border:2px solid #fff!important; border-radius:20px; display:inline-block;}
+.btn-started:hover {background:#fff; border:2px solid #fff!important; text-decoration:none; color:#000;}
+.lender-benefits {width:100%; float:left; margin:0; padding:0; vertical-align: middle; display: table;}
+.lender-benefits li {width:50%; float:left; text-align:center; display:inline-block; font-size:20px; color:#fff; padding:30px; height: 393px; vertical-align: middle;}
+.lender-benefits li:before {content: ""; display: inline-block; height: 50%;}
+.lender-benefits li p {font-size:24px; margin-top:25px; margin-bottom:0;}
+.lender-benefits li span {display:block; font-size:24px;}
+.lender-benefits li:nth-child(1) {background:#e78e00;}
+.lender-benefits li:nth-child(2) {background:#19b495;}
+.lender-benefits li:nth-child(3) {background:#1795be;}
+.lender-benefits li:nth-child(4) {background:#004566;}
+.watp2p p {text-align:justify;}
+.watp2p-hd {position:relative; font-size:38px; font-weight:300; color:#000; margin-bottom:25px;}
+.watp2p-hd:before {position:absolute; content:""; background:#ff5700; width:50px; height:3px; bottom:-10px;}
+.lender-comnt {background:#dedede; padding:60px 0;}
+.lender-comnt-hd {font-size:38px; color:#000; font-weight:300; text-align:center; margin:10px 0;}
+
+.partners {padding:50px 0;}
+.partners-hd-txt {font-size:24px; color:#5d5d5d; font-weight:300; text-align:center;}
+
+.subscribe {max-width: 650px; margin: 0 auto; text-align: center; position: relative; z-index:2;}
+.subscribe .form-control {height: 50px; background: rgba(255, 255, 255, 0.6); border-color: transparent; border-radius: 20px 0 0 20px; }
+.subscribe .form-control:focus {box-shadow: none; border-color: #243c4f; }
+.subscribe .btn {min-height: 50px; width:200px; background:#ca1936; color: #fff; margin-left:10px!important;}
+
+.lenborro-formbtn a {display:inline-block; padding: 10px 15px; border-radius:4px 4px 0px 0px;}
+.lenborro-formbtn a:last-child {background-color: #1795be; color: #333;}
+.lenborro-form {background:#fff; padding:50px 15px; margin-bottom:60px; width:100%; float:left;}
+.lenborro-form .slider_bg {background:#e6e6e6; margin-top:10px; padding:25px 40px 10px 20px;}
+.lenborro-form .col-md-4 input{background:none; border:none; margin-top:10px;}
+/*Blog Section*/
+.blogs-main {background: #fff; padding: 40px 0;}
+.blogs-hd {position: relative; font-size: 36px; color: #000; font-weight: 800; text-align: center; margin-bottom: 50px;}
+.blogs-hd:before {position: absolute; content: ""; background: #000; width: 54px; height: 4px; bottom: -7px; left: 50%; margin-left:-28px;}
+.blog-block {margin-bottom: 20px; width: 100%; float: left; box-shadow: 0 4px 15px #eaeaea; padding-bottom: 10px; border-radius: 3px; overflow: hidden; transition: all .3s ease-in-out; -webkit-transition: all .3s ease-in-out;}
+.blog-block:hover {margin-top: -10px;}
+.blog-block img {max-width: 100%;}
+.blog-content {padding: 20px; font-family:'Lato'; min-height:218px;}
+.blog-content p {text-align: justify; font-size: 16px !important; font-weight: 400; color: #757171;}
+.blog-block-title {font-size: 16px; color: #012068; font-weight: 800; line-height: auto; text-transform: inherit; text-align: left; display: inline-block;}
+.btn-blog {background: 0 0; color: #012068; font-size: 14px; float: right; font-weight: 600;}
+.btn-blog:hover {color: #000;}
+.blog-cat {text-align: right;}
+.blog-cat li {color: #b51e37; font-size: 14px; display: block;}
+.prod-thumbs img{margin-top: 10px;}
+/*End Blog Section*/
+
+/*Product Pages*/
+.product-bannerp2p {padding:30px 0; background-size:100%;}
+.personalloan-banr {background:#004566 url("../img/personalloan.jpg") center bottom repeat-x;}
+.businessloan-banr {background:#004566 url("../img/businessloan.jpg") center bottom repeat-x;}
+.consumerloan-banr {background:#004566 url("../img/consumerloan.jpg") center bottom repeat-x;}
+.prodbanr-hd {color:#000 !important; font-size:22px; text-align:center; margin-bottom:5px; font-weight:600;}
+.prodbanr-txt {color:#000; font-size:12px; padding:0 15px; margin-bottom:0px; text-transform:inherit;}
+.fullname {margin:7px 0;}
+.productform {background:#fff; float: left; width: 100%; padding: 15px; border-radius:3px;}
+.productform .col-md-12 label {font-size:12px; font-weight:100; margin-top:5px; margin-bottom:-10px; background:#fff; padding: 5px 5px; margin-left: 10px;}
+.productform .col-md-12 input {background:none; border:none; width:100%; text-align:right; font-size:12px;}
+.productform .slider_bg {border:1px solid #e6e6e6; margin-top: -10px; padding:20px 10px 5px 10px; border-radius:3px;}
+.getstarted-btn {background:#b41e37; padding:10px; width: 120px; border-radius:6px!important; border:transparent; float: right; text-align: center; font-size: 16px; color:#fff; margin-top: 10px; margin-bottom: 10px;}
+.prod-thumbs {margin-top:10px;}
+.prod-thumbs .col-md-4 {padding:0;}
+.prod-thumbs .col-md-4 img {padding:0 5px;}
+/*End Product Pages*/
+.performance-tble tr th {background:#2275a3 !important; color:#fff !important}
+
+
+/* END Home Page */
+/* Registration */
+
+.loginbg {background-image: linear-gradient(90deg, #004566 50%, #fff 50%);}
+.login-tab {margin-bottom:20px !important;}
+.login-tab li {display:inline-block; margin:10px 5px 10px 0; border: 1px solid #ccc;}
+.login-tab li a {display:inline-block; padding:15px 20px; color:#000; font-size:15px;}
+.login-tab li a.active {color:#fff; background:#1795be; box-shadow:1px 1px 25px #898989;}
+.star {color:#f20;}
+.login-register input, .login-register label {color:#000; font-size:16px;}
+.btn-logsig {text-align:right; margin-top: 15px;}
+.btn-logsig button {background:#b61e37; width:80px; padding:6px 15px; border: none; border-radius:20px; color:#fff; font-size:14px;}
+.login-register .top-txt {font-size:20px; color:#fff;}
+.top-hd {font-size:26px; font-weight:bold; color:#fff; line-height:inherit; margin-bottom:15px;}
+.top-highlight {position:relative;}
+.top-highlight>li {font-size:14px; color:#fff; margin-bottom:15px; padding-left:30px; min-height:54px;}
+.top-highlight>li>span {font-size:13px; color:#fff; display:block;}
+/*.owl-carousel .owl-item img{max-width: 100% !important; width: 54px !important;*/
+/*    float: left;}*/
+.login-register .btn-signup {background:#b61e37; padding:7px 20px; font-size:16px; color:#fff; border-radius:20px; display:inline-block;}
+.howwork li {display:inline-block; padding:30px 15px;}
+.howwork li a {display:block; color:#fff;}
+.register-hd {font-size:28px; font-weight:600; color:#000;}
+
+.f1 {padding: 25px; background: #fff; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;}
+.f1 h3 { margin-top: 0; margin-bottom: 5px; text-transform: uppercase;}
+.f1 .form-group {margin-bottom: 5px;}
+.f1-steps { overflow: hidden; position: relative; margin: 20px 30px 0 30px; }
+.f1-progress { position: absolute; top: 24px; left: 12%; width: 75%; height: 4px; background: #ddd;}
+.f1-progress-line { position: absolute; top: 0; left: 0; height: 4px; background: #004566;}
+.f1-step { position: relative; float: left; width: 33.333333%; padding: 0; text-align: center;}
+.f1-step-icon {display: inline-block;  text-align:center; width: 40px; height: 40px; margin-top: 4px; background: #ddd; font-size: 16px; color: #fff; line-height: 40px; -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%;}
+.f1-step.activated .f1-step-icon {background: #fff; border: 1px solid #004566; color: #fff; line-height: 48px; width: 48px; height: 48px; margin-top: 0; background: #004566;}
+.f1-step.active .f1-step-icon {width: 48px; height: 48px; margin-top: 0; background: #004566; font-size: 22px; line-height: 48px;}
+.f1-step p {color: #ccc;}
+.f1-step.activated p {color:#004566;}
+.f1-step.active p {color:#004566;}
+.f1 fieldset {display: none; text-align:left;}
+.f1-buttons {text-align: right;}
+.f1 .input-error { border-color: red !important;}
+.f1 fieldset [class^="col-"] {padding:0 5px;}
+.f1 label {font-size:14px; color:#595959; font-weight:400;}
+.f1 label span {color:#fe0000; font-size:15px;}
+.pas-tips {font-size:11px; color: #222; line-height:12px; display: inline-block; margin-top:5px;}
+#send_otp button {float:right; border: none; background: #014667; color:#fff; margin-top:-10px; border-radius:3px; font-size:11px; padding:5px 10px;}
+.f1-buttons button {background:#b61e37; width:96px; color:#fff; border-radius:20px;}
+.f1-buttons {width:100%; float:left; padding:10px 0;}
+.f1-buttons button:hover {color:#fff;}
+.f1-buttons .btn-previous {float:left;}
+.f1-step .f1-progress-line {display:none;}
+.header .stricky-fixed {position: relative !important;}
+.ui-datepicker {min-width: 270px;}
+
+
+.password_strength{
+    position: absolute;
+    right: 0;
+    background: #fff;
+    box-shadow: 1px 3px 10px #f3f3f3;
+    padding: 10px;}
+#password-strength-meter{
+    width: 100%;
+}
+
+/* END Registration */
+.top-nav-sublinks-wrapper{background-color:#fff;border-bottom:solid 1px #ccc;}
+ul.top-nav-sublinks{margin:0px;padding:0px;float:right;}
+ul.top-nav-sublinks li{display:inline-block;}
+ul.top-nav-sublinks li a{display:block;padding:0 20px;margin:10px;border-radius:5px;font-size:16px;font-family:"Montserrat-Regular", sans-serif;line-height:45px;color:#1a1744;}
+ul.top-nav-sublinks li a:hover{background-color:#333;color:#fff;}
+ul.top-nav-sublinks li:last-child a, ul.top-nav-sublinks li:last-child a:hover{background-color:#1a1744;color:#fff;}
+.top-nav-dropdown{position:relative;display:inline-block;}
+.top-nav-dropdown-content{display:none;position:absolute;min-width:185px;z-index:1;padding-top:10px;padding:0px;}
+.top-nav-dropdown:hover .top-nav-dropdown-content{display:block;}
+.top-nav-dropdown-content ul{box-shadow:0px 8px 16px 0px rgba(0,0,0,0.2);padding:0px;background-color: #161616;border-top: 4px solid #3563a9;}
+.top-nav-dropdown-content ul li{display:block !important;border-right:none !important;}
+.top-nav-dropdown-content ul li a{/*background-color:#fcb823;*/display:block;padding:8px 15px !important;color:#fff !important;font-size:12px !important;border-bottom:dotted 1px #282828 !important;}
+.top-nav-dropdown-content ul li a:hover{background-color:#3563a9 !important;border-color: #3563a9 !important;}
+.top-login-panels{position:fixed;top:-400%;right:0;left:0;z-index:98;height:100vh;overflow-y:auto;background:#01518c;background:-moz-linear-gradient(top, #01518c 0%, #0097d8 100%);background:-webkit-linear-gradient(top, #01518c 0%,#0097d8 100%);background:linear-gradient(to bottom, #01518c 0%,#0097d8 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#01518c', endColorstr='#0097d8',GradientType=0);}
+.top-nav{background-color:#00518c;}
+.top-nav .top-nav-primary{float:right;margin:10px 0;padding-left:0px;}
+.top-nav .top-nav-primary li{display:inline-block;border-right:solid 1px #fff;}
+.top-nav .top-nav-primary li:nth-child(3), .top-nav .top-nav-primary li:nth-child(4){border-right:none;}
+.top-nav .top-nav-primary li:nth-child(4) a{padding:0px;}
+.top-nav .top-nav-primary li a{font-size:14px;font-weight:600;color:#fff;padding:0 15px;}
+.top-nav .top-nav-primary li a:hover{color:#ccc;background-color:transparent;}
+.dt-col-3{width:33.33333333%;}
+.top-login-panels .login-close{width:30px;height:30px;color:#fff;opacity:1;position:absolute;top:30px;right:30px;cursor:pointer;text-align:center;z-index:99;}
+.top-login-panels .man{position:absolute;bottom:-50px;right:52px;max-width:400px;}
+.top-login-panels .border-bm{border-bottom:dotted 1px #fff;padding-top:3%;}
+.top-login-panels .inner-bottom{background-color:#f9f8f0;position:absolute;bottom:0px;width:100%;padding:30px 0px;border-bottom:solid 1px #ccc;}
+.top-login-panels .inner-bottom a{color:#fff;padding:8px 12px;background-color:#a6a8ab;border-radius:5px;font-size:16px;display:block;text-align:center;}
+.top-login-panels .inner-bottom .text{font-size:12px;font-weight:400;}
+.top-login-panels .inner-bottom .copy{font-size:12px;font-weight:400;}
+.login-box h1, .login-box h2{color:#fff !important;font-size:42px;line-height:110%;margin:2.1rem 0 1.68rem 0;}
+
+.login-box input{background-color:#fff !important;padding:0 10px !important;margin-bottom:15px;line-height:45px;}
+.login-box .btn{padding:8px 15px !important;font-weight:bold !important;border-radius:5px !important;font-size:17px !important;background-color:#fff !important;color:#00adee !important;line-height:normal;}
+.login-box .btn.btn-blue{padding:8px 15px !important;font-weight:bold !important;border-radius:5px !important;font-size:17px !important;background-color:#002b6a !important;color:#fff !important;}
+.lb1{padding:0px 30px 30px 0px;border-right:dotted 1px #fff;}
+.lb2{padding:0px 30px 30px 30px;border-right:dotted 1px #fff;}
+.quick-links{padding:0px 30px 30px 30px;}
+.quick-links h4{color:#fff !important;font-size:16px;font-weight:bold;margin:1.14rem 0 0.912rem 0;}
+.quick-links ul{list-style-type:none;padding:0px;margin:0px;}
+.quick-links ul li a{color:#fff;font-size:16px;padding:3px 0;display:inline-block;}
+.quick-links ul li span{color:#fff;font-size:12px;background-color:red;padding:2px 5px;border-radius:3px;font-weight:bold;margin-left:5px;}
+.register-box h1{font-size:62px;color:#fff !important;margin-top:0px;margin-bottom:10px;margin:2.1rem 0 1.68rem 0;}
+.register-box p{font-size:16px;color:#fff;margin-bottom:30px;}
+.register-box .btn{padding:12px 20px;font-weight:bold;border-radius:5px;font-size:17px;background-color:#fff;color:#00adee;margin-right:10px;}
+.register-box .btn.btn-blue{padding:12px 20px;font-weight:bold;border-radius:5px;font-size:17px;background-color:#002b6a;color:#fff;}
+.divtable{display:table;width:100%;}
+.divtable-row{display:table-row;}
+.divtable-cell{display:table-cell;}
+.sliderbox {padding-left: 30px;}
+.disclaimer p{font-size: 11px; line-height: 18px; text-align: justify;}
+.f1 input, .f1 select {margin-bottom: 25px;}
+.f1 input::placeholder {color:#333; font-size: 14px; font-weight: 300; font-family: 'Lato';}
+.error-validation {position: absolute; bottom: -5px;}
+.error-validation p {color: red; font-size: 10px;}
+div#livesearch1 {top: 34px; position: absolute; font-size: 11px; background: #fff; z-index: 99; padding: 10px;}
+#livesearch1 ul li {padding-bottom: 10px; text-transform: capitalize;}
+.terms-condtns label{font-size: 11px !important; text-align: left; padding-left: 5px; min-height: auto; line-height: 14px;}
+.terms-condtns label a{font-size: 11px !important; text-align: left; padding-left: 5px; min-height: auto; line-height: 14px;}
+input#term_and_condition {width: 18px; height: 18px; background: transparent; margin-top: 0px; float: left;}
+.terms-condtns {margin-bottom: 20px; margin-top: 10px; position: relative;}
+.terms-condtns .error-validation {left: 0;}
+.terms-condtns .error-validation p {text-align: left; padding-left: 22px; line-height: 18px;}
+.bt24 {bottom:-24px;}
+
+@media (max-width:1440px){.top-login-panels .inner-bottom{position:relative;}
+.top-login-panels .man{right:120px;max-width:280px;}
+}
+@media (max-width:768px){.top-login-panels .divtable, .top-login-panels .divtable-row, .top-login-panels .divtable-cell{width:100%;display:block;}
+.top-login-panels .login-close{position:absolute;top:20px;right:20px;margin-left:auto;}
+.lb1{border-right:dotted 0px #fff;border-bottom:dotted 1px #fff;}
+.lb2{padding:0px 30px 30px 0px;border-right:dotted 0px #fff;}
+.quick-links{padding:0px;}
+.login-box h1{font-size:26px;}
+.login-box h1 br{display:none;}
+.top-login-panels .man{position:static;bottom:auto;right:auto;width:200px;margin-bottom:30px;margin-left:auto;margin-right:auto;}
+.top-login-panels .inner-bottom a{margin-bottom:30px;}
+.register-box h1{font-size:30px;}
+.register-box .btn{width:100%;text-align:center; margin-bottom: 10px;}
+.top-nav-sublinks-wrapper{display:none;}
+    .error-validation {position: absolute; bottom: 5px;}
+}
+@media (max-width:568px){.top-nav .top-nav-primary{float:none;text-align:center;}
+}
+.get-in-touch-form .form-grp{margin-bottom:30px;}
+.get-in-touch-form textarea{height:135px;padding-top:10px;}
+.get-in-touch-form input, .get-in-touch-form textarea{width:100%;border-radius:4px;border:1px solid #F7F7F7;padding-left:15px;outline:none;}
+btn-info.focus, .btn-info:focus{color:#fff;background-color:#31b0d5 !important;border-color:#1b6d85 !important;}
+.btn-info{color:#fff;background-color:#5bc0de !important;border-color:#46b8da !important;}
+.clearfix{clear:both;}
+section.client-skill-sec-yellow{background:#fcb823;}
+section.client-skill-sec:before{display:none;}
+section.client-skill-sec-yellow div.container h2, section.client-skill-sec-yellow div.container p{color:#5b554b !important;}
+section.client-skill-sec-yellow .fact-box .single-fact-count .title span{color:#5b554b !important;}
+section.client-skill-sec-yellow .fact-box .single-fact-count .title i{color:#5b554b !important;}
+section.client-skill-sec-yellow .pgrs-bar-wrapper .inner-box small{color:#5b554b !important;}
+section.client-skill-sec-yellow .lender-panel .lender-box .lender-heading{color:#3563a9 !important;}
+section.client-skill-sec-yellow .lender-panel .lender-box .lender-info{color:#5b554b !important;}
+section.client-skill-sec-yellow .lender-panel .lender-box .lender-price{color:#5b554b !important;font-weight:600;}
+section.client-skill-sec-yellow .borrower-panel .lender-box .lender-heading{color:#3563a9 !important;}
+section.client-skill-sec-yellow .borrower-panel .lender-box .lender-info{color:#5b554b !important;}
+section.client-skill-sec-yellow .borrower-panel .lender-box .lender-price{color:#5b554b !important;font-weight:600;}
+section.client-skill-sec-yellow .lender-box{border:2px solid #5b554b;}
+input#submitidcss{background-color:#3563a9 !important;border:1px solid #3563a9;font-size:14px;color:#FFFFFF;letter-spacing:-.005em !important;display:inline-block;line-height:51px;font-family:"Montserrat-Bold", sans-serif;font-weight:bold !important;text-transform:uppercase;vertical-align:middle;border-radius:4px;padding:0 36px;-webkit-transition:background .4s ease, color .4s ease !important;transition:background .4s ease, color .4s ease !important;}
+input#submitidcss:hover{background:#fff !important;color:#3563a9;border:1px solid #3563a9;}
+.forget>a{color:#fff!important;}
+.top-highlight img {
+	width: 50px !important;
+	float: left;
+}
+
+@media(max-width:767px){
+    .banner-hd {font-size: 24px; margin: 0 0 30px 0;}
+	.loginbg {background-image: linear-gradient(0deg, #004566 60%, #fff 40%); padding: 10px 0 !important;}
+    .login-register .top-txt {font-size: 15px; line-height:inherit; margin-top: 15px;}
+	.main-bannerp2p .tab-content > .tab-pane {padding: 20px 15px 40px 15px;}
+    .top-hd {font-size: 18px;}
+    .login-register .btn-signup {padding:7px 20px; font-size:14px;}
+    .login-register form .text-right a {font-size: 14px;}
+    .login-tab {margin-bottom:20px !important;}
+    .login-tab li {margin:5px 0;}
+    .login-tab li a {padding:7px 8px; font-size:12px;}
+    .login-register .pull-right a {font-size:10px; margin-top:-5px; margin-bottom:10px; display:inline-block;}
+    .whitebg {margin-top:10%; display:table;}
+    .howwork li {padding: 10px 15px;}
+    .mno{padding-left: 0px!important;}
+    .f1{padding: 10px;}
+    .f1-step{margin: 0px;}
+    .f1-steps {margin: 20px 0;}
+    .f1-steps p{line-height: 16px; margin-bottom: 10px; font-size: 13px;}
+    .top-highlight>li {padding-left: 10px;}
+    .np{padding: 0;}
+    .register-hd {font-size:21px; margin-top: 5px;}
+	.m-text-center {text-align:center;}
+    .client-skill-sec .fact-box {margin-left:0px; padding-left:0px;}
+    .p2p .fact-box .single-fact-count p {font-size:12px; line-height:14px;}
+    .p2p .fact-box .single-fact-count .title span {font-size:30px;}
+    .p2p .fact-box .single-fact-count .title i {font-size:30px;}
+    .m-sec-pad {padding:0px !important;}
+    .p2p .thm-btn {padding: 0px;}
+    .client-skill-sec .pgrs-bar-wrapper .inner-box small {text-align:center; display:block;}
+    .service-box-one .single-service-box-one {text-align:center;}
+
+<!-- Nav tabs -->
+    .main-bannerp2p {padding:30px 0; background-size:80%;}
+    .main-bannerp2p .tab-content .slider_bg {margin-bottom:15px; margin-top:0;}
+    .lender-comnt {background:#dedede; padding:20px 0;}
+    .lender-comnt-hd {font-size: 24px; font-weight:300;}
+    .lender-mainbg {padding: 40px;}
+    .lender-mainbg-hd {font-size: 22px; margin: 0;}
+    .lender-mainbg-hd span {font-size: 38px;}
+    .lender-befts-txt {font-size:22px; color:#fff; font-weight:300; margin-top:25px;}
+    .partners-hd-txt {font-size: 14px;}
+    .watp2p-hd {font-size: 24px;}
+	.lender-benefits li {padding: 20px; height: 200px;}
+	.lender-benefits li::before {height: 40%;}
+	.lender-benefits li:nth-child(3) p {margin-top: 5px;}
+	.blogs-hd {font-size: 30px; margin-top: 35px; margin-bottom: 25px;}
+	.single-footer-widget.link-widget ul {margin-top: 0;}
+	.btn-getstarted {width: 160px;}
+	.prod-thumbs .col-md-6 {padding:0 5px;}
+	.mybanner .title h1 {font-size: 24px;}
+	.mybanner ul.breadcrumb a {font-size: 12px;}
+	.mybanner .title h1 {margin-top: 0; font-size: 24px;}
+	.mybanner {height: 160px;}
+	#content .container {padding:0;}
+	#content, .service-box-one {text-align:justify;}
+	.contact-form .form-grp {margin-bottom: 15px;}
+	.thm-btn {margin-top: 10px;}
+	.service-box-one, .modal-body {padding:0;}
+}
+.banner {background:url(../img/banner.jpg); padding:50px 0;}
+.leadbox {background:rgba(0,0,0,0.8); padding:30px; width:300px; border-radius:3px; float:right; margin:60px 0;}
+
+.leadbox label {color:#fff;}
+.submit-now {width:100%;}
+.btn-leadbox{background:#fabc36; color:#fff; width:100px; float:right;}
+.intro {padding:50px 0; text-align:justify; line-height:24px;}
+.txt-italic {font-style:italic;}
+.page-hd {font-size:30px; font-weight:600; color:#000;}
+.pd-t {padding-top:35px;}
+.pd-t60 {padding-top:60px;}
+.features {background:#eff7fc;}
+.hd-font {width:65%; text-align:center; margin:0 auto; padding-bottom:60px;}
+.features-point {margin:0; padding:0;}
+.features-point li {padding:10px 0 10px 25px; font-size:16px; position:relative; display:block;}
+.features-point li:before {position:absolute; left:0; content: "\f00c"; font-family:FontAwesome;}
+.pn {padding-bottom:0!important;}
+.freedom-fotrform {width: 100%; float: left; background: #fff; padding: 30px;  -webkit-box-shadow: 0 10px 6px -6px #777; -moz-box-shadow: 0 10px 6px -6px #777; box-shadow: 0 10px 6px -6px #777; border: 1px solid #f3f3f3;}
+.freedom-fotrform .col-md-3 {padding-left:10px; padding-right:10px;}
+.freedom-fotrform h2 {margin:0 0 10px 0;}
+/*Browse Lender*/
+.browse-lender-banr {background:url(../img/browse-lender-banr.jpg); padding:120px 0;}
+.browse-lender-hd {font-size:48px; color:#fff;}
+.browse-lender-hd span {display:block;}
+.browse-lender {background:#f8f6f5;}
+.lender-row {width:100%; float:left; border-bottom:1px solid #fff; padding:50px 0;}
+.star-rating {display:inline-block; font-size:24px; color:#ff5504;}
+.comntday {font-size:12px; color:#ccc;}
+.lendername {font-size:24px; color:#000; font-weight:bold;}
+.member-year {font-size:14px; color:#7f7b79;}
+.lender-maincomnt {font-size:21px; color:#000; margin:0 0 15px 0;}
+.lender-comt {font-size:14px; color:#7f7b79;}
+.recommended {font-size:13px; color:#7f7b79; padding-top:10px;}
+
+/*Browse Lender End*/
+
+@media(max-width:767px){
+	.banner {background:#dcd9e3; padding:20px 0;}
+	.leadbox {width:90%; float:inherit; margin:10px auto;}
+	.submit-now {text-align:right;}
+	.btn-leadbox{float:inherit;}
+	.intro {padding: 10px 0 50px 0;}
+	.pd-t60 {padding-top:20px;}
+	.hd-font {width:98%;}
+	.features-point li {font-size:15px; text-align:left;}
+
+	/*Browse Lender*/
+	.browse-lender-banr {padding:40px; background-position: center; background-size: cover;}
+	.browse-lender-hd {font-size: 30px;}
+	.lender-maincomnt {margin-top:15px;}
+	.lender-row {padding: 35px 0;}
+	.star-rating {font-size: 21px;}
+	/*Browse Lender End*/
+   .banner-hd {font-size: 21px;}
+	.banner-hd span {padding-bottom: 15px;}
+	.lender-benefits li {font-size: 18px; padding: 20px; height: 250px;}
+	.lender-benefits li p {font-size: 20px; margin-top: 15px; margin-bottom: 0; line-height: 20px;}
+	.lender-benefits li p span {font-size: 20px;}
+	.lender-benefits li::before {height: 40%;}
+	.banr-hd {font-size: 20px;}
+    .teamimage {margin: 15px 0;}
+    .sec-title.medium h2 {font-size: 18px; line-height: 20px;}
+	.prod-thumbs .col-md-4 img {margin-bottom: 15px;}
+
+}
+.mypop-alert {
+	margin-right: auto;
+	margin-left: auto;
+	width: 500px;
+	margin: 30px auto;
+	position: absolute;
+	left: 30%;
+	z-index: 9;
+}
+.mypop-alert-content {
+	position: relative;
+	font-size: 14px;
+	color: #333;
+	background-color: #fff;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border: 1px solid #999;
+	border: 1px solid rgba(0,0,0,.2);
+	border-radius: 6px;
+	outline: 0;
+	-webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+	box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+

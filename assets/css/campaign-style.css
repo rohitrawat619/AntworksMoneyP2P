@@ -1,0 +1,197 @@
+a {transition: all 0.5s ease-out;}
+.single-service-box-two .icon-box-img .inner-box i {line-height:73px;}
+.main-bannerp2p {background: #004566 url("https://www.antworksp2p.com/assets/img/p2pbannerbg.png") center bottom repeat-x; padding:50px 0; background-size:60%;}
+.banner-hd {color:#fff; font-size:30px; font-weight:bold; text-align:center;}
+.main-bannerp2p .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {background-color: #fff; color: #000;}
+.main-bannerp2p .nav > li > a {background-color: #1795be; color:#333;}
+.main-bannerp2p .tab-content > .tab-pane {background:#fff; padding:50px 15px; margin-bottom:60px; width:100%; float:left;}
+.banr-hd {color:#000 !important; font-size:24px; text-align:center; margin-bottom:30px; text-transform:inherit;}
+.btn-getstarted {background:#b41e37; padding:15px 15px; width:230px; float:right; text-align:center; font-size:18px; color:#fff; transition: all 0.5s ease-out; margin-top:15px;}
+.btn-getstarted:hover {color:#fff; background:#004566;}
+.main-bannerp2p .tab-content .col-md-4 input{background:none; border:none; margin-top:10px;}
+.main-bannerp2p .tab-content .slider_bg {background:#e6e6e6; margin-top:10px; padding:25px 40px 10px 20px;}
+.lender_benefits_main {background:#dedede; margin-top:10px;}
+.lender-mainbg {background: rgba(0, 0, 0, .6) url("https://www.antworksp2p.com/assets/img/lendr-bg.png") no-repeat center; padding:199px 60px;}
+.lender-mainbg-hd {font-size:36px; color:#fff!important; text-transform:inherit; font-weight:100;}
+.lender-mainbg-hd span {font-size:60px; color:#fff; font-weight:600; margin-top:15px; display:inline-block;}
+.lender-befts-txt {font-size:22px; color:#fff; font-weight:300; margin-top:85px;}
+.btn-started {font-size:22px; color:#fff; font-weight:300; margin-top:30px; padding:2px 30px; border:2px solid #fff!important; border-radius:20px; display:inline-block;}
+.btn-started:hover {background:#fff; border:2px solid #fff!important; text-decoration:none; color:#000;}
+.lender-benefits {width:100%; float:left; margin:0; padding:0; vertical-align: middle; display: table;}
+.lender-benefits li {width:50%; float:left; text-align:center; display:inline-block; font-size:20px; color:#fff; padding:30px; height: 393px; vertical-align: middle;}
+.lender-benefits li:before {content: ""; display: inline-block; height: 50%;}
+.lender-benefits li p {font-size:24px; margin-top:25px; margin-bottom:0;}
+.lender-benefits li span {display:block; font-size:12px;}
+.lender-benefits li:nth-child(1) {background:#e78e00;}
+.lender-benefits li:nth-child(2) {background:#19b495;}
+.lender-benefits li:nth-child(3) {background:#1795be;}
+.lender-benefits li:nth-child(4) {background:#004566;}
+.watp2p p {text-align:justify;}
+.watp2p-hd {position:relative; font-size:38px; font-weight:300; color:#000; margin-bottom:25px;}
+.watp2p-hd:before {position:absolute; content:""; background:#ff5700; width:50px; height:3px; bottom:-10px;}
+.lender-comnt {background:#dedede; padding:60px 0;}
+.lender-comnt-hd {font-size:38px; color:#000; font-weight:300; text-align:center; margin:10px 0;}
+
+/* Testimonials Slider */
+.testimonials-list {margin:25px 0;}
+.testimonials-list .testimonial-item {text-align:center;}
+.testimonials-list .testimonial-item.background {
+	padding: 20px; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius:5px;}
+.testimonials-list .testimonial-item .testimonial-image img {display: block; margin-left: auto; margin-right: auto; width: 100px; border: 5px solid #FFF; border-radius: 50%; -moz-border-radius: 50%; -webkit-border-radius: 50%; margin-bottom: 10px;}
+
+.testimonials-list .testimonial-item .testimonial-image img.square {border-radius: 15%; -moz-border-radius: 15%; -webkit-border-radius: 15%;}
+.testimonials-list .testimonial-item .testimonial-name {color: #000; font-size: 15px; line-height: 17px; font-style: normal; font-weight: 600; letter-spacing: 0.7px; margin-bottom: 5px;}
+.testimonials-list .testimonial-item .testimonial-job {font-size: 14px; color: #757575; font-weight: normal; font-style: normal;}
+.testimonials-list .testimonial-item .testimonial-rating {color: #bebebe; margin-top: 5px;}
+.testimonials-list .testimonial-item .testimonial-rating i {margin-right: 3px;}
+.testimonials-list .testimonial-item .testimonial-content {color: #818181; font-size: 14px; line-height: 26px; font-style: normal; font-weight: 400; margin-top: 15px; text-align: center;}
+.testimonials-list .testimonial-item .cell-left {display: table-cell; vertical-align: top; padding-right: 15px;}
+.testimonials-list .testimonial-item .cell-right {display: table-cell; vertical-align: middle; text-align: left;}
+.testimonials-list .testimonial-item .testimonial-content.quote {margin-top: 0; text-align: left; margin-bottom: 15px; font-size: 15px;}
+.testimonials-list .testimonial-item .testimonial-content.quote i {margin-right: 10px; font-size: 20px;}
+.testimonials-list .testimonial-content {background:#fff; box-shadow:1px 1px 5px #c9c9c9; padding:40px 20px; margin-bottom: 20px; position: relative;}
+.testimonials-list .testimonial-content:before, .testimonials-list .testimonial-content:after {top: 100%; left: 0; border: solid transparent; content: " "; height: 0; width: 0; position: absolute;}
+.testimonials-list .testimonial-content:after {border-top-color: #fff; border-width: 8px; margin-left: -8px;}
+.testimonials-list .testimonial-content:before {border-top-color: #cccccc; border-width: 9px; margin-left: -9px;}
+.testimonials-list .testimonial-item .testimonial-content {margin-top: 0; text-align: left;}
+.testimonials-list .testimonial-item .testimonial-content:before, .testimonials-list .testimonial-item .testimonial-content:after {left: 50px;}
+.testimonials-list .testimonial-item .testimonial-content p {position:relative;}
+.testimonials-list .testimonial-item .testimonial-content p:before {position:absolute; content:"\f10d"; font-family:FontAwesome; top:-30px; color:#b3b3b3; font-size:22px;}
+.testimonials-list .testimonial-item .testimonial-content p:after {position:absolute; content:"\f10e"; font-family:FontAwesome; bottom:-30px; right:0; color:#b3b3b3; font-size:22px;}
+.testimonials-list .testimonial-item .testimonial-image img {width: 90px;}
+/* Testimonials Slider End */
+.partners {padding:50px 0;}
+.partners-hd-txt {font-size:24px; color:#5d5d5d; font-weight:300; text-align:center;}
+
+#owl-demo .item{margin: 10px; text-align: center; max-width:150px;}
+#owl-demo .owl-controls {margin-top:3px;}
+.subscribe {max-width: 650px; margin: 0 auto; text-align: center; position: relative; z-index:2;}
+.subscribe .form-control {height: 50px; background: rgba(255, 255, 255, 0.6); border-color: transparent; border-radius: 20px 0 0 20px; }
+.subscribe .form-control:focus {box-shadow: none; border-color: #243c4f; }
+.subscribe .btn {min-height: 50px; width:200px; background:#ca1936; color: #fff; margin-left:10px!important;}
+
+@media (max-width: 768px){
+	.m-text-center {text-align:center;}
+	.client-skill-sec .fact-box {margin-left:0px; padding-left:0px;}
+	.p2p .fact-box .single-fact-count p {font-size:12px; line-height:14px;}
+	.p2p .fact-box .single-fact-count .title span {font-size:30px;}
+	.p2p .fact-box .single-fact-count .title i {font-size:30px;}
+	.m-sec-pad {padding:0px !important;}
+	.p2p .thm-btn {padding: 0px;}
+	.client-skill-sec .pgrs-bar-wrapper .inner-box small {text-align:center; display:block;}
+	.service-box-one .single-service-box-one {text-align:center;}
+
+<!-- Nav tabs -->
+	.main-bannerp2p {padding:30px 0; background-size:80%;}
+	.main-bannerp2p .tab-content .slider_bg {margin-bottom:15px;}
+	.lender-comnt {background:#dedede; padding:20px 0;}
+	.lender-comnt-hd {font-size: 24px; font-weight:300;}
+	.lender-mainbg {padding: 60px 60px;}
+	.lender-mainbg-hd {font-size: 22px;}
+	.lender-mainbg-hd span {font-size: 38px;}
+	.lender-befts-txt {font-size:22px; color:#fff; font-weight:300; margin-top:50px;}
+	.partners-hd-txt {font-size: 14px;}
+	.watp2p-hd {font-size: 30px;}
+}
+
+.lenborro-formbtn a {display:inline-block; padding: 10px 15px; border-radius:4px 4px 0px 0px;}
+.lenborro-formbtn a:last-child {background-color: #1795be; color: #333;}
+.lenborro-form {background:#fff; padding:50px 15px; margin-bottom:60px; width:100%; float:left;}
+.lenborro-form .slider_bg {background:#e6e6e6; margin-top:10px; padding:25px 40px 10px 20px;}
+.lenborro-form .col-md-4 input{background:none; border:none; margin-top:10px;}
+.textoverlay {position: absolute; z-index:99; width: 100%; height: 100%; top: 160px; left: 10%; display: block; align-items: center; max-width:550px;}
+.bannertext {font-size:26px; color:#fff; font-weight:700; line-height: 1.3; text-shadow:0 2px 2px rgba(0,0,0,.5); margin-bottom:10px; width:100%; float:left; letter-spacing: .9px;}
+.bannertext span{font-size:18px; display:block;}
+.support {width:100%; float:left;}
+.support a{border-radius: 42px; background-color: #b51e37; box-shadow: 0 2px 10px 0 rgba(0,0,0,.1); color: #fff; text-transform: uppercase; font-size: 21px; padding: 17px 45px; font-weight: 700; display:inline-block; margin-bottom:10px;}
+.description {width:100%; float:left;}
+.description p {font-size: 18px; bottom: 80px; width: 555px; border-left: 2px solid #fff; color:#fff; font-style: italic; padding: 0 20px; font-weight: 600; text-shadow: 0 2px 3px rgba(0,0,0,.5);}
+.support-ratio {margin:0; padding:0 0 0 20px;}
+.support-ratio li {display:inline-block; padding-right:15px; font-size: 18px; color:#fff; font-style: italic; font-weight: 600; text-shadow: 0 2px 3px rgba(0,0,0,.5);}
+.inr-hd {font-size:32px; color:#333; text-align:center; font-weight:600; margin:35px 0;}
+.knowmore {color: #fff; text-decoration: underline;}
+.knowmore:hover {color: #fff; text-decoration: none;}
+#main-nav-bar .navigation-box, .top-nav {display: none;}
+
+/**InnerPage**/
+.bxshadow{box-shadow: 0 6px 40px 0 rgba(0,0,0,.1); -webkit-box-shadow: 0 6px 40px 0 rgba(0,0,0,.1); width:100%; float:left; border-radius: 10px 10px; margin-top: 0; margin-bottom: 20px; padding-bottom:20px;}
+.contents {padding:0 30px; font-size: 17px; color: #444; line-height: 27px; letter-spacing: .4px;}
+.contents-hd {border-bottom: 3px solid #d7efef !important; padding-bottom:7px; font-size:16px; color:#333 !important; font-weight:700;}
+.contents-hd i{color:#00CCCC;}
+.contents-hd2 {text-align:center; font-size: 24px; font-weight: 600; color: #444; margin:15px 0;}
+.sociallink-inr a {text-align:center; display:inline-block;}
+.whatsapp-btn {border-radius: 4px; background-color: #13cb6a; color: #fff; font-size: 17px; font-weight: 400; width: 200px; height: 42px; line-height:42px; display: inline-block; text-align:center;}
+.fb-btn button a {border-radius: 4px; font-size: 17px; font-weight: 400; width: 200px; height: 42px; color:#fff; background-color: rgb(59, 89, 152);  line-height:42px; display: inline-block; text-align:center;}
+
+.support-btn {width: 200px; height: 42px; color:#fff; background-color: #c71d37; border-radius: 4px;  line-height:42px; display: inline-block; text-align:center;}
+.whatsapp-btn:hover, .fb-btn:hover, .support-btn:hover, .support-btn-larg:hover, .fb-btn-large:hover {text-decoration:none; color:#fff;}
+.bdr-top {border-radius: 6px 6px 0 0;}
+.support-btn-larg {width: 100%; height: 72px; font-size:18px; color:#fff; font-weight:600; background-color: #c71d37; border-radius: 4px; text-transform:uppercase
+; line-height:72px; display: inline-block; text-align:center; box-shadow: 0 2px 10px 0 #c71d37;}
+
+.list-inline {padding-left: 10px; margin: 15px 0 7px;}
+.credit-debit, .netbank, .paytm-wallets {background-image: url(../images/paymentoptions.svg); background-size: auto; height: 33px; display: inline-block; cursor: pointer;}
+.credit-debit {background-position: 0 112px; width: 97px;}
+.netbank {background-position: -102px 112px; width: 76px;}
+.paytm-wallets {background-position: -272px 112px; width: 78px; margin-right: 6px;}
+.credit-debit:hover {background-position: 350px 112px;}
+.netbank:hover {background-position: 248px 112px;}
+.paytm-wallets:hover {background-position: 78px 112px;}
+.fb-btn-large {border-radius: 4px; font-size: 17px; font-weight: 400; width: 100%; height: 54px; color:#fff; background-color: rgb(59, 89, 152);  line-height:54px; display: inline-block; text-align:center;}
+.btn-callback {border-radius: 4px; font-size: 17px; font-weight: 400; width: 100%; height: 54px; margin-top: 15px; color:#fff; background-color: #c71d37;  line-height:54px; display: inline-block; text-align:center;}
+.btn-callback:hover {color: #fff;}
+.supporter-count {font-size:48px; font-weight:600; margin-bottom:15px;}
+.supporter-count span {font-size:24px;}
+.right-section {background:#fff; box-shadow: 0 6px 40px 0 rgba(0,0,0,.1); -webkit-box-shadow: 0 6px 40px 0 rgba(0,0,0,.1); border-radius: 10px; margin-bottom: 30px; transition: box-shadow 280ms cubic-bezier(.4,0,.2,1); display: block; position: relative; padding: 16px;}
+.businssup-hd {font-size:18px; font-weight:600; padding:7px 0 20px 45px; background:url(../images/ru-icon.png) no-repeat top left; border-bottom:1px solid #f2f2f2 !important;}
+.support-content {padding: 10px 0;}
+.support-icon {background:#c71d37; text-align:center; color:#fff; font-size:14px; line-height: 35px; height: 35px; width: 35px; margin-right: 10px; border-radius: 50%; display:inline-block;}
+.support-name {line-height: normal; letter-spacing: .3px; display:inline-block;}
+.support-name a {font-size: 17px; color: #444;}
+#myModal .modal-title {color:#01bfbd; font-weight: 700; font-size: 20px; padding: 14px 0; text-align:center;}
+#myModal .modal-header {background: #f7f8f8; border-radius: 6px 6px 0 0; padding: 7px;}
+#myModal .modal-header .close {margin:10px 10px 0 0; font-size:30px; color:#fff;}
+.approx {font-style: italic; color: #888; font-size: 12px;}
+.approx span{color:#01bfbd; font-weight:400;}
+.suprt-btn {margin: 0 auto; width: 100%; text-align: center; float: none;}
+.suprt-btn .btn-primary {float:inherit; border-radius:55px !important; padding:7px 35px;}
+.suprt-btn .active {background: #c71d37; border-color:#c71d37;}
+.amountselct {width:100%; text-align:center; padding:15px 0;}
+#funding_amount {width:200px; border:1px solid #ccc; border-radius:30px; height:36px; padding:7px 10px;}
+.amountselct .input-group-addon {background-color:transparent; border-top-left-radius: 30px; border-bottom-left-radius: 30px;}
+.payform {width:400px; margin:0 auto;}
+.payform .icon {position: relative; float: right; margin-right: 8px; margin-top: -24px; z-index: 2; color: #ccc;}
+.payform input {border:none; box-shadow:none; border-bottom:1px solid #ddd; border-radius:0; padding-left:0; font-size:12px;}
+.payform .form-control:focus {border-color:transparent; box-shadow:none;}
+#lender_submit_payment_button, .btn-proceed {width: 100%; background: #c71d37; margin:10px 0; font-size:18px; color:#fff; border-radius:30px !important; padding:10px 15px;}
+.tc-apply {font-size: 12px; color: #888; font-style: italic; text-align: center;}
+.tc-apply a {}
+.list-comment {padding-left: 50px; margin-top: -10px;}
+.fa-quote-left:before, .fa-quote-right:before {color: #444; font-size: 11px; vertical-align: top;}
+.fa-quote-right:before {margin-left: 5px;}
+.fa-quote-left:before {margin-right: 5px;}
+/**InnerPage**/
+
+@media (max-width:767px) {
+	.owl-carousel .owl-item img, .owl-carousel.owl-drag .owl-item {max-width:100%!important;}
+	.textoverlay {top:120px; left:20px; max-width:100%;}
+	.bannertext {font-size:12px; width: 75%; font-weight: 400; letter-spacing: .2px;}
+	.bannertext span{font-size:12px; display: inline-block;}
+	.support a{font-size: 12px; padding: 5px 20px;}
+	.textoverlay .progress {height: 10px;}
+	.description p {font-size: 11px; width:100%; margin:0; padding: 0 10px;}
+	.support-ratio {width:100%; float: left; margin:0; padding:0 0 0 10px;}
+	.support-ratio li {font-size: 12px;}
+	.owl-carousel .owl-item img, .owl-carousel.owl-drag .owl-item {height: 300px;}
+	.lender-benefits li p {font-size: 18px; margin-top: 20px;}
+	.lender-benefits li {padding: 20px; height: 222px;}
+	/**InnerPage**/
+	.inr-hd {font-size:24px;}
+	.whatsapp-btn, .fb-btn, .support-btn {width:100px; margin-bottom: 10px;}
+	.btn-share {font-size:14px;}
+	.suprt-btn .btn-primary {margin-bottom:10px;}
+	.payform {max-width: 400px; width: 100%;}
+	.navbar-default .navbar-toggle {display: none;}
+
+	/**InnerPage**/
+}
