@@ -171,21 +171,21 @@
 										<td>Experian Score</td>
 										<?php
 										$messqge = $experian_details['experian_response'];
-//										if (stripos($messqge, "SYS100005") !== false || $current_step['msg'] == 'Experian Step is not complete') {
+										if (!$experian_details['experian_score']) {
 											?>
-											<!--<td>
+											<td>
 												<form
-														action="<?php /*echo base_url() . 'teamleader/reinitiateExperian' */?>"
+														action="<?php echo base_url() . 'teamleader/reinitiateExperian'; ?>"
 														method="post">
 													<input type="hidden" name="borrower_id" id="borrower_id"
-														   value="<?php /*echo $list['borrower_id']; */?>">
+														   value="<?php echo $list['borrower_id']; ?>">
 													<input type="hidden" name="b_borrower_id" id="borrower_id"
-														   value="<?php /*echo $list['b_borrower_id']; */?>">
+														   value="<?php echo $list['b_borrower_id']; ?>">
 													<input type="submit" name="submit" value="submit">
 												</form>
-											</td>-->
+											</td>
 											<?
-//										} else {
+										} else {
 											if ($experian_details['experian_score'] > 300) { ?>
 												<td>
 													<a href="<?php echo base_url() . 'teamleader/view_experian_response/' . $list['b_borrower_id']; ?>"> <?php echo $experian_details['experian_score'] ?></a>
@@ -193,7 +193,7 @@
 												<?
 											} else {
 												echo "<td>" . $experian_details['experian_score'] . "</td>";
-//											}
+											}
 										}
 										?>
 
@@ -682,7 +682,7 @@
 											<td><?php echo $list['date_added']; ?></td>
 											<td><?php echo $list['loan_amount']; ?></td>
 											<td><?php echo $list['min_interest_rate']; ?></td>
-											<td><?php echo $bids['loan_amount']; ?></td>
+											<td><?php echo $list['loan_amount']; ?></td>
 											<td><?php echo $list['tenor_months']; ?></td>
 											<td><?php echo $list['borrower_city']; ?></td>
 											<td><?php echo $bids['bid_loan_amount']; ?></td>

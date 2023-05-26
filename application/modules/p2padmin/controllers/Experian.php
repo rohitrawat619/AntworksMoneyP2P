@@ -60,8 +60,8 @@ class Experian extends CI_Controller {
       <urn:process>
          <urn:cbv2String><![CDATA[<INProfileRequest>
    <Identification>
-      <XMLUser>cpu2ant_prod01</XMLUser>
-      <XMLPassword>20@March20</XMLPassword>
+      <XMLUser>cpu2ant_prod03</XMLUser>
+      <XMLPassword>Antworks@1234</XMLPassword>
    </Identification>
    <Application>
       <FTReferenceNumber></FTReferenceNumber>
@@ -217,7 +217,7 @@ class Experian extends CI_Controller {
          <INProfileRequest>
          <Identification>
                 <XMLUser>cpu2ant_prod01</XMLUser>
-		<XMLPassword>Antworks@270</XMLPassword>
+		<XMLPassword>Antworks@16523@16523</XMLPassword>
           </Identification>
           <Application>
                   <FTReferenceNumber></FTReferenceNumber>

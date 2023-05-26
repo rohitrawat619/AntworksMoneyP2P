@@ -450,12 +450,13 @@ class Commonapi extends REST_Controller{
                 {
 
                     $keys = json_decode($result, true);
+					//pr($keys);exit;
                     if($keys['razorpay_Testkey']['status'] == 0)
                     {
                        $key['key'] = $keys['razorpay_Testkey']['key'];
 
                     }
-                    if ($keys['razorpay_razorpay_Livekey']['status'] == 0){
+                    if ($keys['razorpay_razorpay_Livekey']['status'] == 1){
 
                         $key['key'] = $keys['razorpay_razorpay_Livekey']['key'];
 

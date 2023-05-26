@@ -26,7 +26,7 @@
                     <span class="decor-line"> <span class="decor-line-inner"></span> </span> </div>
                 <!-- /.sec-title -->
                 <div class="modal-body">
-                    <p>Antworks P2P Financing Private Limited values the users of our website (the "Website"). Your privacy and trust are very important to us. We recognize that you may be concerned about our collection, use, and disclosure of the personally identifiable information ("Personal Information") that we collect when you use the Website and the services offered on the Website ("Antworks P2P Financing"). This Privacy Policy describes the information that we collect from you, how we collect this information, and what we do with it after we collect it. By using the Website you are accepting the practices described in this Privacy Policy. By using the Website you also give consent to use the Personal Information by Antworks P2P Financing in accordance with the terms set out in this Privacy Policy. If you have any questions or comments regarding this Privacy Policy, please contact us at support[at]AntworksMoney[dot]com.  You may mark the mail to grievance officer Mr. Sunil Kakkar at sunil.kakkar@AntworksMoney.com  and on phone at 8882750000.</p>
+                    <p>Antworks P2P Financing Private Limited values the users of our website (the "Website"). Your privacy and trust are very important to us. We recognize that you may be concerned about our collection, use, and disclosure of the personally identifiable information ("Personal Information") that we collect when you use the Website and the services offered on the Website ("Antworks P2P Financing"). This Privacy Policy describes the information that we collect from you, how we collect this information, and what we do with it after we collect it. By using the Website you are accepting the practices described in this Privacy Policy. By using the Website you also give consent to use the Personal Information by Antworks P2P Financing in accordance with the terms set out in this Privacy Policy. If you have any questions or comments regarding this Privacy Policy, please contact us at support[at]AntworksMoney[dot]com.  You may mark the mail to grievance officer  support@AntworksMoney.com  and on phone at 9773986991.</p>
 
                     <p><strong>DOES Antworks P2P Financing EVER MAKE CHANGES TO ITS PRIVACY POLICY?</strong></p>
 
@@ -125,8 +125,8 @@
                     <p>You may write to </p>
                     <p>The Grievance Redressal Officer<br>
                         Address : 165, Tower B1. Spaze IT Park, Gurgaon<br>
-                        Telephone: 0124 - 4898887<br>
-                        Email id : complaint[at]antworksmoney[dot]com</p>
+                        Telephone: 9773986991<br>
+                        Email id : support[at]antworksmoney[dot]com</p>
 
 
                     <p><strong>Stage 2:</strong></p>

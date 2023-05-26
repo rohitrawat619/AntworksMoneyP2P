@@ -34,6 +34,7 @@ class Borrower_registration extends CI_Controller{
 
     public function borrower_register()
     {
+//echo "hi";exit;
         $this->form_validation->set_rules('name', 'First Name', 'trim|required');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'trim|required');
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required');
@@ -242,7 +243,7 @@ class Borrower_registration extends CI_Controller{
             if($this->db->affected_rows()>0)
             {
                 $result = count($query->result_array());
-                if($result>3)
+                if($result>10)
                 {
                     echo 2; exit;
                 }
@@ -262,6 +263,8 @@ class Borrower_registration extends CI_Controller{
 
 
             $msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
+            $msg = "$otp is your Antworks Account verification code - ANTWORKS";
+//            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
             $message = rawurlencode($msg);
 
             // Prepare data for POST request
@@ -275,7 +278,6 @@ class Borrower_registration extends CI_Controller{
             $response = curl_exec($ch);
             curl_close($ch);
             // Create session for verifying number
-//echo $response; exit;
 
             echo 1; exit;
             }

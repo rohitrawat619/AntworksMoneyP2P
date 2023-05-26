@@ -85,3 +85,11 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 defined('WHATAPP_TOKEN')       OR define('WHATAPP_TOKEN', 'c24fbd2e-bec7-4c24-a384-448050064e8d');//what app token
 defined('API_ACCESS_KEY')      OR define('API_ACCESS_KEY', 'AAAAa2uizTg:APA91bH4ZKQLsl5H-jyiyAjQRN0fjm2nNABHORy-87TcrXIatBjiV9wMtJV1gKmaVKU3tf58OfM3_VcY8qII6RDAu9JIccQALL3aukYxi4B_4u8a5baC5F5zEfpWHiwyYuUJUZnvhinH');//what app token
+
+//Client_Secret_PAN
+defined('Client_Id_PAN')       OR define('Client_Id_PAN', '11199344');//Client_Id_PAN
+defined('Client_Secret_PAN')      OR define('Client_Secret_PAN', 'jFjXGxllHLzs1jlQIcM9leJZL4RRAhCk');
+defined('PAN_API_URL')      OR define('PAN_API_URL', 'https://svcdemo.digitap.work/validation/kyc/v1/pan_basic');//PAN_API_URL
+defined('GENERATE_ESIGN_URL')      OR define('GENERATE_ESIGN_URL', 'https://api.digitap.ai/ent/v1/generate-esign');//PAN_API_URL
+defined('GET_E_SIGN_DOC')      OR define('GET_E_SIGN_DOC', 'https://api.digitap.ai/ent/v1/get-esign-doc');//PAN_API_URL
+defined('E_SIGN_PROCESS')      OR define('E_SIGN_PROCESS', 'https://sdk.digitap.ai/e-sign/templateesignprocess.html?docId=');//PAN_API_URL

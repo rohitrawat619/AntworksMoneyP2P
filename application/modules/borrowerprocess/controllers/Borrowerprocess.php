@@ -325,8 +325,8 @@ class Borrowerprocess extends CI_Controller
       <urn:process>
          <urn:cbv2String><![CDATA[<INProfileRequest>
    <Identification>
-      <XMLUser>cpu2ant_prod01</XMLUser>
-      <XMLPassword>20@March20</XMLPassword>
+      <XMLUser>cpu2ant_prod03</XMLUser>
+      <XMLPassword>Antworks@1234</XMLPassword>
    </Identification>
    <Application>
       <FTReferenceNumber></FTReferenceNumber>
@@ -419,7 +419,7 @@ class Borrowerprocess extends CI_Controller
 			$err = curl_error($curl);
 			curl_close($curl);
 			if ($err) {
-				echo "cURL Error #:" . $err;
+				echo "cURL Error # Experian:" . $err;
 			} else {
 
 				$year = date("Y");

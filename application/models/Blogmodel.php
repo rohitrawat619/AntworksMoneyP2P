@@ -9,7 +9,7 @@ class Blogmodel extends CI_Model{
 
     public function get_blogs()
     {
-      $blog = '';
+
         $sql = "SELECT
                         p1.*,
                         CONCAT('https://www.antworksp2p.com/blog/wp-content/uploads/', wm2.meta_value) AS blog_fetured_image

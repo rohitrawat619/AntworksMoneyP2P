@@ -171,11 +171,10 @@
 										<td>Experian Score</td>
 										<?php
 										$messqge = $experian_details['experian_response'];
-//										if (stripos($messqge, "SYS100005") !== false || $current_step['msg'] == 'Experian Step is not complete') {
+										//if (stripos($messqge, "SYS100005") !== false || $current_step['msg'] == 'Experian Step is not complete') {
 											?>
 											<td>
-												<form
-														action="<?php echo base_url() . 'p2padmin/p2pborrower/reinitiateExperian' ?>"
+												<form action="<?php echo base_url() . 'p2padmin/p2pborrower/reinitiateExperian' ?>"
 														method="post">
 													<input type="hidden" name="borrower_id" id="borrower_id"
 														   value="<?php echo $list['borrower_id']; ?>">

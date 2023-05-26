@@ -183,6 +183,7 @@ class Missearch extends CI_Controller
 								  ->join('ant_all_leads as aal', 'on aal.id = bp.lead_id',  'left')
 								  ->join('ant_source as so', 'on so.id = aal.source_of_lead', 'left')
 								  ->join('ant_source_campaign as sc', 'on sc.id = aal.campaign_id', 'left')
+
 						          ->where($where)
 								  ->get_where('p2p_res_borrower_payment as bp');
 					if ($this->db2->affected_rows() > 0) {
@@ -340,6 +341,7 @@ class Missearch extends CI_Controller
 					$this->db2->join('credit_score_query AS CC', 'on cc.id = pd.cc_id', 'left');
 					$this->db2->join('credit_counselling_source AS ccs', 'on ccs.id = CC.source_of_lead', 'left');
 					$this->db2->join('credit_counselling_source_campaign AS csc', 'on csc.id = CC.source_of_lead_campaign', 'left');
+					//$this->db2->join('cc_payment_invoice_details AS invo', 'on invo.cc_id = CC.id', 'left');
 					$this->db2->where($where);
 					$result = $this->db2->get();
 
@@ -436,8 +438,7 @@ class Missearch extends CI_Controller
 					$filename = "Mis.csv";
 					// unset($_POST['submit']);
 
-					$this->db->select("ALL.created_date,
-                                                               ALL.id,
+					$this->db->select("ALL.created_date,ALL.id,
                                                                ALL.fname,
                                                                ALL.lname,
                                                                ALL.email,
@@ -490,15 +491,14 @@ class Missearch extends CI_Controller
                                                                ALL.status,");
 
 
-					$this->db2->from('ant_all_leads AS ALL');
-					$this->db2->join('user_info AS USR', 'ON ALL.assigned_to = USR.user_id', 'left');
-					$this->db2->join('ant_source AS SOU', 'ON ALL.source_of_lead = SOU.id', 'left');
-					$this->db2->join('ant_source_campaign AS CAMP', 'ON ALL.source_of_lead = CAMP.id', 'left');
-					$this->db2->join('bank_loan_type AS LT', 'ON ALL.product_type = LT.id', 'left');
-					$this->db2->join('residence_type AS RES', 'ON ALL.residence_type = RES.id', 'left');
-
-					$this->db2->where('ALL.status', '15');
-					$this->db2->where($where);
+				$this->db2->from('ant_all_leads AS ALL');
+				$this->db2->join('user_info AS USR', 'ON ALL.assigned_to = USR.user_id', 'left');
+				$this->db2->join('ant_source AS SOU', 'ON ALL.source_of_lead = SOU.id', 'left');
+				$this->db2->join('ant_source_campaign AS CAMP', 'ON ALL.source_of_lead = CAMP.id', 'left');
+				$this->db2->join('bank_loan_type AS LT', 'ON ALL.product_type = LT.id', 'left');
+				$this->db2->join('residence_type AS RES', 'ON ALL.residence_type = RES.id', 'left');
+				$this->db2->where('ALL.status', '15');
+				$this->db2->where($where);
 
 					$result = $this->db2->get();
 

@@ -9,6 +9,7 @@ class Borrowermodel extends CI_Model
 
     public function add_borrower()
     {
+
        $borrower_id = $this->create_borrower_id();
         $borrower_escrow_account = $this->createEscrowaccount();
        $borrower_array = array(

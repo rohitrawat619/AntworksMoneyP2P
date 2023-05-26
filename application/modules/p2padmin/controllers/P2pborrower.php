@@ -270,8 +270,8 @@ class P2pborrower extends CI_Controller
       <urn:process>
          <urn:cbv2String><![CDATA[<INProfileRequest>
    <Identification>
-      <XMLUser>cpu2ant_prod01</XMLUser>
-      <XMLPassword>20@March20</XMLPassword>
+      <XMLUser>cpu2ant_prod03</XMLUser>
+      <XMLPassword>Antworks@1234</XMLPassword>
    </Identification>
    <Application>
       <FTReferenceNumber></FTReferenceNumber>

@@ -15,6 +15,7 @@
 			<li><a href="<?=base_url();?>p2precovery/pendigApproval/"><span class="fa fa-calculator"></span> Panding Approval EMI</a></li>
 			<li><a href="<?=base_url();?>p2precovery/lenderofflinepayment/"><span class="fa fa-calculator"></span>Lender Ofline Payment</a></li>
 			<li><a href="<?=base_url();?>p2precovery/downloadLoans/"><span class="fa fa-calculator"></span>Download Loans</a></li>
+			<li><a href="<?=base_url();?>p2precovery/downloadLoansAll/"><span class="fa fa-calculator"></span>Download Loans All</a></li>
 			<li><a href="<?=base_url();?>p2padmin/p2pmis/"><span class="fa fa-calculator"></span>Reconciliation</a></li>
 
 			<li class="treeview">

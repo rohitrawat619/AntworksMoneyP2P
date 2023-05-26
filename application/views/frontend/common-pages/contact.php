@@ -7,7 +7,7 @@
 <div class=" sec-pad service-box-one service">
   <div class="container">
 
-    <div class="col-md-8">
+    <div class="col-md-7">
 			<div class="sec-title">
 				<h2>Contact Us</h2>
 				<span class="decor-line">
@@ -56,9 +56,9 @@
 				<div class="form-result"></div><!-- /.form-result -->
 			</form>
 		</div><!-- /.col-md-8 -->
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<div class="sec-title">
-				<h2>Get Touch With Us</h2>
+				<h2>Get In Touch With Us</h2>
 				<span class="decor-line">
 					<span class="decor-line-inner"></span>
 				</span>
@@ -73,9 +73,19 @@
 							</div><!-- /.inner-box -->
 						</div><!-- /.icon-box -->
 						<div class="text-box">
-							<h3>Address :</h3>
-							<p>UL-03, Eros EF3 Mal, Sector-20 A,
-Mathura Road, Faridabad,121001, Haryana</p>
+							<h3>Registered Address :</h3>
+							<p>UL-03, Eros EF3 Mal, Sector-20 A, Mathura Road, Faridabad,121001, Haryana</p>
+						</div><!-- /.text-box -->
+					</li>
+					<li>
+						<div class="icon-box">
+							<div class="inner-box">
+								<i class="fn-icon-international-delivery"></i>
+							</div><!-- /.inner-box -->
+						</div><!-- /.icon-box -->
+						<div class="text-box">
+							<h3>Corporate Address :</h3>
+							<p>Unit 165, Tower-B1, Spaze iTech Park Sector-49, Sohna Road, Gurgaon Haryana 122018</p>
 						</div><!-- /.text-box -->
 					</li>
 <!--					<li>-->
@@ -97,7 +107,7 @@ Mathura Road, Faridabad,121001, Haryana</p>
 						</div><!-- /.icon-box -->
 						<div class="text-box">
 							<h3>Call Us:</h3>
-							<p> 8882750000</p>
+							<p> 9773986991</p>
 						</div><!-- /.text-box -->
 					</li>
 				</ul><!-- /.info-items -->

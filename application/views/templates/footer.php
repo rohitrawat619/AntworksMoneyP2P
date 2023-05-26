@@ -19,6 +19,7 @@
 						<ul id="menu-footer-menu" class="menu">
 							<li><a href="<?php echo base_url(); ?>contact-us">Contact Us</a></li>
 							<li><a href="<?php echo base_url(); ?>privacy-and-policy">Privacy Policy</a></li>
+							<li><a href="<?php echo base_url(); ?>affiliates">Affiliates</a></li>
 
 						</ul>
 					</div>

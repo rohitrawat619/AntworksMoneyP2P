@@ -347,8 +347,8 @@ class Teamleader extends CI_Controller
       <urn:process>
          <urn:cbv2String><![CDATA[<INProfileRequest>
    <Identification>
-      <XMLUser>cpu2ant_prod01</XMLUser>
-      <XMLPassword>20@March20</XMLPassword>
+     <XMLUser>cpu2ant_prod03</XMLUser>
+      <XMLPassword>Antworks@1234</XMLPassword>
    </Identification>
    <Application>
       <FTReferenceNumber></FTReferenceNumber>
@@ -518,6 +518,7 @@ class Teamleader extends CI_Controller
             $arr = array(
 
                 'assigned_to' => 7,
+				'status' => 15,
             );
 
             $this->money->where('mobile', $this->input->post('mobile'));

@@ -24,6 +24,7 @@ class Loan extends CI_Controller {
 
 	public function personalLoan()
 	{
+
 		$this->load->model('Blogmodel');
 		$data['list'] = $this->Blogmodel->get_blogs();
 		$data['title']='P2P Lending | Quick and Easy P2P Loan Services in India';

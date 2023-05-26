@@ -28,7 +28,7 @@
                     <span class="decor-line"> <span class="decor-line-inner"></span> </span> </div>
                 <!-- /.sec-title -->
                 <div class="modal-body">
-					<p>AntPay Mobile Application, owned by Antworks Financial buddy Technologies Pvt. Ltd. is working with Antworks P2P Financing Pvt Ltd as a lead aggregator to provide borrowers to the Antworks P2P platform. </p>
+					<p>Antworks P2P is into an agreement with AntPay (Antworks Financial Buddy Technologies Pvt Ltd.) as a Lead aggregator for providing Borrowers to the Antworks P2P Platform</p>
 					
                 </div>
             </div>

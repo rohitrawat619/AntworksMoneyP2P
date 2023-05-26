@@ -556,7 +556,7 @@ class P2precovery extends CI_Controller
 	public function downloadLoans()
 	{
 		if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'recovery') {
-			$query = $this->db->select('dld.id, bl.borrower_id, bl.pan, ad.r_pincode, bl.name, ll.name as lender_name, bpd.loan_no, dld.approved_loan_amount, bpd.interest_rate, bpd.accepted_tenor')
+			$query = $this->db->select('dld.id, bl.borrower_id, bl.pan, ad.r_pincode, bl.name, ll.name as lender_name, bpd.loan_no, dld.approved_loan_amount, bpd.interest_rate, bpd.accepted_tenor,bl.gender,bl.occuption_id,bl.marital_status,ad.r_state,ad.present_residence,bl.highest_qualification')
 				->join('p2p_borrowers_list bl', 'ON bl.id = dld.borrower_id', 'left')
 				->join('p2p_borrower_address_details ad', 'ON ad.borrower_id = dld.borrower_id', 'left')
 				->join('p2p_lender_list ll', 'ON ll.user_id = dld.lender_id', 'left')
@@ -582,13 +582,19 @@ class P2precovery extends CI_Controller
 						'borrower_id' => $result['borrower_id'],
 						'borrower_name' => $result['name'],
 						'pan' => $result['pan'],
-						'r_pincode' => $result['r_pincode'],
 						'lender_name' => $result['lender_name'],
 						'loan_amount' => $result['approved_loan_amount'],
 						'interest_rate' => $result['interest_rate'],
 						'tenor' => $result['accepted_tenor'],
 						'total_emi_paid' => $total_emi_paid,
 						'total_emi_unpaid' => $total_emi_unpaid,
+						'gender' => $result['gender'],
+						'r_pincode' => $result['r_pincode'],
+						'r_state' => $result['r_state'],
+						'occuption_id' => $result['occuption_id'],
+						'marital_status' => $result['marital_status'],
+						'present_residence' => $result['present_residence'],
+						'highest_qualification' => $result['highest_qualification'],
 					);
 
 
@@ -601,13 +607,19 @@ class P2precovery extends CI_Controller
 					'borrower_id',
 					'borrower_name',
 					'pan',
-					'pincode',
 					'lender_name',
 					'loan_amount',
 					'interest_rate',
 					'tenor',
 					'total_emi_paid',
-					'total_emi_unpaid');
+					'total_emi_unpaid',
+					'gender',
+					'r_pincode',
+					'r_state',
+					'occuption_id',
+					'marital_status',
+					'present_residence',
+					'highest_qualification',);
 				foreach ($loan_details as $key => $loan) {
 					if ($i == 1) {
 						fputcsv($fp, $head);
@@ -858,6 +870,198 @@ class P2precovery extends CI_Controller
 			redirect(base_url() . 'login/admin-login');
 		}
 	}*/
+	
+	
+	public function downloadLoansAll()
+	{
+		if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'recovery')
+		 {
+			$query = $this->db->select('dld.id, bl.borrower_id, bl.pan, bl.name,bl.email,bl.mobile,bl.dob,bpd.loan_no, dld.date_created AS disbursement_date, dld.approved_loan_amount,bl.gender,ad.r_state,ad.residence_type ,ad.r_pincode,ad.r_address,emi.created_date as close_date,emi.emi_balance')
+				->join('p2p_borrowers_list bl', 'ON bl.id = dld.borrower_id', 'left')
+				->join('p2p_borrower_address_details ad', 'ON ad.borrower_id = dld.borrower_id', 'left')
+				->join('p2p_bidding_proposal_details bpd', 'ON bpd.bid_registration_id = dld.bid_registration_id', 'left')
+				->join('p2p_borrower_emi_details emi', 'ON emi.disburse_loan_id = dld.id', 'left')
+				->group_by('dld.id')
+				->get_where('p2p_disburse_loan_details as dld', array('dld.id !=' => NULL));
+				
+			if ($this->db->affected_rows() > 0) {
+				$results = $query->result_array();
+				foreach ($results as $result) {
+				     $date=date_create($result['dob']);
+                     $dob= "'".date_format($date,"dmY");
+				     $date1=date_create($result['disbursement_date']);
+                     $disbursement_date= "'".date_format($date1,"dmY");
+					 $date2=date_create($result['close_date']);
+                     $close_date= "'".date_format($date2,"dmY");
+					$loan_details[] = array(
+						'Consumer Name' => $result['name'],
+						'Date of Birth' =>$dob,
+						'Gender' => $result['gender'],
+						'Income Tax ID Number' => $result['pan'],
+						'Passport Number' => '',
+						'Passport Issue Date' => '',
+						'Passport Expiry Date' => '',
+						'Voter ID Number' => '',
+						'Driving License Number' => '',
+						'Driving License Issue Date' => '',
+						'Driving License Expiry Date' => '',
+						'Ration Card Number' => '',
+						'Universal ID Number' => '',
+						'Additional ID #1' => '',
+						'Additional ID #2' => '',
+						'mobile' => $result['mobile'],
+						'Telephone No.Residence' => '',
+					    'Telephone No.Office' => '',
+					    'Extension Office' => '',
+				        'Telephone No.Other' => '',
+				        'Extension Other' => '',
+				        'Email ID 1' => $result['email'],
+				        'Email ID 2' => '',
+				        'Address 1' => $result['r_address'],
+				        'State Code 1' => $result['r_state'],
+				        'PIN Code 1' => $result['r_pincode'],
+				        'Address Category 1' => $result['residence_type'],
+				        'Residence Code 1' => '',
+				        'Address 2' => '',
+				        'State Code 2' => '',
+				        'PIN Code 2' => '', 
+				        'Address Category 2' => '',
+				        'Residence Code 2' => '',
+				        'Current/New Member Code' => '',
+				        'Current/New Member Short Name' => '',
+				        'Curr/New Account No' => $result['loan_no'],
+				        'Account Type' => '',
+				        'Ownership Indicator' => '',
+				        'Date Opened/Disbursed' => $disbursement_date, 
+						'Date of Last Payment' => $close_date, 
+						'Date Closed' => $close_date,
+						'Date Reported' => '',
+						'High Credit/Sanctioned Amt' => $result['approved_loan_amount'],
+						'Current Balance' => $result['emi_balance'],
+						'Amt Overdue' => $result['emi_balance'],
+						'No of Days Past Due' => '',
+						'Old Mbr Code' => '',
+						'Old Mbr Short Name' => '',
+					    'Old Acc No' => '',
+				        'Old Acc Type' => '',
+				        'Old Ownership Indicator' => '',
+				        'Suit Filed / Wilful Default' => '',
+				        'Credit Facility Status' => '',
+				        'Asset Classification' => '', 
+						'Value of Collateral' => '',
+						'Type of Collateral' => '',
+						'Credit Limit' => '',
+						'Cash Limit'=> '',
+						'Rate of Interest' => '',
+						'RepaymentTenure' => '',
+						'EMI Amount' => '',
+						'Written- off Amount (Total)' => '',
+						'Written- off Principal Amount' => '',
+						'Settlement Amt' => '',
+						'Payment Frequency' => '',
+						'Actual Payment Amt' => '',
+						'Occupation Code' => '',
+						'Income' => '',
+						'Net/Gross Income Indicator' => '',
+						'Monthly/Annual Income Indicator' => '',);
+
+				}
+				header("Content-type: application/csv");
+				header("Content-Disposition: attachment; filename=Loan-file.csv");
+				$fp = fopen('php://output', 'w');
+				
+				$i = 1;
+				$head = array('Consumer Name',
+					'Date of Birth',
+					'Gender',
+					'Income Tax ID Number',
+					'Passport Number',
+					'Passport Issue Date',
+					'Passport Expiry Date',
+					'Voter ID Number',
+					'Driving License Number',
+					'Driving License Issue Date',
+					'Driving License Expiry Date',
+					'Ration Card Number',
+					'Universal ID Number',
+					'Additional ID #1',
+					'Additional ID #2',
+					'Telephone No.Mobile',
+					'Telephone No.Residence',
+				    'Telephone No.Office',
+				    'Extension Office',
+			        'Telephone No.Other ',
+			        'Extension Other',
+			        'Email ID 1',
+			        'Email ID 2',
+			        'Address 1',
+			        'State Code 1',
+			        'PIN Code 1',
+			        'Address Category 1',
+			        'Residence Code 1',
+			        'Address 2',
+			        'State Code 2',
+			        'PIN Code 2',
+			        'Address Category 2',
+			        'Residence Code 2',
+			        'Current/New Member Code',
+			        'Current/New Member Short Name',
+			        'Curr/New Account No',
+			        'Account Type',
+			        'Ownership Indicator',
+			        'Date Opened/Disbursed', 
+					'Date of Last Payment',
+					'Date Closed',
+					'Date Reported',
+					'High Credit/Sanctioned Amt',
+					'Current  Balance',
+					'Amt Overdue',
+					'No of Days Past Due',
+					'Old Mbr Code',
+					'Old Mbr Short Name',
+				    'Old Acc No',
+			        'Old Acc Type',
+			        'Old Ownership Indicator',
+			        'Suit Filed / Wilful Default',
+			        'Credit Facility Status',
+			        'Asset Classification', 
+					'Value of Collateral',
+					'Type of Collateral',
+					'Credit Limit',
+					'Cash Limit',
+					'Rate of Interest',
+					'RepaymentTenure',
+					'EMI Amount',
+					'Written- off Amount (Total) ',
+					'Written- off Principal Amount',
+					'Settlement Amt',
+					'Payment Frequency',
+					'Actual Payment Amt',
+					'Occupation Code',
+					'Income',
+					'Net/Gross Income Indicator',
+					'Monthly/Annual Income Indicator',);
+
+
+				foreach ($loan_details as $key => $loan) {
+					if ($i == 1) {
+						fputcsv($fp, $head);
+					}
+					fputcsv($fp, $loan);
+					$i++;
+				}
+				fclose($fp);
+				exit;
+			} else {
+				return false;
+			}
+		} else {
+			$msg = "Please Login First";
+			$this->session->set_flashdata('notification', array('error' => 1, 'message' => $msg));
+			redirect(base_url() . 'login/admin-login');
+		}
+	}
+
 
 }
 

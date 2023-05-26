@@ -37,7 +37,7 @@ class Commonapimodel extends CI_Model{
     public function Send_verification_email_code($source)
     {
         $this->db-> select('id, name, email');
-        $this->db-> f2p_borrom('prowers_list');
+        $this->db-> from('p2p_borrowers_list');
         $this->db-> where('email', $this->input->post('email'));
         $this->db-> limit(1);
         $query = $this->db->get();
