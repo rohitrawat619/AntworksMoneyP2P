@@ -300,7 +300,7 @@ class Investapi extends REST_Controller{
 			 $this->form_validation->set_rules('amount','Amount','required');
 			 $this->form_validation->set_rules('ant_txn_id','Transaction Id','required');
 			  if ($this->form_validation->run() == TRUE) {
-				  $query = $this->cldb->select('Interest_Rate,hike_rate,Pre_Mat_Rate')->get_where('invest_scheme_details',array('id'=>$this->input->post('scheme_id')));
+				  $query = $this->cldb->select('Interest_Rate,hike_rate')->get_where('invest_scheme_details',array('id'=>$this->input->post('scheme_id')));
 				   if($this->cldb->affected_rows()>0){
 					   $investment_no = $this->create_investment_no();
 						   $result = (array)$query->row();
@@ -312,9 +312,7 @@ class Investapi extends REST_Controller{
 									'mobile' => $this->input->post('phone'),
 									'scheme_id' => $this->input->post('scheme_id'),
 									'amount' => $this->input->post('amount'),
-									'basic_rate' => $result['Interest_Rate'],
-									'hike_rate' => $result['hike_rate'],
-									'pre_mat_rate' => $result['Pre_Mat_Rate'],
+									'invest_time_interest_rate' => ($result['hike_rate'])?$result['hike_rate']:$result['Interest_Rate'],
 									'ant_txn_id' => $this->input->post('ant_txn_id'),
 									'source' => 'surge',
 								));
@@ -392,60 +390,6 @@ class Investapi extends REST_Controller{
                    $response = array(
 							'status' => 1,
 							'investment_details' => $investment_details,
-						);
-					$this->set_response($response, REST_Controller::HTTP_OK);
-					return;
-			}else {
-				$errmsg = array("error_msg" => validation_errors());
-				$this->set_response($errmsg, REST_Controller::HTTP_OK);
-				return;
-			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
-	}
-	public function redemption_request_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
-			 $_POST = json_decode(file_get_contents('php://input'), true);
-			
-			 $this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
-			 $this->form_validation->set_rules('investment_no','Investment No.','required');
-			  if ($this->form_validation->run() == TRUE) {
-				  $redemption_request = $this->Invest_model->redemption_request();
-				  
-                   $response = array(
-							'status' => 1,
-							'redemption_request' => $redemption_request,
-						);
-					
-					$this->set_response($response, REST_Controller::HTTP_OK);
-					return;
-			}else {
-				$errmsg = array("error_msg" => validation_errors());
-				$this->set_response($errmsg, REST_Controller::HTTP_OK);
-				return;
-			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
-	}
-	public function redemption_status_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
-			$_POST = json_decode(file_get_contents('php://input'), true);
-			
-			 $this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
-			 $this->form_validation->set_rules('investment_no','Investment No.','required');
-			  if ($this->form_validation->run() == TRUE) {
-				  
-				  $this->cldb->where('investment_No', $this->input->post('investment_no'));
-				  $this->cldb->where('mobile', $this->input->post('phone'));
-				  $this->cldb->where('redemption_status', 0);
-                  $this->cldb->set('redemption_status', 1);
-                  $this->cldb->set('redemption_date', date('Y-m-d h:i:sa'));
-                  $this->cldb->update('p2p_lender_reinvestment');
-				   $response = array(
-							'status' => 1,
-							'mes' => 'Redemption in Process',
 						);
 					$this->set_response($response, REST_Controller::HTTP_OK);
 					return;

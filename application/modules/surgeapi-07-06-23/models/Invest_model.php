@@ -206,9 +206,8 @@ public function basic_bank_kyc($details) {
 		
 		$invested_amount = 0;
         $current_value = 0;
-        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
-		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.redemption_status'=>0));
-		
+        $query = $this->cldb->select('ISD.*, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.invest_time_interest_rate, LI.redemption_date, LI.created_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
+		->get_where('p2p_lender_reinvestment as LI',array('mobile'=>$postVal['phone'],'source'=>'surge','redemption_status'=>0));
         if($this->cldb->affected_rows()>0)
         {
             $result = $query->result_array();
@@ -223,40 +222,23 @@ public function basic_bank_kyc($details) {
 					   $redemption_date = date('d-m-Y', strtotime($row['redemption_date']));
 				   }
 				   
-				   if($row['hike_rate'] > $row['basic_rate']){
-					   $interest_rate = $row['hike_rate'];
-				   }else{
-					   $interest_rate = $row['basic_rate'];
-				   }
-				   
-				   $calculate_amount = $this->calculate_interest_per_day($interest_rate,$row['amount'],$row['investment_date']);
+				   $calculate_amount = $this->calculate_interest_per_day($row['invest_time_interest_rate'],$row['amount'],$row['created_date']);
 				  //pr($calculate_amount);exit;
 				   $investment_arr[$i]['investment_No'] = $row['investment_No'];
 				   $investment_arr[$i]['scheme_name'] = $row['Scheme_Name'];
 				   $investment_arr[$i]['lockin'] = ($row['Lockin']==1)?'Yes':'No';
 				   $investment_arr[$i]['amount'] = $row['amount'];
-				   $investment_arr[$i]['basic_rate'] = $row['basic_rate'].'%';
+				   $investment_arr[$i]['interest_rate'] = $row['Interest_Rate'].'%';
 				   $investment_arr[$i]['hike_rate'] = $row['hike_rate'].'%';
-				   $investment_arr[$i]['pre_mat_rate'] = $row['pre_mat_rate'].'%';
+				   $investment_arr[$i]['invest_time_interest_rate'] = $row['invest_time_interest_rate'].'%';
 				   $investment_arr[$i]['no_of_days'] = $calculate_amount['days'];
 				   $investment_arr[$i]['interest_perday'] = $calculate_amount['interest_perday'];
 				   $investment_arr[$i]['final_interest'] = $calculate_amount['final_interest'];
 				   $investment_arr[$i]['current_value'] = $calculate_amount['current_value'];
-				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['investment_date']));
+				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['created_date']));
 				   $investment_arr[$i]['redemption_date'] = $redemption_date;
-				   $investment_arr[$i]['redemption_status'] = $row['redemption_status'];
 				   $total_investment_amount += $row['amount'];
 				   $total_current_value += $calculate_amount['current_value'];
-				 #Update Final Interest and current Value
-				   $this->cldb->where('investment_No', $row['investment_No']);
-				   $this->cldb->where('mobile', $postVal['phone']);
-				   $this->cldb->update('p2p_lender_reinvestment',array(
-				   'total_no_of_days'=>$calculate_amount['days'],
-				   'total_interest'=>$calculate_amount['final_interest'],
-				   'total_current_value'=>$calculate_amount['current_value']
-				     )
-				   );
-				   #End Update
 				   $i++;
 				  }
 				  $past_investment = $this->past_portfolio();
@@ -275,38 +257,27 @@ public function basic_bank_kyc($details) {
 					 );
 			
 			return $investment_details;
-        }else{
-			$past_portfolio = $this->past_portfolio();
-				  if(!empty($past_portfolio)){
-					  $past_portfolio = $past_portfolio;
-				  }else{
-					  $past_portfolio = array();
-				  }
-            $past_investment = array(
-					 'current_investment'=>array(),
-					 'past_investment'=>$past_portfolio,
-					 'total_investment_amount'=>0,
-					 'total_current_value'=>0,
-					 'total_return'=>0,
-					 );
-			return $past_investment;
+        }
+        else
+        {
+            return false;
         }
     }
 	public function past_portfolio()
     {
 		$postVal = $this->input->post();
 		
-		/* $invested_amount = 0;
-        $current_value = 0; */
-        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.total_no_of_days, LI.total_interest, LI.total_current_value, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
-		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'source'=>'surge','redemption_status'=>1));
+		$invested_amount = 0;
+        $current_value = 0;
+        $query = $this->cldb->select('ISD.*, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.invest_time_interest_rate, LI.redemption_date, LI.created_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
+		->get_where('p2p_lender_reinvestment as LI',array('lender_id'=>$postVal['lender_id'],'source'=>'surge','redemption_status'=>1));
         if($this->cldb->affected_rows()>0)
         {
             $result = $query->result_array();
-			//pr($result);exit;
 			$i = 0;
 			$total_investment_amount = 0;
 			$total_current_value = 0;
+			//$investment_arr = array();
 				foreach($result as $row)
 				   { 
 				   if($row['redemption_date'] == '0000-00-00 00:00:00'){
@@ -314,15 +285,21 @@ public function basic_bank_kyc($details) {
 				   }else{
 					   $redemption_date = date('d-m-Y', strtotime($row['redemption_date']));
 				   }
+				   $calculate_amount = $this->calculate_interest_per_day($row['invest_time_interest_rate'],$row['amount'],$row['created_date']);
+				   
 				   $investment_arr[$i]['investment_No'] = $row['investment_No'];
 				   $investment_arr[$i]['scheme_name'] = $row['Scheme_Name'];
+				   $investment_arr[$i]['lockin'] = ($row['Lockin']==1)?'Yes':'No';
 				   $investment_arr[$i]['amount'] = $row['amount'];
-				   $investment_arr[$i]['no_of_days'] = $row['total_no_of_days'];
-				   $investment_arr[$i]['final_interest'] = $row['total_interest'];
-				   $investment_arr[$i]['current_value'] = $row['total_current_value'];
-				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['investment_date']));
+				   $investment_arr[$i]['interest_rate'] = $row['Interest_Rate'].'%';
+				   $investment_arr[$i]['hike_rate'] = $row['hike_rate'].'%';
+				   $investment_arr[$i]['invest_time_interest_rate'] = $row['invest_time_interest_rate'].'%';
+				   $investment_arr[$i]['no_of_days'] = $calculate_amount['days'];
+				   $investment_arr[$i]['interest_perday'] = $calculate_amount['interest_perday'];
+				   $investment_arr[$i]['final_interest'] = $calculate_amount['final_interest'];
+				   $investment_arr[$i]['current_value'] = $calculate_amount['current_value'];
+				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['created_date']));
 				   $investment_arr[$i]['redemption_date'] = $redemption_date;
-				   $investment_arr[$i]['redemption_status'] = $row['redemption_status'];
 				   $i++;
 				  }
 			
@@ -333,84 +310,15 @@ public function basic_bank_kyc($details) {
             return false;
         }
     }
-	public function redemption_request()
-    {
-		$postVal = $this->input->post();
-		
-		
-        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as invest_date, bank.razorpay_response_fav')
-		->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
-		->join('p2p_borrower_bank_res as bank', 'bank.mobile = LI.mobile', 'left')
-		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.investment_No'=>$postVal['investment_no']));
-        if($this->cldb->affected_rows()>0)
-        {
-            $result = $query->row();
-			if($result->redemption_date == '0000-00-00 00:00:00'){
-				   $redemption_date = '00-00-0000';
-		    }else{
-			   $redemption_date = date('d-m-Y', strtotime($result->redemption_date));
-		    }
-			//pr($result);exit;
-			$bank_details = json_decode($result->razorpay_response_fav, true);
-			$bank_name = $bank_details['fund_account']['bank_account']['bank_name'];
-			$account_number = $bank_details['fund_account']['bank_account']['account_number'];
-			$no_of_days = $this->cal_no_of_days($result->invest_date);
-			
-			#Cooling Period
-			
-			if($no_of_days <= $result->Cooling_Period){
-				$final_amount = $result->amount;
-			}else{
-				   if($result->Lockin == 1 && $no_of_days <= $result->Lockin){ # Lockin => Yes
-				  
-				        $interest_rate = $result->pre_mat_rate;
-				   }
-				   if($result->Lockin == 0 && $result->hike_rate > $result->basic_rate){ # Lockin => NO
-				  
-				        $interest_rate = $result->hike_rate;
-				   }
-				   if($result->Lockin == 0 && $result->hike_rate < $result->basic_rate){ 
-				   
-						$interest_rate = $result->basic_rate;
-				   }
-					
-				$calculate_amount = $this->calculate_interest_per_day($interest_rate,$result->amount,$result->invest_date);
-				
-				$no_of_days = (string)$calculate_amount['days'];
-				$interest_amount = (string)$calculate_amount['final_interest'];
-				$final_amount = $calculate_amount['current_value'];
-				
-			}
-			
-			$result_arr['investment_No'] = $result->investment_No;
-			$result_arr['scheme_Name'] = $result->Scheme_Name;
-			$result_arr['investment_date'] = date('d-m-Y', strtotime($result->invest_date));
-			$result_arr['redemption_date'] = $redemption_date;
-			$result_arr['redemption_status'] = $result->redemption_status;
-			$result_arr['amount'] = $result->amount;
-			$result_arr['final_amount'] = (string)$final_amount;
-			$result_arr['interest_rate'] = $interest_rate?$interest_rate.'%':'';
-			$result_arr['no_of_days'] = $no_of_days?$no_of_days:'';
-			$result_arr['interest_amount'] = $interest_amount?$interest_amount:'';
-			$result_arr['bank_name'] = $bank_name;
-			$result_arr['account_number'] = $account_number;
-			//pr($result_arr);exit;
-			return $result_arr;
-		}else{
-			return false;
-		}		
-        
-    }
+	
 	public function calculate_interest_per_day($rate,$amount,$startdate){
-		$days = $this->cal_no_of_days($startdate);
+		$start_date = strtotime(date('Y-m-d', strtotime($startdate)));
+		$end_date = strtotime(date('Y-m-d'));
+		$days = (($end_date - $start_date) / 60 / 60 / 24);
 		$interestperday = $amount * (($rate) / 100)/365;
 		$finalinterest = $days * $interestperday;
 		return $interest_amount_day = array('days' => $days,'interest_perday'=>round($interestperday,2),'final_interest'=>round($finalinterest,2),'current_value'=>round($finalinterest+$amount,2));
 	}
-    public function cal_no_of_days($startdate){
-		$start_date = strtotime(date('Y-m-d', strtotime($startdate)));
-		$end_date = strtotime(date('Y-m-d'));
-		return $days = (($end_date - $start_date) / 60 / 60 / 24);
-	}
+
 }
 ?>
