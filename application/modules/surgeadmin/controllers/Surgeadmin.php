@@ -2,22 +2,21 @@
 
 class Surgeadmin extends CI_Controller
 {
-  
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->cldb = $this->load->database('credit-line', TRUE);
 		$this->load->model('Investmodel');
 		$this->load->library('form_validation');
-	    $this->load->helper('custom');
-		
+		$this->load->helper('custom');
 	}
 
 	public function index()
 	{
 		$this->load->view('templates/header');
 		$this->load->view('login');
-		$this->load->model('Investmodel');
+		$this->load->model('Investmodel'); 
 	}
 
 	function login()
@@ -28,49 +27,46 @@ class Surgeadmin extends CI_Controller
 
 	function loginnow()
 	{
-	
-			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				$this->form_validation->set_rules('email', 'Email', 'required');
-				$this->form_validation->set_rules('password', 'Password', 'required');
 
-				if ($this->form_validation->run() == TRUE) {
-					$email = $this->input->post('email');
-					$password = md5(($this->input->post('password')));
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$this->form_validation->set_rules('email', 'Email', 'required');
+			$this->form_validation->set_rules('password', 'Password', 'required');
+
+			if ($this->form_validation->run() == TRUE) {
+				$email = $this->input->post('email');
+				$password = md5(($this->input->post('password')));
 
 
-					$this->load->model('surge_model');
-					$status = $this->surge_model->checkPassword($password,$email);
-					if ($status) {
-						$id = $status->id;
-						$email = $status->email; 
-						$role = $status->role; 
-						
+				$this->load->model('surge_model');
+				$status = $this->surge_model->checkPassword($password, $email);
+				if ($status) {
+					$id = $status->id;
+					$email = $status->email;
+					$role = $status->role;
 
-						$session_data = array(
-							'id' => $id,
-							'email' => $email
-						);
 
-						$this->session->set_userdata('session_data', $session_data);
-                    if($role == 'admin'){
-	                 redirect(base_url('Surgeadmin/teamdashboard'));
-                   } elseif($role == 'partner'){
-	               redirect(base_url('Surgeadmin/partnerdashboard'));
-                   } else {
-	                redirect(base_url('Surgeadmin/userdashboard'));
-                       }
-						
+					$session_data = array(
+						'id' => $id,
+						'email' => $email
+					);
+
+					$this->session->set_userdata('session_data', $session_data);
+					if ($role == 'admin') {
+						redirect(base_url('Surgeadmin/teamdashboard'));
+					} elseif ($role == 'partner') {
+						redirect(base_url('Surgeadmin/partnerdashboard'));
 					} else {
-						$this->session->set_flashdata('error', 'Email or Password is Wrong');
-						redirect(base_url('Surgeadmin/login'));
+						redirect(base_url('Surgeadmin/userdashboard'));
 					}
 				} else {
-					$this->session->set_flashdata('error', 'Fill all the required fields');
+					$this->session->set_flashdata('error', 'Email or Password is Wrong');
 					redirect(base_url('Surgeadmin/login'));
 				}
+			} else {
+				$this->session->set_flashdata('error', 'Fill all the required fields');
+				redirect(base_url('Surgeadmin/login'));
 			}
-		
-
+		}
 	}
 
 	function dashboard()
@@ -87,30 +83,35 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('partners/register_partner');
 
 		$this->load->view('templates/footer');
+		
 		removeFlashData();
 	}
 
-	public function vendor_regnow()
+	public function partner_reg()
 	{
 		$this->load->model('Investmodel');
-		
+
 		$this->form_validation->set_rules('Company_Name', 'company_Name', 'required|regex_match[/^([a-z ])+$/i]');
 		$this->form_validation->set_rules('Address', 'address', 'required');
-		$this->form_validation->set_rules('phone', 'Phone', 'required|regex_match[/^[0-9]{10}$/]');
-		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+		$this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^[0-9]{10}$/]');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
 
 		if ($this->form_validation->run() == TRUE) {
 
-			$data = $this->Investmodel->insert_vendor();
-            $this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">vender registerd successfully </div>');
+			$data = $this->Investmodel->insert_partner();
+			$this->session->set_flashdata('flashmsg', 'Partner registerd successfully </div>');
 
-			redirect(base_url('Surgeadmin/allvendors'));
+			redirect(base_url('Surgeadmin/allpartner'));
 		} {
 			$this->register_partner();
 		}
 	}
 
+	
+	
+
+	
 	public function vend_addscheme()
 	{
 		$this->load->model('Investmodel');
@@ -123,36 +124,47 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('partners/vend_addcheme', $data);
 
 		$this->load->view('templates/footer');
+		
 		removeFlashData();
 	}
 
+	
 	public function vend_addschemenow()
 	{
+
+		$this->form_validation->set_rules('Scheme_Name', 'scheme_Name', 'required');
+		$this->form_validation->set_rules('vendor', 'Vendor', 'required');
+		$this->form_validation->set_rules('Min_Inv_Amount', 'min_Inv_Amount', 'required|integer|greater_than[0]');
+		$this->form_validation->set_rules('Max_Inv_Amount', 'max_Inv_Amount', 'required|integer|greater_than[0]');
+		$this->form_validation->set_rules('Aggregate_Amount', 'Aggregate_Amount', 'required');
+		$this->form_validation->set_rules('Lockin', 'lockin');
+		$this->form_validation->set_rules('Lockin_Period', 'lockin_Period','required');
+		$this->form_validation->set_rules('Cooling_Period', 'cooling_Period', 'required|integer');
+		$this->form_validation->set_rules('Interest_Rate', 'interest_Rate');
+		$this->form_validation->set_rules('Hike_Rate', 'hike_Rate');
+		$this->form_validation->set_rules('Pre_Mat_Rate', 'Pre_Mat_Rate');
+		$this->form_validation->set_rules('Withrawl_Anytime', 'withrawl_Anytime', 'required');
+		$this->form_validation->set_rules('Auto_Redeem', 'auto_Redeem', 'required');
+		$this->form_validation->set_rules('Interest_Type', 'interest_Type', 'required');
+
+		if ($this->form_validation->run() == TRUE) {
+			$schemeName = $this->input->post('Scheme_Name');
 	
-	$this->form_validation->set_rules('Scheme_Name', 'scheme_Name', 'required|regex_match[/^([a-z ])+$/i]');
-	$this->form_validation->set_rules('vendor', 'Vendor', 'required');
-	$this->form_validation->set_rules('Min_Inv_Amount', 'min_Inv_Amount', 'required|integer|greater_than[1000]');
-	$this->form_validation->set_rules('Max_Inv_Amount', 'max_Inv_Amount', 'required|integer|less_than[25000]');
-	$this->form_validation->set_rules('Aggregate_Amount', 'Aggregate_Amount', 'required');
-	$this->form_validation->set_rules('Lockin', 'lockin', 'required');
-	$this->form_validation->set_rules('Lockin_Period', 'lockin_Period', 'required|integer');
-	$this->form_validation->set_rules('Cooling_Period', 'cooling_Period', 'required|integer');
-	$this->form_validation->set_rules('Interest_Rate', 'interest_Rate', 'required|integer');
-	$this->form_validation->set_rules('Pre_Mat_Rate', 'Pre_Mat_Rate', 'required|integer');
-	$this->form_validation->set_rules('Withrawl_Anytime', 'withrawl_Anytime', 'required');
-	$this->form_validation->set_rules('Auto_Redeem', 'auto_Redeem', 'required');
-	$this->form_validation->set_rules('Interest_Type', 'interest_Type', 'required');
-		
-		if($this->form_validation->run() == TRUE) {
-			$data = $this->Investmodel->insert_scheme();
-			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Scheme registerd successfully </div>');
-			redirect(base_url('Surgeadmin/allschemes'));
-		} {
+			if (!$this->Investmodel->isSchemeNameExists($schemeName)) {
+				$data = $this->Investmodel->insert_scheme();
+				$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Scheme registered successfully</div>');
+				redirect(base_url('Surgeadmin/allschemes'));
+				
+			} else {
+				
+				$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Scheme name already exists</div>');
+				redirect(base_url('Surgeadmin/vend_addscheme'));
+			}
+		} else {
 			$this->vend_addscheme();
 		}
-			
-		}
 		
+	 }
 
 	function add_representative()
 	{
@@ -164,25 +176,27 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('partners/add_representative', $data);
 
 		$this->load->view('templates/footer');
+		
 		removeFlashData();
 	}
+
 	public function reg_representative()
 	{
 		$this->load->model('Investmodel');
-		
+
 		$this->form_validation->set_rules('RepName', 'repName', 'required|regex_match[/^([a-z ])+$/i]');
 		$this->form_validation->set_rules('vender', 'Vender', 'required');
 		$this->form_validation->set_rules('RepDesignation', 'repDesignation', 'required|regex_match[/^([a-z ])+$/i]');
 		$this->form_validation->set_rules('Repphone', 'repphone', 'required|regex_match[/^[0-9]{10}$/]');
 		$this->form_validation->set_rules('Repemail', 'repemail', 'trim|required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|matches[password]');
-	
+
 
 
 		if ($this->form_validation->run() == TRUE) {
 
 			$data = $this->Investmodel->insert_repersentive();
-            $this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive registerd successfully </div>');
+			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive registerd successfully </div>');
 
 			redirect(base_url('Surgeadmin/allrepersentative'));
 		} {
@@ -190,52 +204,7 @@ class Surgeadmin extends CI_Controller
 		}
 	}
 
-
-	public function businessTeamlogin()
-	{
-
-		$this->load->view('templates/header');
-		$this->load->view('buisnessteam/businessTeamlogin');
-	}
-	public function buisnesloginnow()
-	{
-
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-			$this->form_validation->set_rules('email', 'Email', 'required');
-			$this->form_validation->set_rules('password', 'Password', 'required');
-
-			if ($this->form_validation->run() == TRUE) {
-				$email = $this->input->post('email');
-				$password = $this->input->post('password');
-
-
-				// $this->load->model('Investmodel');
-				// $status = $this->Investmodel->checkPassword($password,$email);
-				if (($email == "star@test.com") && ($password == "test")) {
-					// $username = $status->fullname;
-					// $email = $status->email; 
-					// $UID = $status->UID;
-					// $VID = $status->Vendor_ID;
-
-					$session_data = array(
-						'fullname' => "testing",
-						'email' => $email
-					);
-
-					$this->session->set_userdata('Teamloginsession', $session_data);
-
-					redirect(base_url('Surgeadmin/teamdashboard'));
-				} else {
-					$this->session->set_flashdata('error', 'Email or Password is Wrong');
-					redirect(base_url('Surgeadmin/login'));
-				}
-			} else {
-				$this->session->set_flashdata('error', 'Fill all the required fields');
-				redirect(base_url('Surgeadmin/businessTeamlogin'));
-			}
-		}
-	}
-
+	
 
 	public	function teamdashboard()
 	{
@@ -253,8 +222,7 @@ class Surgeadmin extends CI_Controller
 	}
 	public	function Partnerloginnow()
 	{
-		// var_dump($this->input->post());
-		// exit;
+	
 
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$this->form_validation->set_rules('email', 'Email', 'required');
@@ -302,14 +270,24 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('partners/vendordashboard');
 	}
 
-	public function allvendors()
+	public function allpartner()
 	{
 
 		$this->load->model('Investmodel');
 		$this->load->view('templates/teamheader');
 
-		$data['row'] = $this->Investmodel->allvendors_get();
-		$this->load->view('buisnessteam/allvendors', $data);
+		$data['row'] = $this->Investmodel->allpartners_get();
+		$this->load->view('buisnessteam/allpartner', $data);
+		$this->load->view('templates/footer');
+	}
+
+
+	public function allhikelogs()
+	{
+		$this->load->model('Investmodel');
+		$this->load->view('templates/teamheader');
+		$data['row'] = $this->Investmodel->allhikes_get();
+		$this->load->view('buisnessteam/allhikelogs', $data);
 		$this->load->view('templates/footer');
 	}
 
@@ -320,18 +298,96 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('templates/teamheader');
 
 		$data['row'] = $this->Investmodel->allrepersent_gets();
-	
-		$this->load->view('buisnessteam/redeemtions', $data);
+
+		$this->load->view('buisnessteam/allrepersentative', $data);
 		$this->load->view('templates/footer');
 	}
-	public function allschemes()
+
+
+	public function redemptionlist_request()
 	{
 
+		$this->load->model('Investmodel');
+		$this->load->view('templates/teamheader');
+
+		$data['row'] = $this->Investmodel->redemption_gets();
+
+		$this->load->view('buisnessteam/redemptionlist_request', $data);
+		$this->load->view('templates/footer');
+	}
+
+public function redemption_process()
+{
+
+	$this->load->model('Investmodel');
+	$this->load->view('templates/teamheader');
+	$data['row'] = $this->Investmodel->disbursment_gets();
+	$this->load->view('buisnessteam/redemption_process', $data);
+	$this->load->view('templates/footer');
+}
+
+public function redeem()
+{
+
+	$this->load->model('Investmodel');
+	$this->load->view('templates/teamheader');
+	$data['row'] = $this->Investmodel->disburse_gets();
+	$this->load->view('buisnessteam/redemption_redeem', $data);
+	$this->load->view('templates/footer');
+}
+
+public function redemption_pending()
+{
+
+	$this->load->model('Investmodel');
+	$this->load->view('templates/teamheader');
+	$data['row'] = $this->Investmodel->dipending_gets();
+	$this->load->view('buisnessteam/redemption_pending', $data);
+	$this->load->view('templates/footer');
+}
+
+	public function declinelist()
+	{
+		$this->load->model('Investmodel');
+		$this->load->view('templates/teamheader');
+
+		$data['row'] = $this->Investmodel->decline_gets();
+		$this->load->view('buisnessteam/redemptionlist', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function Investmentlist()
+	{
+
+		$this->load->model('Investmodel');
+		$this->load->view('templates/teamheader');
+
+		$data['row'] = $this->Investmodel->investment_gets();
+
+		$this->load->view('buisnessteam/Investmentlist', $data);
+		$this->load->view('templates/footer');
+	}
+
+	
+	public function schemelogs($id)
+	{
+
+		$this->load->model('Investmodel');
+		$this->load->view('templates/teamheader');
+		$data['row'] = $this->Investmodel->schemelogs_get($id);
+
+		$this->load->view('buisnessteam/schemelog', $data);
+		$this->load->view('templates/footer');
+	}
+
+
+	public function allschemes()
+	{
 
 		$this->load->model('Investmodel');
 		$this->load->view('templates/teamheader');
 		$data['row'] = $this->Investmodel->allschemes_get();
-		
+
 		$this->load->view('buisnessteam/allschemes', $data);
 		$this->load->view('templates/footer');
 	}
@@ -345,16 +401,72 @@ class Surgeadmin extends CI_Controller
 
 
 		$data['schemelist'] = $this->Investmodel->updateschemes($id);
-      
+
 
 		$this->load->view('buisnessteam/editscheme', $data);
 		$this->load->view('templates/footer');
+		
 		removeFlashData();
 	}
+
+
+	public function redemptionapproved($id, $st)
+	{
+	       
+		$this->Investmodel->redemptionapproved($id, $st);
+		$this->session->set_flashdata('flashmsg', '<div class="alert alert-warning text-center">Pending for redemption </div>');
+		redirect(base_url() . 'Surgeadmin/redemption_pending/');
+	}
+
+	
+	
+	public function disburseapproved($id, $st)
+	{
+	       
+		$this->Investmodel->disburseapproved($id, $st);
+		$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Disbursment Successfully  </div>');
+		redirect(base_url() . 'Surgeadmin/redeem/');
+	}
+
+	/*public function pendingapproved($id, $st)
+	{
+	       
+		$this->Investmodel->pendingapproved($id, $st);
+		$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Disbursment Is In Pending  </div>');
+		redirect(base_url() . 'Surgeadmin/dipending/');
+	}*/
+
+
+	public function update_redemption_status() {  
+			
+		$redemption_status = $this->input->post('redemption_status');
+		$updatedRows = $this->Investmodel->updateRedemptionStatus($redemption_status);
+	   echo json_encode($updatedRows);
+	   }
+
+
+	
+	public function decline($id, $st)
+	{
+	       
+		$this->Investmodel->decline($id, $st);
+		$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Declined Successfylly </div>');
+		redirect(base_url() . 'Surgeadmin/redemptionlist/');
+	}
+
+	public function statusupdate($id, $status)
+	{
+
+		$st = ($status == 0 ? 1 : 0);
+		$this->Investmodel->statusupdate($id, $st);
+		$this->session->set_flashdata('flashmsg', '<div class="alert alert-warning text-center">Status Updated Successfylly </div>');
+		redirect(base_url() . 'Surgeadmin/allschemes/');
+	}
+
 	public function updatescheme()
 	{
 		$this->load->model('Investmodel');
-		
+
 		$this->load->view('templates/teamheader');
 
 		$data = array(
@@ -367,22 +479,24 @@ class Surgeadmin extends CI_Controller
 			'Lockin_Period' => $this->input->post('Lockin_Period'),
 			'Cooling_Period' => $this->input->post('Cooling_Period'),
 			'Interest_Rate' => $this->input->post('Interest_Rate'),
+			'hike_rate' => $this->input->post('hike_rate'),
 			'Pre_Mat_Rate' => $this->input->post('Pre_Mat_Rate'),
 			'Withrawl_Anytime' => $this->input->post('Withrawl_Anytime'),
 			'Auto_Redeem' => $this->input->post('Auto_Redeem'),
 			'Interest_Type' => $this->input->post('Interest_Type'),
 
 		);
+	
 		$result = $this->Investmodel->update_scheme($data);
 
 		$this->load->view('buisnessteam/allschemes', $data);
 		$this->load->view('templates/footer');
 		if ($result) {
-			
+
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Scheme Updated Successfully </div>');
 			redirect(base_url() . 'Surgeadmin/allschemes/');
 		} else {
-			
+
 			$this->session->set_flashdata('flashmsg', 'Scheme Not Updated Successfylly');
 			redirect(base_url() . 'Surgeadmin/allschemes/');
 		}
@@ -399,9 +513,8 @@ class Surgeadmin extends CI_Controller
 
 		$this->load->view('buisnessteam/editvendor', $data);
 		$this->load->view('templates/footer');
-	
-         removeFlashData();
 
+		removeFlashData();
 	}
 	public function editscheme($id)
 	{
@@ -426,16 +539,16 @@ class Surgeadmin extends CI_Controller
 		);
 		$result = $this->Investmodel->update_user($data);
 
-		$this->load->view('buisnessteam/allvendors', $data);
+		$this->load->view('buisnessteam/allpartner', $data);
 		$this->load->view('templates/footer');
 		if ($result) {
-			$msg = "Update successfully";
-		$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">vender updated successfully</div>');
-			redirect(base_url() . 'Surgeadmin/allvendors/');
+			
+			$this->session->set_flashdata('flashmsg', 'Partner updated successfully');
+			redirect(base_url() . 'Surgeadmin/allpartner/');
 		} else {
-			$msg = "Nothing to update";
-			$this->session->set_flashdata('notification', array('error' => 1, 'message' => $msg));
-			redirect(base_url() . 'Surgeadmin/allvendors/' . $this->input->post('admin_id'));
+			
+			$this->session->set_flashdata('flashmsg', 'Partner not updated successfully');
+			redirect(base_url() . 'Surgeadmin/allpartner/');
 		}
 	}
 	public	function logout()
@@ -451,14 +564,14 @@ class Surgeadmin extends CI_Controller
 		$this->cldb->where('VID', $VID);
 		$row1 = $this->cldb->delete('invest_vendors');
 		if ($row1 == true) {
-			
-			$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Vender deleted successfully</div>');
+
+			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Pender deleted successfully</div>');
 		} else {
-			
-			$this->session->set_flashdata('error', 'Vender not deleted successfully');
+
+			$this->session->set_flashdata('error', 'Partner not deleted successfully');
 		}
 
-		redirect(base_url('Surgeadmin/allvendors'));
+		redirect(base_url('Surgeadmin/allpartner'));
 	}
 
 	public function deleterepersent($rid)
@@ -490,6 +603,8 @@ class Surgeadmin extends CI_Controller
 		redirect(base_url('Surgeadmin/allschemes'));
 	}
 
+	
+
 
 	public function editrepersent($rid)
 	{
@@ -497,7 +612,7 @@ class Surgeadmin extends CI_Controller
 		$data['result'] = $this->Investmodel->scheme_vend_get();
 		$this->load->view('templates/teamheader');
 
-	
+
 		$data['representlist'] = $this->Investmodel->editrepersents($rid);
 
 
@@ -505,7 +620,6 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('templates/footer');
 
 		removeFlashData();
-
 	}
 
 
@@ -527,11 +641,11 @@ class Surgeadmin extends CI_Controller
 		$this->load->view('buisnessteam/allrepersentative', $data);
 		$this->load->view('templates/footer');
 		if ($result) {
-			
+
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive Updated Successfully </div>');
 			redirect(base_url() . 'Surgeadmin/allrepersentative/');
 		} else {
-			
+
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive Updated Successfully </div>');
 			redirect(base_url() . 'Surgeadmin/allrepersentative/');
 		}

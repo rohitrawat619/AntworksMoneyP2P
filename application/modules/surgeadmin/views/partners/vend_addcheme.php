@@ -1,19 +1,32 @@
 <?php 
-if($this->session->userdata('session_data'))
-{
+if($this->session->userdata('session_data'))                              
     $udata = $this->session->userdata('session_data');
 
-}
+
 else
 {
-    redirect(base_url('Surgeadmin/businessTeamlogin'));
+    redirect(base_url('Surgeadmin/login'));
 }
  ?>
 
+<script>
+
+function text(x) {
+	if(x == 1) document.getElementById("Lockin_Period").style.display = "block";
+	else document.getElementById("Lockin_Period").style.display = "none";
+	return;
+}
 
 
 
-		<div class="container">
+</script>
+
+
+
+
+
+
+            <div class="container">
 			<div class="row">
 				<div class="col-md-4"></div>
 				<div class="col-md-4">
@@ -40,10 +53,10 @@ else
                             <div class="mb-3">
                             
 						
-							<label for="exampleInputEmail1" class="form-label">Select Vendor from list</label>
+							<label for="exampleInputEmail1" class="form-label">Select Partner from list</label>
 							
 							<select name="vendor" class="form-control" id="vendor">
-                                    <option value="">Select Vendor from list</option>
+                                    <option value="">Select Partner from list</option>
                                     <?php
 									
 
@@ -82,13 +95,13 @@ else
 						  </div>
                           <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Lockin :</label>
-                            </br> <input type="radio" name ="Lockin" id="Lockin" value="1"> Yes 
-                            <input type="radio" name = "Lockin" id="Lockin" value="0" checked> No </br>
+                            </br> <input type="radio" name ="Lockin" id="Lockin" value="yes" onclick="text(1)" checked> Yes 
+                            <input type="radio" name = "Lockin" id="Lockin" value="no" onclick="text(0)"> No </br>
 							<div style="color:red;">
 							<?php echo form_error('Lockin'); ?>
 							</div>
 						  </div>
-                          <div class="mb-3">
+                          <div class="mb-3" id="Lockin_Period">
 						    <label for="exampleInputEmail1" class="form-label">Lockin Period</label>
 						    <input type="text"  placeholder="Lockin_Period" name="Lockin_Period" class="form-control" id="Lockin_Period" aria-describedby="Lockin_Period" >
 							<div style="color:red;">
@@ -96,7 +109,7 @@ else
 							</div>
 						  </div>
                           <div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">Cooling Period</label>
+						    <label for="exampleInputEmail1" id="lock" class="form-label">Cooling Period</label>
 						    <input type="text"  placeholder="Cooling_Period" name="Cooling_Period" class="form-control" id="Cooling_Period" aria-describedby="Cooling_Period" >
 							<div style="color:red;">
 							<?php echo form_error('Cooling_Period'); ?>
@@ -109,25 +122,34 @@ else
 							<?php echo form_error('Interest_Rate'); ?>
 							</div>
                             </div>
-                            <div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">Pre-Mature Interest Rate</label>
+							<div class="mb-3">
+						    <label for="exampleInputEmail1" class="form-label">Hike Rate</label>
+						    <input type="text"  placeholder="Hike Rate" name="Hike_Rate" class="form-control" id="Hike_Rate" aria-describedby="Hike_Rate">
+							<div style="color:red;">
+							<?php echo form_error('Hike_Rate'); ?>
+							</div>
+                            </div>
+							
+                            <div class="mb-3" id="Pre_Mat_Rate">
+						     <label for="exampleInputEmail1" class="form-label">Pre-Mature Interest Rate</label> 
 						    <input type="text"  placeholder="Pre_Mat_Rate" name="Pre_Mat_Rate" class="form-control" id="Pre_Mat_Rate" aria-describedby="Pre_Mat_Rate">
 							<div style="color:red;">
 							<?php echo form_error('Pre_Mat_Rate'); ?>
 							</div>
 						  </div>
-                          <div class="mb-3">
+						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Withrawl Anytime</label>
-                            </br> <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="1"> Yes 
-                            <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="0" checked> No </br>
+                            </br> <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="yes" checked> Yes 
+                            <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="no"> No </br>
 							<div style="color:red;">
 							<?php echo form_error('Withrawl_Anytime'); ?>
 							</div>
 						  </div>
+
                           <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Auto Redeem</label>
-                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1"> Yes 
-                            <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="0" checked> No </br>
+                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1" checked> Yes 
+                            <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="0"> No </br>
 							<div style="color:red;">
 							<?php echo form_error('Auto_Redeem'); ?>
 							</div>
@@ -150,6 +172,7 @@ else
 
     <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <!-- Op.tion 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
+	
+	

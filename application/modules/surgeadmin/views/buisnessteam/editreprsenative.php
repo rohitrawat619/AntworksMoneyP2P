@@ -31,7 +31,7 @@ else
 						  </div><br> 
 
 						  <div class="mb-3">
-						  <label for="exampleInputEmail1" name="vender" class="form-label">Select Vendor From list</label>
+						  <label for="exampleInputEmail1" name="vender" class="form-label">Select Partner From list</label>
 						  <select name="vender" id="vender" class="form-control">
 						  
 						  <?php

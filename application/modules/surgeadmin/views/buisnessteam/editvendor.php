@@ -8,14 +8,14 @@
 				<div class="col-md-4">
 					<div class="card" style="margin-top: 30px">
 					  <div class="card-header text-center">
-					    Edit Vendor Details
+					    <h2>Edit Partner Details</h2>
 					  </div>
 					  <div class="card-body">
 
 					  
 					   <form method="post" autocomplete="off" action="<?=base_url('Surgeadmin/updatevendor')?>">
 					   	<div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">Company Name</label>
+						    <label for="exampleInputEmail1" class="form-label">Partner Name</label>
 						    <input type="text" placeholder="Company Name" value="<?php echo $adminlist['Company_Name'];?>" name="Company_Name" class="form-control" id="Company_Name" aria-describedby="Company_Name">
 						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Address</label>
@@ -32,7 +32,7 @@
 						  <br>
 						 <div class="text-center">
 						 <input type="hidden" id="VID" name="VID" value="<?php echo $adminlist['VID'];?>">
-						  <button type="submit" class="btn btn-primary">Update Vendor Details</button>
+						  <button type="submit" class="btn btn-primary">Update Partner Details</button>
 						</div>
 
 					

@@ -6,7 +6,7 @@ if($this->session->userdata('session_data'))
 }
 else
 {
-    redirect(base_url('Surgeadmin/businessTeamlogin'));
+    redirect(base_url('Surgeadmin/login'));
 }
  ?>
 
@@ -37,9 +37,9 @@ else
 						  </div><br>
 
 					       <div class="mb-3">
-						  <label for="exampleInputEmail1" name="vender" class="form-label">Select Vendor From list : </label>
+						  <label for="exampleInputEmail1" name="vender" class="form-label">Select Partner From list : </label>
 						  <select name="vender" class="form-control" id="vender">
-						  <option value="">Select Vendor from list</option>
+						  <option value="">Select Partner from list</option>
 						  <?php
 						
 

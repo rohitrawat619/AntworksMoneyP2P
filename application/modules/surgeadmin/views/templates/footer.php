@@ -30,9 +30,9 @@
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 7.4.0
+      <b>Version</b> 1.0.0
     </div>
-    <strong>Copyright &copy; 2020-2023 <a href="#">Star Developer</a>.</strong> All rights
+    <strong>Copyright &copy; 2020-2023 <a href="https://www.antworksmoney.com/">Antworks Financial Buddy Technologies Pvt. Ltd.</a>.</strong> All rights
     reserved.
   </footer>
 
@@ -54,10 +54,6 @@
 
 <!-- jQuery 3 -->
 <!-- <script src="bower_components/jquery/assets-p2padmin/jquery.min.js"></script> -->
-<script src="<?=base_url('assets-p2padmin/bower_components/jquery/assets-p2padmin/jquery.min.js')?>"></script>
-<!-- Bootstrap 3.3.7 -->
-<!-- <script src="bower_components/bootstrap/assets-p2padmin/js/bootstrap.min.js"></script> -->
-<script src="<?=base_url('assets-p2padmin/bower_components/bootstrap/assets-p2padmin/js/bootstrap.min.js')?>"></script>
 <!-- FastClick -->
 <!-- <script src="bower_components/fastclick/lib/fastclick.js"></script> -->
 <script src="<?=base_url('assets-p2padmin/bower_components/fastclick/lib/fastclick.js')?>"></script>
@@ -66,7 +62,7 @@
 <script src="<?=base_url('assets-p2padmin/js/adminlte.min.js')?>"></script>
 <!-- Sparkline -->
 <!-- <script src="bower_components/jquery-sparkline/assets-p2padmin/jquery.sparkline.min.js"></script> -->
-<script src="<?=base_url('assets-p2padmin/bower_components/jquery-sparkline/assets-p2padmin/jquery.sparkline.min.js')?>"></script>
+<script src="<?=base_url('assets-p2padmin/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')?>"></script>
 <!-- jvectormap  -->
 <!-- <script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
 <script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script> -->
@@ -114,13 +110,6 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-
-<script src="<?=base_url('assets-p2padmin/bower_components/jquery/assets-p2padmin/jquery.min.js')?>"></script>
-
-<!-- <script src="bower_components/jquery/assets-p2padmin/jquery.min.js"></script> -->
-<!-- Bootstrap 3.3.7 -->
-<!-- <script src="bower_components/bootstrap/assets-p2padmin/js/bootstrap.min.js"></script> -->
-<script src="<?=base_url('assets-p2padmin/bower_components/bootstrap/assets-p2padmin/js/bootstrap.min.js')?>"></script>
 <!-- FastClick -->
 <script src="<?=base_url('assets-p2padmin/bower_components/fastclick/lib/fastclick.js')?>"></script>
 <!-- AdminLTE App -->
@@ -140,12 +129,7 @@
 <script src="<?=base_url('assets-p2padmin/js/demo.js')?>"></script>
 
 
-<!-- jQuery 3 -->
-<script src="<?=base_url('assets-p2padmin/bower_components/jquery/dist/jquery.min.js')?>"></script>
-<!-- <script src="../../bower_components/jquery/assets-p2padmin/jquery.min.js"></script> -->
-<!-- Bootstrap 3.3.7 -->
-<!-- <script src="../../bower_components/bootstrap/assets-p2padmin/js/bootstrap.min.js"></script> -->
-<script src="<?=base_url('assets-p2padmin/bower_components/bootstrap/dist/js/bootstrap.min.js')?>"></script>
+
 <!-- ChartJS -->
 <script src="<?=base_url('assets-p2padmin/bower_components/chart.js/Chart.js')?>"></script>
 <!-- <script src="../../bower_components/chart.js/Chart.js"></script> -->

@@ -29,10 +29,10 @@ else
 							<div class="mb-3">
                             
 						
-							<label for="exampleInputEmail1" class="form-label">Select Vendor from list</label>
+							<label for="exampleInputEmail1" class="form-label">Select Partner from list</label>
 							
 							<select name="vendor" class="form-control" id="vendor">
-                                    <option value="">Select Vendor from list</option>
+                                  
 									
                                     <?php
 									
@@ -79,7 +79,7 @@ else
 						if($schemelist['Lockin'] == 0) {	?>
 						<div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Lockin :</label>
-                            </br> <input type="radio" name = "Lockin" id="Lockin" value="1" > Yes </br>
+                            </br> <input type="radio" name = "Lockin" id="Lockin" value="1"> Yes </br>
                             <input type="radio" name = "Lockin" id="Lockin" value="0" checked> No </br>
 						  </div>
 						<?php } ?>
@@ -93,9 +93,14 @@ else
                           <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Cooling Period</label>
 						    <input type="text"  placeholder="Cooling_Period" name="Cooling_Period"  value="<?php echo $schemelist['Cooling_Period'];?>"  class="form-control" id="Cooling_Period" aria-describedby="Cooling_Period" required>
-						  </div><div class="mb-3">
+						  </div>
+						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Interest Rate</label>
 						    <input type="text"  placeholder="Interest_Rate" name="Interest_Rate" value="<?php echo $schemelist['Interest_Rate'];?>"  class="form-control" id="Interest_Rate" aria-describedby="Interest_Rate" required>
+                            </div>
+							<div class="mb-3">
+						    <label for="exampleInputEmail1" class="form-label">Hike Rate</label>
+						    <input type="text"  placeholder="Hike_Rate" name="hike_rate" value="<?php echo $schemelist['hike_rate'];?>"  class="form-control" id="hike_rate" aria-describedby="rike_rate" required>
                             </div>
                             <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Pre-Mature Interest Rate</label>
@@ -107,7 +112,7 @@ else
 						<div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Withrawl Anytime :</label>
                             </br> <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="1" checked> Yes </br>
-                            <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="0" > No </br>
+                            <input type="radio" name = "Withrawl_Anytime" id="Withrawl_Anytime" value="0"> No </br>
 						  </div>
 						<?php } ?>
 
@@ -126,7 +131,7 @@ else
 						if($schemelist['Auto_Redeem'] ==1) {	?>
 						<div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Auto Redeem :</label>
-                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1" checked> Yes </br>
+                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1" checked > Yes </br>
                             <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="0" > No </br>
 						  </div>
 						<?php } ?>
@@ -135,8 +140,8 @@ else
 						if($schemelist['Auto_Redeem'] == 0) {	?>
 						<div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Withrawl Anytime :</label>
-                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1" > Yes </br>
-                            <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="0" checked> No </br>
+                            </br> <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="1"> Yes </br>
+                            <input type="radio" name = "Auto_Redeem" id="Auto_Redeem" value="0"> No </br>
 						  </div>
 						<?php } ?>
 

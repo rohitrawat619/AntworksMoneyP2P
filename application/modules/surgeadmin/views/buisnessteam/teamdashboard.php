@@ -7,7 +7,7 @@ if($this->session->userdata('session_data'))
 }
 else
 {
-    redirect(base_url('Surgeadmin/businessTeamlogin'));
+    redirect(base_url('Surgeadmin/login'));
 }
  ?>
 
