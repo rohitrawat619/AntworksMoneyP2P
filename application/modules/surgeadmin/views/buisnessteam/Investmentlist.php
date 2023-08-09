@@ -158,10 +158,10 @@ $(document).ready(function() {
     const table = $('#investlist').DataTable();
 
     // Add a custom data attribute to each row containing the status name
-    $('#investlist tbody').on('click', 'tr', function() {
+   /* $('#investlist').on('click', 'tr', function() {
         const status = $(this).data('status');
         $('#status-filter').val(status).trigger('change');
-    });
+    }); */
 
     // Initialize the status filter dropdown
     $('#status-filter').on('change', function() {
