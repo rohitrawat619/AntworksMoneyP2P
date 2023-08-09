@@ -37,6 +37,7 @@ else
     <label for="status-filter">Filter by Status:</label>
 <select id="status-filter">
     <option value="">All</option>
+    <option value="Investment">Investment</option>
     <option value="Redemption Request">Redemption Request</option>
     <option value="Redemption in process">Redemption in process</option>
     <option value="Redeem">Redeem</option>
@@ -97,7 +98,9 @@ else
             <td><?php echo $row1['total_current_value']; ?></td>
             <td><?php echo $row1['total_no_of_days']; ?></td>
             <td>
-                <?php if ($row1['redemption_status'] == 1) { ?>
+                <?php if ($row1['redemption_status'] == 0) { ?>
+                    <span class="label label-info">Investment</span>
+                <?php } else if ($row1['redemption_status'] == 1) { ?>
              <span class="label label-default">Redemption Request</span>
              <?php } else if ($row1['redemption_status'] == 2) { ?>
                 <span class="label label-primary">Redemption in process</span>
