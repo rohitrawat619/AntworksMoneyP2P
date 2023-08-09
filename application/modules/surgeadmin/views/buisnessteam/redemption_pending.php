@@ -147,7 +147,7 @@ $(document).ready(function() {
 
 
    
-    const checkboxes = document.querySelectorAll('#investlist tbody input[type="checkbox"]');
+    const checkboxes = document.querySelectorAll('#investlist input[type="checkbox"]');
 
     
     checkboxes.forEach(checkbox => {
@@ -297,7 +297,7 @@ $(document).ready(function() {
                   return $(this).val();
               }).get();
 
-           
+          
               $.ajax({
                   url: "<?php echo base_url('Surgeadmin/update_redemption_status'); ?>",
                   method: "POST",
@@ -309,7 +309,7 @@ $(document).ready(function() {
                       selectedRows.closest("tr").remove();
 
                       
-                      $("##investlist tbody").append(response);
+                      $("##investlist").append(response);
                   },
                   error: function (xhr, status, error) {
                       console.error(error);

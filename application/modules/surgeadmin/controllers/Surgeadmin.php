@@ -439,8 +439,8 @@ public function redemption_pending()
 
 	public function update_redemption_status() {  
 			
-		$redemption_status = $this->input->post('redemption_status');
-		$updatedRows = $this->Investmodel->updateRedemptionStatus($redemption_status);
+		$reinvestment_id = $this->input->post('reinvestment_id');
+		$updatedRows = $this->Investmodel->updateRedemptionStatus($reinvestment_id);
 	   echo json_encode($updatedRows);
 	   }
 
