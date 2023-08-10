@@ -1,0 +1,1 @@
+ALTER TABLE `p2p_lender_reinvestment` ADD `updated_on` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `redemption_date`;

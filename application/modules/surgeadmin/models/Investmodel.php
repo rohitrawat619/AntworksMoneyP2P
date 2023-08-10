@@ -142,11 +142,11 @@ class Investmodel extends CI_Model
 	}
 
 
-	public function updateRedemptionStatus($redemption_status) {                                         
+	public function updateRedemptionStatus($reinvestment_id) {                                         
       
-        $this->cldb->where_in('reinvestment_id', $redemption_status);
+        $this->cldb->where_in('reinvestment_id', $reinvestment_id);
         $this->cldb->update('p2p_lender_reinvestment', array('redemption_status' => '2'));
-        $this->cldb->where_in('reinvestment_id', $redemption_status);
+       
         $query = $this->cldb->get('p2p_lender_reinvestment');
         return $query->result_array();
     }
