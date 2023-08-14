@@ -79,9 +79,11 @@ $route['personal-loan'] = 'Loan/personalLoan';
 $route['business-loan'] = 'Loan/businessLoan';
 $route['consumer-loan'] = 'Loan/consumerLoan';
 
+
 $route['lender/business-loan'] = 'Loan/lenderBusinessLoan';
 $route['lender/consumer-loan'] = 'Loan/lenderConsumerLoan';
 $route['lender/portfolio-performance'] = 'Portfolio_performance';
+$route['lender/surge'] = 'Loan/surge';
 
 
 $route['borrower-registration'] = 'Borrower_registration';
@@ -171,5 +173,7 @@ $route['p2padmin/appdetails/(:num)'] = 'P2padmin/Appdetails';
 //MICRO
 $route['fundofferglimpse'] = 'micro/index';
 
+//Social details
+$route['sl'] = 'social_profile/get_borrower_details_social_profile';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
