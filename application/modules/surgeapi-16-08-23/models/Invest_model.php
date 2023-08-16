@@ -3,7 +3,7 @@ class Invest_model extends CI_Model{
     public function __construct()
     {
         parent::__construct();
-		
+		//$this->db2 = $this->load->database('invest', TRUE);
 		$this->cldb = $this->load->database('credit-line', TRUE);
     }
 	public function check_user_exist_in_p2p(){
@@ -199,39 +199,7 @@ public function basic_bank_kyc($details) {
 
         return $response;
      }
-   	 public function addaccount($response,$lender_details)
-    {
-		$bank_res = array(
-                'lender_id' => $lender_details->user_id,
-                'mobile' => $lender_details->mobile,
-                'account_no' => $this->input->post('account_no'),
-                'ifsc_code' => $this->input->post('ifsc_code'),
-                'fav_id' => $response['id'] ? $response['id'] : '',
-                'razorpay_response_bank_ac' => json_encode($response),
-            );
-         $this->cldb->insert('p2p_lender_bank_res', $bank_res);
-		 
-        
-        if($this->cldb->affected_rows()>0)
-        {
-			$bankdetails = array(
-                'lender_id' => $lender_details->user_id,
-                'bank_name' => $response['fund_account']['bank_account']['bank_name']?$response['fund_account']['bank_account']['bank_name']:'',
-                'account_number' => $this->input->post('account_no'),
-                'ifsc_code' => $this->input->post('ifsc_code'),
-                'is_verified' => 1,
-            );
-			$this->cldb->insert('p2p_lender_account_info', $bankdetails);
-            /* $this->cldb->set('step_4', 1);
-            $this->cldb->where('lender_id', $this->session->userdata('user_id'));
-            $this->cldb->update('p2p_lender_steps'); */
-
-           return true;
-        }
-        else{
-           return false;
-        }
-    }
+   	
 	public function investment_details()
     {
 		$postVal = $this->input->post();
@@ -323,73 +291,6 @@ public function basic_bank_kyc($details) {
 					 );
 			return $past_investment;
         }
-    }
-	public function update_investment_cron()
-    {
-		$postVal = $this->input->post();
-		
-		$invested_amount = 0;
-        $current_value = 0;
-        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
-		->get_where('p2p_lender_reinvestment as LI',array('LI.source'=>'surge','LI.redemption_status'=>0));
-		
-        if($this->cldb->affected_rows()>0)
-        {
-            $result = $query->result_array();
-			$i = 0;
-			$total_investment_amount = 0;
-			$total_current_value = 0;
-				foreach($result as $row)
-				   { 
-				  // pr($row);exit;
-				   if($row['redemption_date'] == '0000-00-00 00:00:00'){
-					   $redemption_date = '00-00-0000';
-				   }else{
-					   $redemption_date = date('d-m-Y', strtotime($row['redemption_date']));
-				   }
-				   
-				   if($row['hike_rate'] > $row['basic_rate']){
-					   $interest_rate = $row['hike_rate'];
-				   }else{
-					   $interest_rate = $row['basic_rate'];
-				   }
-				   
-				   $calculate_amount = $this->calculate_interest_per_day($interest_rate,$row['amount'],$row['investment_date']);
-				  
-				   $investment_arr[$i]['investment_No'] = $row['investment_No'];
-				   $investment_arr[$i]['scheme_name'] = $row['Scheme_Name'];
-				   $investment_arr[$i]['lockin'] = ($row['Lockin']==1)?'Yes':'No';
-				   $investment_arr[$i]['amount'] = $row['amount'];
-				   $investment_arr[$i]['basic_rate'] = $row['basic_rate'].'%';
-				   $investment_arr[$i]['hike_rate'] = $row['hike_rate'].'%';
-				   $investment_arr[$i]['pre_mat_rate'] = $row['pre_mat_rate'].'%';
-				   $investment_arr[$i]['no_of_days'] = $calculate_amount['days'];
-				   $investment_arr[$i]['interest_perday'] = $calculate_amount['interest_perday'];
-				   $investment_arr[$i]['final_interest'] = $calculate_amount['final_interest'];
-				   $investment_arr[$i]['current_value'] = $calculate_amount['current_value'];
-				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['investment_date']));
-				   $investment_arr[$i]['redemption_date'] = $redemption_date;
-				   $investment_arr[$i]['redemption_status'] = $row['redemption_status'];
-				   $total_investment_amount += $row['amount'];
-				   $total_current_value += $calculate_amount['current_value'];
-				   //pr($investment_arr);exit;
-				 #Update Final Interest and current Value
-				   $this->cldb->where('investment_No', $row['investment_No']);
-				   $this->cldb->where('mobile', $row['mobile']);
-				   $this->cldb->update('p2p_lender_reinvestment',array(
-				   'total_no_of_days'=>$calculate_amount['days'],
-				   'total_interest'=>$calculate_amount['final_interest'],
-				   'total_current_value'=>$calculate_amount['current_value']
-				     )
-				   );
-				   #End Update
-				   $i++;
-				  }
-				 return true; 
-        }else{
-			
-			return false;
-		}
     }
 	public function past_portfolio()
     {

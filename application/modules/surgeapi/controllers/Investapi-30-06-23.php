@@ -24,11 +24,7 @@ class Investapi extends REST_Controller{
 				$this->form_validation->set_rules('phone', 'Mobile No', 'trim|required|regex_match[/^[6-9]\d{9}$/]');
 				if ($this->form_validation->run() == TRUE) {
 					$all_scheme = $this->Invest_model->get_all_scheme();
-					#Send Mail KYC Pending
-							/* $product_type = 'AntpaySurge';
-							$instance = 'KYC Pending';
-							echo $this->Communication_model->sendEmail($this->input->post('phone'),$product_type, $instance, $amount = '');exit; */
-					    #end
+					
 					if($all_scheme)
 					{
 						$response = array(
@@ -77,7 +73,17 @@ class Investapi extends REST_Controller{
 						$user_exist_in_p2p = $this->Invest_model->check_user_exist_in_p2p();
 						//pr($user_exist_in_p2p);exit;
 						if($user_exist_in_p2p['status'] == 1 && $user_exist_in_p2p['msg'] == 'PAN Mismatch'){
-							
+							//echo $user_exist_in_p2p['msg'];exit;
+							/* $this->cldb->insert('p2p_lender_list', array(
+										'lender_id' => $user_exist_in_p2p['lender_id'],
+										'vendor_id' => 3,
+										'name' => $postData['fullname'],
+										'gender' => $postData['gender'],
+										'email' => $postData['email'],
+										'mobile' => $postData['phone'],
+										'dob' => date('Y-m-d', strtotime(str_replace('/', '-', $postData['DOB']))),
+										'pan' => $postData['PAN']
+									)); */
 							$response = array(
 									'status'=>2,
 									'lender_id'=>$user_exist_in_p2p['lender_id'],
@@ -89,6 +95,8 @@ class Investapi extends REST_Controller{
 							
 						}
 						if($user_exist_in_p2p['status'] == 1 && $user_exist_in_p2p['msg'] == 'Already Exist'){
+							
+							//$query = $this->cldb->get_where('p2p_lender_list', array('pan' => $postData['PAN'], 'mobile' => $postData['phone']));
 							$query = $this ->cldb
 									   -> select('*')
 									   -> where('mobile', $this->input->post('phone'))
@@ -155,14 +163,14 @@ class Investapi extends REST_Controller{
 						#Genrate Token End
 						
                         $this->cldb->where('mobile', $postData['phone']);
-                        $this->cldb->update('p2p_lender_list', array('pan_kyc' => 1,'oath_token' => $oath_token,'modified_date'=>date("Y-m-d H:i:s")));
+                        $this->cldb->update('p2p_lender_list', array('pan_kyc' => 1,'oath_token' => $oath_token));
 						
 						
 						$response = array(
 							'status'=>1,
 							'lender_id'=>$lender_id,
 							'Authorization' => $oath_token,
-							'msg'=>"User Basic KYC Done!"
+							'msg'=>"User Basic KYC Done!!"
 							);
 						
 						$this->set_response($response, REST_Controller::HTTP_OK);
@@ -206,13 +214,10 @@ class Investapi extends REST_Controller{
 				$this->form_validation->set_rules('ifsc_code','ifsc_code','required|regex_match[/^[A-Z]{4}0[A-Z0-9]{6}$/]');
 				if ($this->form_validation->run() == TRUE) {
 					 $query = $this->cldb->get_where('p2p_lender_list', array('mobile' => $postData['phone']));
-					 //echo $this->cldb->last_query();exit;
                     if ($this->cldb->affected_rows() > 0) {
 						$lender_details = $query->row();
 						$bank_kyc_response = $this->Invest_model->basic_bank_kyc($postData);
 					   $arr_response = json_decode($bank_kyc_response, true);
-					   ## Insert bank Account details response in table 
-					   $this->Invest_model->addaccount($arr_response,$lender_details);
 					   if ($arr_response['results']['account_status'] == 'active') {
 						   $name = strtoupper($lender_details->name);
 					       $razorpay_bankname = strtoupper($arr_response['results']['registered_name']);
@@ -221,25 +226,30 @@ class Investapi extends REST_Controller{
 							$this->cldb->where('mobile', $this->input->post('phone'));
 							$this->cldb->set('account_kyc', 1);
 							$this->cldb->update('p2p_lender_list');
-							
 							$response = array(
 								'status' => 1,
 								'lender_id'=>$lender_details->lender_id,
 								'msg' => "Bank verified successfully!",
 							);
-					    #Send Mail Registration Successful
-							$product_type = 'AntpaySurge';
-							$instance = 'Registration Successful';
-							$this->Communication_model->sendEmail($this->input->post('phone'),$product_type, $instance, $amount = '');
-					    #end
-					$this->set_response($response, REST_Controller::HTTP_OK);
+					#Send Mail Registration Successful
+						$product_type = 'AntpaySurge';
+						$instance = 'Registration Successful';
+						$this->Communication_model->sendEmail($this->input->post('phone'),$product_type, $instance, $amount = '');
+					#end
+							$this->set_response($response, REST_Controller::HTTP_OK);
 						return;
+							/* $bank_res_arr = array(
+								'bank_name' => $res_razorpay['fund_account']['bank_account']['bank_name'],
+								'bank_registered_name' => str_replace(' ', '', $razorpay_bankname),
+								'is_verified' => '1',
+							);
+							$this->db->where('borrower_id', $this->input->post('borrower_id'));
+							$this->db->update('p2p_borrower_bank_details', $bank_res_arr); */
+
 						} else {
-							#Send Mail KYC Pending
-							$product_type = 'AntpaySurge';
-							$instance = 'KYC Pending';
-							$this->Communication_model->sendEmail($this->input->post('phone'),$product_type, $instance, $amount = '');
-					    #end
+							/* $this->db->where('borrower_id', $this->input->post('borrower_id'));
+							$this->db->set('bank_account_step', 2);
+							$this->db->update('p2p_borrower_steps'); */
 							$response = array(
 								'status' => 0,
 								'msg' => "Bank not verified successfully!",
