@@ -131,7 +131,8 @@ class Invest_model extends CI_Model{
  }
 	public function basic_pan_kyc() {
     $postData = $this->input->post();
-            $pan_url = "https://antworksmoney.com/credit-line/p2papiborrower/borrowerres/pan_api"; 
+	//pr($postData);exit;
+            /* $pan_url = "https://antworksmoney.com/credit-line/p2papiborrower/borrowerres/pan_api"; 
             $name_match_method= "exact";
             $anchor = "Investent";
   
@@ -156,20 +157,50 @@ class Invest_model extends CI_Model{
         CURLOPT_HTTPHEADER => array(
              'Content-Type: application/json'
         ),
-    ));
-    $response = curl_exec($curl);
-
-curl_close($curl);
-
-        return $response;
+    )); 
+    $response = curl_exec($curl);*/
+	
+			
+			  $curl = curl_init();
+			   curl_setopt_array($curl, array(
+				CURLOPT_URL => 'https://antworksmoney.com/credit-line/API/pan',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS => json_encode(array(
+					'pan' => $postData['PAN'],
+					'name' => $postData['fullname'],
+					'mobile'=> $postData['phone'],
+					'name_match_method' => 'exact',
+					'user_type' => 'lender',
+					'user_id' => 0,
+					'source' => 'surge',
+					
+				)),
+				CURLOPT_HTTPHEADER => array(
+					  'client_id: antworkCurlApi',
+					  'secret: testing@1234#',
+					 'Content-Type: application/json'
+				),
+			)); 
+			$response = curl_exec($curl);
+			 curl_close($curl);
+			 $curl_response =  json_decode($response, true); 
+		     $arr_response = $curl_response['response'];
+			 return json_encode($arr_response);
+			 
+		
+        
 }
 
 public function basic_bank_kyc($details) {
 
        $bank_url = "https://antworksmoney.com/credit-line/p2papiborrower/borrowerres/addBank"; 
-    
-            $anchor = "Investent";
-    
+       $anchor = "Investent";
         $curl = curl_init();
     
         curl_setopt_array($curl, array(
@@ -214,17 +245,26 @@ public function basic_bank_kyc($details) {
         
         if($this->cldb->affected_rows()>0)
         {
-			$bankdetails = array(
+		$query = $this->cldb->get_where('p2p_lender_account_info',array('lender_id' => $lender_details->user_id));
+		$bankdetails = array(
                 'lender_id' => $lender_details->user_id,
                 'bank_name' => $response['fund_account']['bank_account']['bank_name']?$response['fund_account']['bank_account']['bank_name']:'',
                 'account_number' => $this->input->post('account_no'),
                 'ifsc_code' => $this->input->post('ifsc_code'),
                 'is_verified' => 1,
             );
+		if($this->cldb->affected_rows()>0)
+        {
+			unset($bankdetails['lender_id']);
+			
+			$this->cldb->where('lender_id', $lender_details->user_id);
+			$this->cldb->update('p2p_lender_account_info', $bankdetails);
+		}else{
+			
 			$this->cldb->insert('p2p_lender_account_info', $bankdetails);
-            /* $this->cldb->set('step_4', 1);
-            $this->cldb->where('lender_id', $this->session->userdata('user_id'));
-            $this->cldb->update('p2p_lender_steps'); */
+		}
+			
+            
 
            return true;
         }
@@ -232,13 +272,21 @@ public function basic_bank_kyc($details) {
            return false;
         }
     }
+	public function update_lender_id_in_pan_kyc_table($mobile,$pan,$lenderID){
+		$this->cldb->where('mobile', $phone);
+		$this->cldb->where('source', 'surge');
+		$this->cldb->where('pan', $pan);
+		$this->cldb->update('borrower_pan_api_details', array('lender_id' => $lenderID));
+		return true;
+	}
 	public function investment_details()
     {
 		$postVal = $this->input->post();
 		
 		$invested_amount = 0;
         $current_value = 0;
-        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
+        $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')
+		->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
 		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.redemption_status'=>0));
 		
         if($this->cldb->affected_rows()>0)

@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
 class Investapi extends REST_Controller{
-
     public function __construct($config = 'rest')
     {
         parent::__construct($config);
@@ -75,7 +74,7 @@ class Investapi extends REST_Controller{
 					if ($arr_response['result']['name_match'] == true) {
 						#check User exist in main P2P  Database Table-p2p_lender_list
 						$user_exist_in_p2p = $this->Invest_model->check_user_exist_in_p2p();
-						//pr($user_exist_in_p2p);exit;
+						
 						if($user_exist_in_p2p['status'] == 1 && $user_exist_in_p2p['msg'] == 'PAN Mismatch'){
 							
 							$response = array(
@@ -89,6 +88,7 @@ class Investapi extends REST_Controller{
 							
 						}
 						if($user_exist_in_p2p['status'] == 1 && $user_exist_in_p2p['msg'] == 'Already Exist'){
+							//echo 'Not exist in new p2p IFFFF';exit;
 							$query = $this ->cldb
 									   -> select('*')
 									   -> where('mobile', $this->input->post('phone'))
@@ -100,6 +100,9 @@ class Investapi extends REST_Controller{
 									//echo 'exist in new p2p';exit;
 									$lender_details = $query->row();
 									$lender_id = $lender_details->lender_id;
+									$lenderID = $lender_details->user_id;
+									$pan = $lender_details->pan;
+									$phone = $lender_details->mobile;
 								}else{
 									//echo 'Not exist in new p2p';exit;
 									$lender_id = $this->create_lender_id();
@@ -114,9 +117,13 @@ class Investapi extends REST_Controller{
 										'dob' => date('Y-m-d', strtotime(str_replace('/', '-', $postData['DOB']))),
 										'pan' => $postData['PAN']
 									));
+									$pan = $postData['PAN'];
+									$phone = $postData['phone'];
+									$lenderID = $this->cldb->insert_id();
 								}
-							
-							
+						#update Lender id in borrower_pan_api_details Table After PAN KYC
+						$this->Invest_model->update_lender_id_in_pan_kyc_table($phone,$pan,$lenderID);
+						
 						}else{
 								//echo 'New User';exit;
 							$lender_id = $this->create_lender_id();
@@ -144,6 +151,9 @@ class Investapi extends REST_Controller{
 										'dob' => date('Y-m-d', strtotime(str_replace('/', '-', $postData['DOB']))),
 										'pan' => $postData['PAN']
 									));
+									$lenderID = $this->cldb->insert_id();
+						#update Lender id in borrower_pan_api_details Table After PAN KYC
+						$this->Invest_model->update_lender_id_in_pan_kyc_table($postData['phone'],$postData['PAN'],$lenderID);		
 						}
                         #Genrate Token  Start
 						$tokenData['user_id'] = $lender_id;
