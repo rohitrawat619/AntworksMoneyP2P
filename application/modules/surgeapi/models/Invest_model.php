@@ -132,35 +132,7 @@ class Invest_model extends CI_Model{
 	public function basic_pan_kyc() {
     $postData = $this->input->post();
 	//pr($postData);exit;
-            /* $pan_url = "https://antworksmoney.com/credit-line/p2papiborrower/borrowerres/pan_api"; 
-            $name_match_method= "exact";
-            $anchor = "Investent";
-  
-        $curl = curl_init();
-    
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $pan_url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode(array(
-            'pan' => $postData['PAN'],
-            'name' => $postData['fullname'],
-            'mode' => $name_match_method,
-            'anchor'=> $anchor,
-            'mobile'=> $postData['phone'],
-        )),
-        CURLOPT_HTTPHEADER => array(
-             'Content-Type: application/json'
-        ),
-    )); 
-    $response = curl_exec($curl);*/
-	
-			
+           
 			  $curl = curl_init();
 			   curl_setopt_array($curl, array(
 				CURLOPT_URL => 'https://antworksmoney.com/credit-line/API/pan',
@@ -273,10 +245,11 @@ public function basic_bank_kyc($details) {
         }
     }
 	public function update_lender_id_in_pan_kyc_table($mobile,$pan,$lenderID){
-		$this->cldb->where('mobile', $phone);
+		$this->cldb->where('mobile', $mobile);
 		$this->cldb->where('source', 'surge');
 		$this->cldb->where('pan', $pan);
 		$this->cldb->update('borrower_pan_api_details', array('lender_id' => $lenderID));
+		//echo $this->cldb->last_query();exit;
 		return true;
 	}
 	public function investment_details()
