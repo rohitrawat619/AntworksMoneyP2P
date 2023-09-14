@@ -335,14 +335,17 @@ class Missearch extends CI_Controller
 										 CC.source_of_lead,
 										 CC.source_of_lead_campaign,
 										 ccs.name as source,
-										 csc.name as campaign
+										 csc.name as campaign,
+                                         invo.invoice_no,
+                                         pd.created_date,
 										 ");
 					$this->db2->from('cc_payment_details AS pd');
 					$this->db2->join('credit_score_query AS CC', 'on cc.id = pd.cc_id', 'left');
 					$this->db2->join('credit_counselling_source AS ccs', 'on ccs.id = CC.source_of_lead', 'left');
 					$this->db2->join('credit_counselling_source_campaign AS csc', 'on csc.id = CC.source_of_lead_campaign', 'left');
-					//$this->db2->join('cc_payment_invoice_details AS invo', 'on invo.cc_id = CC.id', 'left');
+					$this->db2->join('cc_payment_invoice_details AS invo', 'on invo.cc_id = CC.id', 'left');
 					$this->db2->where($where);
+					$this->db2->group_by('payment_id');
 					$result = $this->db2->get();
 
 
@@ -488,7 +491,9 @@ class Missearch extends CI_Controller
                                                                CAMP.campaign_name,
                                                                ALL.payout_id,
                                                                USR.username AS caller name,
-                                                               ALL.status,");
+                                                               ALL.status,
+                                                               PPD.invoice,
+                                                                ");
 
 
 				$this->db2->from('ant_all_leads AS ALL');
@@ -497,6 +502,7 @@ class Missearch extends CI_Controller
 				$this->db2->join('ant_source_campaign AS CAMP', 'ON ALL.source_of_lead = CAMP.id', 'left');
 				$this->db2->join('bank_loan_type AS LT', 'ON ALL.product_type = LT.id', 'left');
 				$this->db2->join('residence_type AS RES', 'ON ALL.residence_type = RES.id', 'left');
+                $this->db2->join('premium_plan_payment_details AS PPD', 'ON PPD.premium_id = ALL.id', 'left');
 				$this->db2->where('ALL.status', '15');
 				$this->db2->where($where);
 
