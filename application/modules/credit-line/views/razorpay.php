@@ -20,6 +20,65 @@
         background-color: #E3563E;
     }
 </style>
+<?php
+$name = $borrower_details['name'];
+$email = $borrower_details['email'];
+$mobile = $borrower_details['mobile'];
+$amount = ($borrower_details['amount']);
+$lender_id = $borrower_details['borrower_id'];
+
+?>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<script>
+ function pay_now(){
+        
+                var options = {
+            "key": "rzp_test_YL7LZ4LtCobrH7",
+            "amount": "<?=($amount*100) ?>",
+            "currency": "INR",
+            "name": "Antworks Capital LLP",
+            "description": "Payment Description",
+            "image": "https://www.antworksmoney.com/assets/img/logo128.png",
+            
+            "handler": function(response) {
+                if (response.razorpay_payment_id != '') {
+                            $.ajax({
+                                type: "POST",
+                                url: "payment_process",
+                                data: "razorpay_payment_id=" + response.razorpay_payment_id+"&lender_id=<?php echo $lender_id?>",
+                                datatype: 'json',
+                                success: function (data) {
+                                    if (data == 1) {
+                                        window.location.href = "<?php echo base_url(); ?>credit-line/Social_profile/thanks";
+                                    }
+                                }
+                            });
+                        } else {
+                            alert("Please Make Payment First");
+                        }
+
+            },
+            "prefill": {
+                "name": "<?=$name ?>",
+                "email": "<?=$email ?>",
+                "contact": "<?=$mobile ?>"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#00518c"
+            }
+        };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+               }
+        
+
+</script>
+
 <div class=" sec-pad service-box-one service">
  <div class="container">
    <div class="col-md-12 text-center">
@@ -30,23 +89,15 @@
                </span>
             </div>        
 
-       <form action="<?php echo base_url(); ?>credit-line/social_profile/thanks" method="POST">
-            <script
-                   src="https://checkout.razorpay.com/v1/checkout.js"
-                   data-key="rzp_test_YL7LZ4LtCobrH7"
-                   data-amount="<?=$borrower_details['amount'] * 100; ?>"
-                   data-buttontext="Pay Now"
-                   data-name="Antworks Capital LLP"
-                   data-description="Payment Description"
-                   data-image="https://www.antworksmoney.com/assets/img/logo128.png"
-                   data-prefill.name="<?=$borrower_details['name'] ?>"
-                   data-prefill.email="<?=$borrower_details['email'] ?>"
-                   data-theme.color="#00518c"
-           ></script>
-           <input type="hidden" value="Hidden Element" name="hidden">
-       </form>
+            <form>
+    <input type="button" class="razorpay-payment-button" name="btn" id="btn" value="Pay Now" onclick="pay_now()">
+</form>
+
        </div><!-- /.col-md-8 -->
 
     </div>
- <!-- /.row --> 
+ <!-- /.row -->
 </div>
+
+
+

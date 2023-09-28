@@ -50,6 +50,7 @@ class Social_profile extends CI_Controller{
          //  var_dump($decode_mobile); exit;
             if ($decode_mobile !='') {
                 $response = $this->Borrower_social_model->get_borrower_details_credit_line_social_profile($decode_mobile);
+				//$image_status = file_put_contents('profile_images/' . md5($this->input->post('mobile')) . '.PNG', $decoded);
                 return $response;
                 
             } else {
@@ -102,12 +103,12 @@ class Social_profile extends CI_Controller{
         $confirmaccount = $this->input->post('confirmaccount');
         $ifsc = $this->input->post('ifsc');
         
-        $result = $this->Borrower_social_model->borrower_detail_update($borrower_id, $name, $dob, $email, $mobile, $pan, $account, $ifsc);
+        
         
     // echo("Welcome India");
     // print_r($result); exit;
     
-    if ($result['status'] == 1) {
+  //  if ($result['status'] == 1) {
     // PAN KYC Validation
         $pan_validation_details = array(
             'pan' => $pan,               
@@ -156,6 +157,7 @@ class Social_profile extends CI_Controller{
            // $account_details['fund_account']['active'] == 1 &&
             $account_details['results']['account_status'] == 'active')
         {
+			$result = $this->Borrower_social_model->borrower_detail_update($borrower_id, $name, $dob, $email, $mobile, $pan, $account, $ifsc);
             // Both PAN KYC and Account Validation successful
              // echo"<pre>"; print_r($data); die();
             $this->load->view('templates/header', $data);
@@ -168,14 +170,22 @@ class Social_profile extends CI_Controller{
             redirect('credit-line/social_profile/registration_borrower');
         }
 
-    } else {
+   /*  } else {
 
-    }
+    } */
 } 
 
 //payment process 
 public function payment_process(){
 
+    $payment_array = array(
+        'lender_id' => $this->input->post('lender_id'),
+        'razorpay_payment_id' => $this->input->post('razorpay_payment_id'),
+        'created_date' => date('Y-m-d h:i:s')
+    );
+    $this->db->insert('p2p_lender_registration_payment', $payment_array);
+    echo 1;
+    exit;
 }
 
 

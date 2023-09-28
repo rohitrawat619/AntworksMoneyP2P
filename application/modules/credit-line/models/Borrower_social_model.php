@@ -52,7 +52,8 @@ class Borrower_social_model extends CI_Model
         
         $data = array(
             'borrower_id' => $borrower_id,
-            'amount' => $submit_amount
+            'amount' => $submit_amount,
+			'created_date'=> date('Y-m-d H:i:s'),
         ); 
         $this->db->insert('p2p_lender_list', $data);
         
@@ -86,6 +87,7 @@ class Borrower_social_model extends CI_Model
             'email' => $this->input->post('email'),
             'mobile' => $this->input->post('mobile'),
             'pan' => $this->input->post('pan'),
+			'modified_date'=> date('Y-m-d H:i:s')
             
         );
         $this->db->where('borrower_id', $borrower_id);
@@ -94,7 +96,9 @@ class Borrower_social_model extends CI_Model
         $this->db->insert('p2p_lender_account_info', array(
             'lender_id' => $borrower_id,
             'account_number' => $this->input->post('account'),
-            'ifsc_code' => $this->input->post('ifsc'))
+            'ifsc_code' => $this->input->post('ifsc'),
+			'created_date'=> date('Y-m-d H:i:s')
+			)
         );
         if ($this->db->affected_rows() > 0) {
             return array('status' => 1, 'msg' => 'Record updated successfully');
