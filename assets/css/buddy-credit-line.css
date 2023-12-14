@@ -1,0 +1,125 @@
+/* ul {margin:0; padding:0;}
+.creditlinebg {background:#c5e6eb; padding:80px 30px;}
+.creditlinelogo {max-width:200px; margin-bottom:10px;}
+.creditline-headr {font-size: 30px; font-weight:bold; margin:15px 0 0 0;}
+.creditline-subheadr {font-size: 21px; font-weight:400; margin-bottom:15px;}
+.clsub-subheadr {font-size: 21px; font-weight:400;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.creditline-hd {font-size:30px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline {width:100%; float:left; position:relative; padding:30px; margin-bottom:30px; border-radius:8px; border:1px solid #e1e1e1; box-shadow:1px 1px 10px 5px #e8e8e8;}
+.maincreditline ul {padding:0 0 0 15px;}
+.maincreditline h2 {font-size:24px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline li {font-size:18px; font-weight:400; margin:0 0 10px 0; display:block;}
+.maincreditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.maincreditline-btn:hover {background:#7eb3bb; color:#fff;}
+.remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
+.maincreditline .f1 fieldset {margin-top:15px;}
+.creditline-icon {max-width:360px; margin-bottom:30px;}
+.creditline-sucs {max-width:160px; margin-bottom:30px;}
+.creditline-waittxt {font-size: 24px; color:#0d8c03; font-weight:600;}
+.creditline-p {font-size: 18px; color:#333; font-weight:600;}
+.creditline-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0;}
+.creditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.creditline-btn:hover {background:#7eb3bb; color:#fff;}
+.creditloan-dtls {width:100%; float:left;}
+.creditloan-dtls li {display:inline-block; width:50%; float:left; padding:15px 0; font-size:16px;}
+.creditloan-dtls li span {display:block; font-weight:bold; font-size:20px;}
+.e-signbox-loanbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:30px 30px; margin:50px 0;}
+.e-signbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:10px 0 10px 0;}
+.e-signbox-txt {max-height:500px; overflow-y: scroll;}
+.e-signbox-btn {background:#26499a; padding:15px 60px; margin-top:10px; margin-bottom:50px; color:#fff; display: inline-block; border-radius:30px;}
+.e-signbox-btn:hover {background:#7eb3bb; color:#fff;}
+.signbox-p {font-size: 18px; color:#333; font-weight:600; margin:0;}
+.creditloan-box {background:#a0cfd7; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:30px 0 0 0;}
+.creditloan-box-hd {font-size: 24px; color:#333; font-weight:600; margin:0;}
+.creditshare-btn {padding-top:20px; font-weight:bold;}
+.bordr-btm {border-bottom:1px solid #bcdbdf; margin-bottom:15px;}
+.credit-lender {font-size: 21px; color:#333; font-weight:600; margin:0;}
+.credit-loanno {font-size: 21px; color:#333; font-weight:600; margin:0; padding:10px 0; margin-bottom:10px; border-bottom:1px solid #ccc;}
+.credit-disbursement {font-size: 21px; color:#04a82d; font-weight:600; margin:5px 0;}
+
+
+@media(max-width:767px){
+.creditlinelogo {max-width:160px; margin-bottom:5px;}
+.creditlinebg {padding:40px 20px;}
+.surge-badge img {max-width:130px;}
+.topfeature {max-width:60px; margin-top:10px;}
+.creditline-hd, .creditline-headr {font-size: 24px;}
+.creditline-subheadr {font-size:14px;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.maincreditline li {font-size: 14px;}
+.maincreditline-btn {width:100%; text-align:center;}
+.maincreditline ul, .maincreditline {min-height:auto;}
+.credit-disbursement {font-size: 18px;}
+} */
+
+ul {margin:0; padding:0;}
+.creditlinebg {background:#c5e6eb; padding:80px 30px;}
+.creditlinelogo {max-width:200px; margin-bottom:10px;}
+.creditline-headr {font-size: 30px; font-weight:bold; margin:15px 0 0 0;}
+.creditline-subheadr {font-size: 21px; font-weight:400; margin-bottom:15px;}
+.clsub-subheadr {font-size: 21px; font-weight:400;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.creditline-hd {font-size:30px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline {width:100%; float:left; position:relative; padding:30px; margin-bottom:30px; border-radius:8px; border:1px solid #e1e1e1; box-shadow:1px 1px 10px 5px #e8e8e8;}
+.maincreditline ul {padding:0 0 0 15px;}
+.maincreditline h2 {font-size:24px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline li {font-size:18px; font-weight:400; margin:0 0 10px 0; display:block;}
+.maincreditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.maincreditline-btn:hover {background:#7eb3bb; color:#fff;}
+.remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
+.maincreditline .f1 fieldset {margin-top:15px;}
+.creditline-icon {max-width:360px; margin-bottom:30px;}
+.creditline-sucs {max-width:160px; margin-bottom:30px;}
+.creditline-waittxt {font-size: 24px; color:#0d8c03; font-weight:600;}
+.creditline-p {font-size: 18px; color:#333; font-weight:600;}
+.creditline-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0;}
+.creditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.creditline-btn:hover {background:#7eb3bb; color:#fff;}
+.creditloan-dtls {width:100%; float:left;}
+.creditloan-dtls li {display:inline-block; width:50%; float:left; padding:15px 0; font-size:16px;}
+.creditloan-dtls li span {display:block; font-weight:bold; font-size:20px;}
+.e-signbox-loanbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:30px 30px; margin:50px 0;}
+.e-signbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:10px 0 10px 0;}
+.e-signbox-txt {max-height:500px; overflow-y: scroll;}
+.e-signbox-btn {background:#26499a; padding:15px 60px; margin-top:10px; margin-bottom:50px; color:#fff; display: inline-block; border-radius:30px;}
+.e-signbox-btn:hover {background:#7eb3bb; color:#fff;}
+.signbox-p {font-size: 18px; color:#333; font-weight:600; margin:0;}
+.creditloan-box {background:#a0cfd7; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:30px 0 0 0;}
+.creditloan-box-hd {font-size: 24px; color:#333; font-weight:600; margin:0;}
+.creditshare-btn {padding-top:20px; font-weight:bold;}
+.bordr-btm {border-bottom:1px solid #bcdbdf; margin-bottom:15px;}
+.credit-lender {font-size: 21px; color:#333; font-weight:600; margin:0;}
+.credit-loanno {font-size: 21px; color:#333; font-weight:600; margin:0; padding:10px 0; margin-bottom:10px; border-bottom:1px solid #ccc;}
+.credit-disbursement {font-size: 21px; color:#04a82d; font-weight:600; margin:5px 0;}
+/*OTP Screen*/
+.otpverify {font-size:24px; color:#000; font-weight:bold; text-transform:auto;}
+.otpinfo {font-size:18px; color:#118a44; font-weight:bold; text-transform:auto;}
+.otpmsg {font-size:18px; color:#000; font-weight:bold; text-transform:auto;}
+.otp-input-fields {margin: auto; width: auto; display: flex; justify-content: center; gap: 10px; padding: 40px;}
+.otp-input-fields>input {height: 42px; width: 42px; background-color: transparent; border: 1px solid #000; border-radius:4px!important; text-align: center; outline: none; font-size: 16px;}
+.otp-input-fields>input::-webkit-outer-spin-button, .otp-input-fields input::-webkit-inner-spin-button {
+-webkit-appearance: none; margin: 0;}
+.otp-input-fields input[type=number] {-moz-appearance: textfield;}
+/*OTP Screen*/
+
+
+@media(max-width:767px){
+.creditlinelogo {max-width:160px; margin-bottom:5px;}
+.creditlinebg {padding:40px 20px;}
+.surge-badge img {max-width:130px;}
+.topfeature {max-width:60px; margin-top:10px;}
+.creditline-hd, .creditline-headr {font-size: 24px;}
+.creditline-subheadr {font-size:14px;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.maincreditline li {font-size: 14px;}
+.maincreditline-btn {width:100%; text-align:center;}
+.maincreditline ul, .maincreditline {min-height:auto;}
+.credit-disbursement {font-size: 14px;}
+.creditloan-box-hd {font-size:18px;}
+.creditloan-box {padding: 30px 20px;}
+.creditloan-dtls li {font-size:14px; padding: 7px 0;}
+.credit-lender, .credit-loanno {font-size:14px;}
+.creditloan-dtls li span {font-size:14px; font-weight:bold;}
+}
+
