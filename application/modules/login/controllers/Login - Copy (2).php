@@ -159,9 +159,6 @@ class Login extends CI_Controller{
 
 	
 
-				
-
-
     public function admin_login()
     {
         if ( $this->session->userdata('admin_state'))
@@ -216,9 +213,6 @@ class Login extends CI_Controller{
         if($this->input->post('pwd') && $this->input->post('hash_value') && $this->input->post('user')){
 
             $result=$this->Loginmodel->validateAdmin($this->input->post('user'), $this->input->post('pwd'), $this->input->post('hash_value'));
-			if(empty($result)){
-			$result=$this->Loginmodel->validateSurgeAdmin($this->input->post('user'), $this->input->post('pwd'), $this->input->post('hash_value'));
-			}
             if(!empty($result))
             {
                 if($result->status==0)
@@ -236,9 +230,6 @@ class Login extends CI_Controller{
                         'role'        => $result->role_name,
                         'role_id'        => $result->role_id,
                         'admin_state' => TRUE,
-						'partner_id' => $result->partner_id,
-						'admin_access' => $result->admin_access,
-						
                         );
 
                     //Update SESSION IP
@@ -311,10 +302,6 @@ class Login extends CI_Controller{
 					}
 					
 					if($result->role_id == 11)
-					{
-						redirect(base_url().'surgeModule/surge/dashboard');
-					}
-					if($result->role_id == 12)
 					{
 						redirect(base_url().'surgeModule/surge/dashboard');
 					}
@@ -810,7 +797,7 @@ class Login extends CI_Controller{
             'expire' => '0'
         );
         delete_cookie($cookie);
-        redirect(base_url().'login/admin-login');
+        redirect(base_url().'login/user-login');
     }
 
     public function Logout()

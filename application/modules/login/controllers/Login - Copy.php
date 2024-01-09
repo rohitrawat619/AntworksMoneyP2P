@@ -25,7 +25,7 @@ class Login extends CI_Controller{
         redirect(base_url().'login/user-login');
     }
 
-    public function user_old() // dated: 2023-oct-23 not using now
+    public function user()
     {
         $data = array();
         if( $this->session->userdata('borrower_state') && $this->session->userdata('login_type') == 'borrower')
@@ -50,117 +50,6 @@ class Login extends CI_Controller{
         $this->load->view('user-login',$data);
         $this->load->view('templates/footer');
     }
-
-
-    public function user() // dated: 2023-Oct-23
-    {
-        $data = array();
-        if( $this->session->userdata('borrower_state') && $this->session->userdata('login_type') == 'borrower')
-    {
-        redirect(base_url().'borrower/dashboard');
-    }
-        if( $this->session->userdata('login_state') && $this->session->userdata('login_type') == 'lender' )
-        {
-            redirect(base_url().'lender/dashboard');
-        }
-        $data['login_failed'] = $this->Loginmodel->validity_ip_base_login_failed();
-        if ($data['login_failed']) {
-            $this->session->set_flashdata('notification', array('error' => 1, 'message' => 'You have attempted 3 times with invalid credentials. Please try after some time'));
-        }
-        $data['title']='P2P Lending | Quick and Easy P2P Loan Services in India';
-        $data['description']="The most trusted P2P Loan services in India enabling low interest loans for bad credit Borrowers and increased earnings for Lenders. Compare and Apply now.";
-        $data['keywords']='';
-        $data['salt_key'] = $this->Loginmodel->generateSalt();
-        $this->load->view('templates/header',$data);
-        $this->load->view('templates/nav',$data);
-        $this->load->view('templates/collapse-nav',$data);
-        $this->load->view('user-login_otp',$data);
-        $this->load->view('templates/footer');
-    }
-						/***********starting of sendotp***************/
-    public function sendLoginOtp() // dated: 2023-oct-23
-    {
-        $this->load->database();
-		 $mobile = sanitize_input_data($_POST['mobile']);
-		// echo $mobile;
-        if(!empty($_POST['mobile'])){
-
-            $sql = "SELECT mobile FROM p2p_lender_list WHERE mobile = ".$mobile."
-                    UNION
-                    SELECT mobile FROM p2p_borrowers_list WHERE mobile = ".$mobile."";
-            $this->db->query($sql);
-			//echo $this->db->last_query();
-            if($this->db->affected_rows()==0)
-            {
-                echo "User Not Found"; exit(); //Already re
-            }
-            else{
-
-
-
-            $arr=array();
-            $number = str_replace("'","",sanitize_input_data($_POST['mobile']));
-			//echo $number."--";
-            $otp = rand(100000,999999);
-			//$otp = '876420';
-            $this->db->select('*');
-            $this->db->from('p2p_otp_details_table');
-            $this->db->where('mobile', $number);
-            $this->db->where('date_added >= now() - INTERVAL 10 MINUTE');
-            $query = $this->db->get();
-            if($this->db->affected_rows()>0)
-            {
-                $result = count($query->result_array());
-                if($result>10)
-                {
-                    echo "Exceeded Max OTP Send Limit"; exit;
-                }
-                else{
-                    $arr["mobile"]=$number;
-                    $arr["otp"]=$otp;
-                    $query = $this->db-> insert('p2p_otp_details_table',$arr);
-                }
-
-            }
-            else{
-                $arr["mobile"]=$number;
-                $arr["otp"]=$otp;
-                $query = $this->db-> insert('p2p_otp_details_table',$arr);
-            }
-
-
-
-            $msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
-            $msg = "$otp is your Antworks Account verification code - ANTWORKS";
-//            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
-            $message = rawurlencode($msg);
-
-            // Prepare data for POST request
-            $data = array('username' => SMS_GATEWAY_USERNAME, 'hash' => SMS_GATEWAY_HASH_API, 'numbers' => $number, "sender" => SMS_GATEWAY_SENDER, "message" => $message);
-
-            // Send the POST request with cURL
-            $ch = curl_init('https://api.textlocal.in/send/');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            curl_close($ch);
-            // Create session for verifying number
-
-            echo "OTP Send Successfully"; exit;
-            }
-        }
-        else{
-            echo "OOPS! You do not have Direct Access. Please Login";
-            exit;
-        }
-    }
-				/***********ending of sendotp***********/
-
-	
-
-				
-
 
     public function admin_login()
     {
@@ -216,9 +105,6 @@ class Login extends CI_Controller{
         if($this->input->post('pwd') && $this->input->post('hash_value') && $this->input->post('user')){
 
             $result=$this->Loginmodel->validateAdmin($this->input->post('user'), $this->input->post('pwd'), $this->input->post('hash_value'));
-			if(empty($result)){
-			$result=$this->Loginmodel->validateSurgeAdmin($this->input->post('user'), $this->input->post('pwd'), $this->input->post('hash_value'));
-			}
             if(!empty($result))
             {
                 if($result->status==0)
@@ -236,9 +122,6 @@ class Login extends CI_Controller{
                         'role'        => $result->role_name,
                         'role_id'        => $result->role_id,
                         'admin_state' => TRUE,
-						'partner_id' => $result->partner_id,
-						'admin_access' => $result->admin_access,
-						
                         );
 
                     //Update SESSION IP
@@ -304,20 +187,6 @@ class Login extends CI_Controller{
 					{
 						redirect(base_url().'p2precovery/agentrecovery/dashboard');
 					}
-					
-					if($result->role_id == 10)
-					{
-						redirect(base_url().'surgeModule/surge/dashboard');
-					}
-					
-					if($result->role_id == 11)
-					{
-						redirect(base_url().'surgeModule/surge/dashboard');
-					}
-					if($result->role_id == 12)
-					{
-						redirect(base_url().'surgeModule/surge/dashboard');
-					}
 
                 }
 
@@ -380,195 +249,6 @@ class Login extends CI_Controller{
             $this->Logout_faild_login_admin();
         }
     }
-
-
- /**
-     * For Both Borrower And Lender
-     */
-    public function verify_user_login_by_otp() // dated: 2023-oct-23
-    {
-		$this->session->sess_regenerate(TRUE); // TRUE means to destroy the old session data dated: 19-September-2023
-        $this->load->library('user_agent');
-        if ($this->security->xss_clean($this->input->post('mobile'), TRUE) === FALSE)
-        {
-            redirect(base_url().'login/login');
-        }
-        if ($this->security->xss_clean($this->input->post('otp'), TRUE) === FALSE)
-        {
-            redirect(base_url().'login/login');
-        }
-        $this->form_validation->set_rules('mobile', 'Mobile', 'required');
-        $this->form_validation->set_rules('otp', 'OTP', 'required');
-
-        if ($this->form_validation->run() == TRUE)
-        {
-            $mobile = $this->db->escape_str($this->input->post('mobile'));
-            $otp = $this->db->escape_str($this->input->post('otp'));
-            $hash = $this->db->escape_str($this->input->post('hash_value'));
-            if(!empty($mobile) && !empty($otp) && !empty($hash) ){
-                $result = $this->Loginmodel->validate_by_mobile($mobile, $otp, $hash);
-				//echo "hello".$result; die();
-				//print_r($result); die();
-                if(!empty($result))
-                {
-
-                    if($result['status'] === '1')
-                    {
-                        $this->Loginmodel->updateSession_ip($result['email']);
-                        if ($this->agent->is_browser())
-                        {
-                            $agent = $this->agent->browser().' '.$this->agent->version();
-                        }
-                        elseif ($this->agent->is_robot())
-                        {
-                            $agent = $this->agent->robot();
-                        }
-                        elseif ($this->agent->is_mobile())
-                        {
-                            $agent = $this->agent->mobile();
-                        }
-                        else
-                        {
-                            $agent = 'Unidentified User Agent';
-                        }
-                        $activity_log = array(
-                            'user_login'=>$result['email'],
-                            'login_date'=> date('y-m-d H:i:s'),
-                            'login_ip'=> $this->input->ip_address(),
-                            'browser_type'=>$agent
-                        );
-                        $this->Loginmodel->activity_login_log($activity_log);
-                        $this->session->set_userdata($result);
-                        $this->session->set_flashdata('init-success',1);
-                        if($result['login_type'] === 'borrower')
-                        {
-                            redirect(base_url().'borrowerprocess/checking-steps');
-                        }
-                        else if($result['login_type'] === 'lender'){
-                            redirect(base_url().'lenderprocess/checking_steps');
-                        }
-                        else{
-                            ////Logout
-                        }
-
-                    }
-                    else{
-                        //Notification
-                        $this->Logout_faild_login();
-                    }
-                }
-                else
-                {
-                    if ($this->agent->is_browser())
-                    {
-                        $agent = $this->agent->browser().' '.$this->agent->version();
-                    }
-                    elseif ($this->agent->is_robot())
-                    {
-                        $agent = $this->agent->robot();
-                    }
-                    elseif ($this->agent->is_mobile())
-                    {
-                        $agent = $this->agent->mobile();
-                    }
-                    else
-                    {
-                        $agent = 'Unidentified User Agent';
-                    }
-                    $activity_log = array(
-                        'user_login'=>$this->input->post('user'),
-                        'login_attempt_ip'=> $this->input->ip_address(),
-                        'browser_type'=>$agent
-                    );
-
-                    $this->Loginmodel->failed_activity_login_log($activity_log);
-
-                    $this->load->helper('cookie');
-                    $cookie = array(
-                        'name'   => 'Array',
-                        'value'  => '',
-                        'expire' => '0'
-                    );
-                    delete_cookie($cookie);
-                    //$this->Logout_faild_login();
-                    $this->session->set_flashdata('notification',array('error'=>1,'message'=>'Incorrect Credentials! Please try again.'));
-                    redirect(base_url().'login/user-login');
-                }
-            }
-            else
-            {
-                if ($this->agent->is_browser())
-                {
-                    $agent = $this->agent->browser().' '.$this->agent->version();
-                }
-                elseif ($this->agent->is_robot())
-                {
-                    $agent = $this->agent->robot();
-                }
-                elseif ($this->agent->is_mobile())
-                {
-                    $agent = $this->agent->mobile();
-                }
-                else
-                {
-                    $agent = 'Unidentified User Agent';
-                }
-                $activity_log = array(
-                    'user_login'=>$this->input->post('user'),
-                    'login_attempt_ip'=> $this->input->ip_address(),
-                    'browser_type'=>$agent
-                );
-                $this->Loginmodel->failed_activity_login_log($activity_log);
-                //$this->Logout_faild_login();
-                $this->load->helper('cookie');
-                $cookie = array(
-                    'name'   => 'Array',
-                    'value'  => '',
-                    'expire' => '0'
-                );
-                delete_cookie($cookie);
-                $this->session->set_flashdata('notification',array('error'=>1,'message'=>'Please enter valid parameter'));
-                redirect(base_url().'login/user-login');
-            }
-        }
-        else{
-            if ($this->agent->is_browser())
-            {
-                $agent = $this->agent->browser().' '.$this->agent->version();
-            }
-            elseif ($this->agent->is_robot())
-            {
-                $agent = $this->agent->robot();
-            }
-            elseif ($this->agent->is_mobile())
-            {
-                $agent = $this->agent->mobile();
-            }
-            else
-            {
-                $agent = 'Unidentified User Agent';
-            }
-            $activity_log = array(
-                'user_login'=>$this->input->post('user')?$this->input->post('user'):'',
-                'login_attempt_ip'=> $this->input->ip_address(),
-                'browser_type'=>$agent
-            );
-            $this->Loginmodel->failed_activity_login_log($activity_log);
-            //$this->Logout_faild_login();
-            $this->load->helper('cookie');
-            $cookie = array(
-                'name'   => 'Array',
-                'value'  => '',
-                'expire' => '0'
-            );
-            delete_cookie($cookie);
-            $errmsg = $this->form_validation->error_array();
-            $this->session->set_flashdata('validation_errors',array('error'=>1,'message'=>$errmsg));
-            redirect(base_url().'login/user-login');
-        }
-
-    }
-
 
     /**
      * For Both Borrower And Lender
@@ -810,7 +490,7 @@ class Login extends CI_Controller{
             'expire' => '0'
         );
         delete_cookie($cookie);
-        redirect(base_url().'login/admin-login');
+        redirect(base_url().'login/user-login');
     }
 
     public function Logout()
