@@ -19,6 +19,7 @@ class Surge extends CI_Controller
 			$this->check_role();
 		$this->partner_id = $this->session->userdata('partner_id');
 		//	print_r($this->session->userdata());
+		$this->session->set_userdata(array("partnerInfo"=>$this->Surgemodel->getPartnersList(1, 0,"")));
 	}
 
 		
@@ -80,6 +81,9 @@ class Surge extends CI_Controller
 			$where['VID'] = $this->input->get('id');
 			$partnersData = $data['lists'] = $this->Surgemodel->getPartnersList(1,0,$where);
 			$data['lists'] = $partnersData['0'];
+			
+			$data['role'] = $this->session->userdata('role_id'); // 11 partner admin; 12:user; 10:super admin	
+			
 			//$this->load->view('templates/teamheader');
 			$this->load->view('template-surgeModule/header');
 			$this->load->view('template-surgeModule/nav');

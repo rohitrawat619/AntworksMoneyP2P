@@ -30,7 +30,7 @@ class Surgemodel extends CI_Model
 
 		public function getPartnersList($limit, $start,$where)
 	{
-		$this->cldb->select('invest_vendors1.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name');
+		$this->cldb->select('b.partner_type, invest_vendors1.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name');
 		$this->cldb->from('invest_vendors1');
 		$this->cldb->join('partners_theme as b', 'invest_vendors1.VID=b.partner_id', 'LEFT');
 		$this->cldb->limit($limit, $start);
@@ -107,6 +107,7 @@ class Surgemodel extends CI_Model
 				'created_user_id' => $this->session->userdata('user_id'),
 			'borrower_product_name' => $this->input->post('borrower_product_name'),
 				'lender_product_name' => $this->input->post('lender_product_name'),
+				'partner_type' => $this->input->post('partner_type'),
 			);
     // Check if any required field is empty
   if (empty($partner_id) || empty($arr_partners_theme['name'])) {
@@ -184,8 +185,8 @@ class Surgemodel extends CI_Model
 				'font_family' => $this->input->post('font_family'),
 				'created_date' => date("Y-m-d H:i:s"),
 				'created_user_id' => $this->session->userdata('user_id'),
-				'borrower_product_name' => $this->input->post('borrower_product_name'),
-				'lender_product_name' => $this->input->post('lender_product_name'),
+				
+				'partner_type' => $this->input->post('partner_type'),
 			);
 				if($logo_path!="<"){
 					$arr_partners_theme['logo_path'] = $logo_path;
@@ -198,7 +199,12 @@ class Surgemodel extends CI_Model
 					$resp['OtherData'] = $arr_partners_theme;
 						return $resp;
 					}
-    
+						if($this->input->post('borrower_product_name')!=""){
+						$arr_partners_theme['borrower_product_name'] = $this->input->post('borrower_product_name');
+						}
+						if($this->input->post('lender_product_name')!=""){
+				$arr_partners_theme['lender_product_name'] = $this->input->post('lender_product_name');
+						}
 								$this->cldb->where('partner_id',$partner_id);	
 			  $insertResult = $this->cldb->update('partners_theme', $arr_partners_theme);
 			  if($insertResult){

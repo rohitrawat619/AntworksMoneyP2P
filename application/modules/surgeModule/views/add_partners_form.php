@@ -96,27 +96,94 @@
 		value="<?php echo $lists['font_family']; ?>" name="font_family" placeholder="Font Family"><br><br>
     </div>
 	
-			<div class="col-md-3 form-group">
+		
+		
+		
+						
+					<div class="col-md-4 form-group"> 
+					<?php if($role=="10"){ //10:super admin ?>
+        <label for="partner_type">Partners Type:</label><br>
+        <select  class="form-control"type="text" required id="partner_type"  name="partner_type" >
+				<option>Select Partner Type</option>
+				<option  value="borrower" <?php echo (($lists['partner_type'] == "borrower") ? 'selected' : ''); ?>>Borrower</option>
+				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Lender</option>
+				<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Both</option>
+		</select>		<?php } ?>
+						</div>			
+	
+		<div class="col-md-4 form-group">
+        <label for="lender_product_name">Disbursment Method:</label><br>
+        <select  class="form-control"type="text" required id="partner_type"  name="partner_type" >
+				<option>Select Disbursment Method</option>
+				<option  value="borrower" <?php echo (($lists['partner_type'] == "borrower") ? 'selected' : ''); ?>>Manual</option>
+				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Hybrid</option>
+				<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Hybrid</option>
+		</select>
+		
+		<!------
+		1. Manual
+		2. Automatic
+		3. Hybrid
+		----->
+    </div>
+	
+			<!-----------------start of lender ------------------->
+					
+			<?php if (in_array($lists['partner_type'], ['lender', 'both'])){ ?>
+
+				<div class="row">
+			<div class="col-md-8 form-group"><b>Lender Link: 
+			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageLender','linkInputIdLender','Lender')">Copy</button>
+					<small id="copyMessageLender" class="form-text text-muted"></small>
+			</b>
+		<a target="_blank" href="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("lender");?>" >
+		<input type="text" class="form-control"  id="linkInputIdLender" value="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("lender");?>" readonly> </a>
+					
+					
+					</div>
+							
+							
+						
+					<div class="col-md-4 form-group">
         <label for="lender_product_name">Lender Product Name:</label><br>
         <input  class="form-control"type="text" required id="lender_product_name" value="<?php echo $lists['lender_product_name']; ?>" name="lender_product_name" placeholder="Lender Product Name"><br><br>
-    </div>
+    </div>	
 
-		<div class="col-md-3 form-group">
+					
+	</div>
+			<?php } ?>
+				<!----------------end of lender------------------>
+					
+					
+					<!-----------------start of borrower ------------------->
+			
+			<?php if (in_array($lists['partner_type'], ['borrower', 'both'])){ ?>
+			<div class="col-md-12 form-group">Borrower Links:</div>
+					<div class="col-md-8 form-group"><b>Bullet Link: 
+			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageBulletBorrower','linkInputIdBulletBorrower',' Bullet')">Copy</button>
+					<small id="copyMessageBulletBorrower" class="form-text text-muted"></small>
+			</b>
+		<a target="_blank" href="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("borrowerBullet");?>" >
+		<input type="text" class="form-control"  id="linkInputIdBulletBorrower" value="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("borrowerBullet");?>" readonly> </a>
+					
+					</div>
+					
+			<div class="col-md-8 form-group"><b>EMI Link: 
+			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageEmiBorrower','linkInputIdEmiBorrower',' EMI')">Copy</button>
+					<small id="copyMessageEmiBorrower" class="form-text text-muted"></small>
+			</b>
+		<a target="_blank" href="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("borrowerEmi");?>" >
+		<input type="text" class="form-control"  id="linkInputIdEmiBorrower" value="https://www.antworksp2p.com/LendSocial/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>&p=<?php echo base64_encode("borrowerEmi");?>" readonly> </a>
+					
+					</div>				
+							
+							
+							
+					<div class="col-md-4 form-group">
         <label for="borrower_product_name">Borrower Product Name:</label><br>
         <input  class="form-control"type="text" required id="borrower_product_name" value="<?php echo $lists['borrower_product_name']; ?>" name="borrower_product_name" placeholder="Borrower Product Name"><br><br>
-    </div>
-
-			<div class="col-md-6 form-group"><b>Lender Link:</b>
-		<a target="_blank" href="https://www.antworksp2p.com/SurgeApp/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>" >
-		<input type="text" class="form-control"  id="lenderLinkInput" value="https://www.antworksp2p.com/SurgeApp/signIn?q=<?php echo base64_encode(base64_encode($lists['VID']));?>" readonly> </a>
-					
-					
-					</div>
-					<div class="col-md-6 form-group"> <b><br></b>
-					
-					<button class="btn btn-outline-secondary" type="button" onclick="copyLink()">Copy</button>
-					<small id="copyMessage" class="form-text text-muted"></small>
-					</div>
+			</div>			<?php } ?>
+						<!----------------end of borrower---------------------->
 					</div>
 					
 				</div>
@@ -142,20 +209,20 @@
 	</div>
 
 <script>
-    function copyLink() {
+    function copyLink(copyMessageVar,linkInputId,label) {
         /* Get the text field */
-        var lenderLinkInput = document.getElementById("lenderLinkInput");
+        var linkInputId = document.getElementById(linkInputId);
 
         /* Select the text field */
-        lenderLinkInput.select();
-        lenderLinkInput.setSelectionRange(0, 99999); /* For mobile devices */
+        linkInputId.select();
+        linkInputId.setSelectionRange(0, 99999); /* For mobile devices */
 
         /* Copy the text inside the text field */
         document.execCommand("copy");
 
         /* Display the copy message */
-        var copyMessage = document.getElementById("copyMessage");
-        copyMessage.innerHTML = "Link copied!";
+        var copyMessage = document.getElementById(copyMessageVar);
+        copyMessage.innerHTML = label+" Link copied!";
         
         /* Clear the message after a short delay */
         setTimeout(function() {
