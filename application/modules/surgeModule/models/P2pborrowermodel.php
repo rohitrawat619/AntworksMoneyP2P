@@ -580,6 +580,7 @@ class P2pborrowermodel extends CI_Model
     } else {
         return false;
     }
+}		***************/
 
     public function getBankresponse($borrower_id)
     {
