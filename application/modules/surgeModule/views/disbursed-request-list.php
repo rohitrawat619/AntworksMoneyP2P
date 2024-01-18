@@ -1,4 +1,5 @@
 <?= getNotificationHtml(); ?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="white-box p-0">
@@ -45,11 +46,13 @@
                                             <td><?= $row['approved_interest']; ?> %</td>
                                             <td><?= $row['approved_tenor']; ?>Month</td>
                                             <td>
-											<?php if($row['loan_status'] == 1){?>
-											<a href="javascript:void(0)" class="btn btn-success">Amt. Disbursed</a></td> 
-											<?php }else{?>
-											<a href="javascript:void(0)" data-loan_no="<?= $row['loan_no']; ?>" data-disburse_amount="<?= $row['approved_loan_amount']; ?>" class="btn btn-primary disburse">Disburse</a></td>
-											<?php }?>
+    <?php if($row['loan_status'] == 1){?>
+        <a href="javascript:void(0)" class="btn btn-success">Amt. Disbursed</a>
+    <?php } else {?>
+        <a href="javascript:void(0)" data-loan_no="<?= $row['loan_no']; ?>" data-disburse_amount="<?= $row['approved_loan_amount']; ?>" class="btn btn-primary disburse">Disburse</a>
+    <?php }?>
+</td>
+
                                         </tr>
                                         <?php $i++;
                                     }
@@ -84,32 +87,88 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function(){
-  // disburse 
-  $('.disburse').click(function(event){
-      // loan loan_no
-      var loan_no = $(this).data('loan_no');
-      var disburse_amount = $(this).data('disburse_amount');
-	
-      // Confirm box
-	  if (confirm('Are you sure you want to Disburse Loan?')) {
-        $.ajax({
-            url: '<?= base_url('p2padmin/loan_disbursed')?>',
-            type: "POST",
-            data: { loan_no:loan_no,disburse_amount:disburse_amount },
-			dataType: 'json',
-            success: function (response) {
-				alert(response.message);
-				location.reload(true);
-            }
-        });
-    }
-  });
-});
-    $(window).load(function () {
-        $('li').removeClass('active1');
-        $('.user div').removeClass('collapse');
-        $('.list-users').addClass('active1');
+
+<!-- modal starts -->
+
+<div id="disburseModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Loan Disbursement</h4>
+            </div>
+            <div class="modal-body">
+                <form id="disburseForm">
+                    <div class="form-group">
+                        <label for="disburseAmount">Disburse Amount:</label>
+                        <input type="text" class="form-control" id="disburseAmount" name="disburseAmount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="disburseROI">Rate of Interest (%):</label>
+                        <input type="text" class="form-control" id="disburseROI" name="disburseROI" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Disburse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- modal ends -->
+
+<script>$(document).ready(function(){
+    // disburse 
+    
+    $('.disburse').click(function(event){
+        console.log("click");
+        // loan loan_no
+        var loan_no = $(this).data('loan_no');
+        var disburse_amount = $(this).data('disburse_amount');
+        
+        // Set modal data attributes
+        $('#disburseModal').attr('data-loan_no', loan_no);
+        $('#disburseModal').attr('data-disburse_amount', disburse_amount);
+        
+        // Show the modal
+        $('#disburseModal').modal('show');
     });
+
+    // Handle form submission
+    $('#disburseForm').submit(function(event){
+        event.preventDefault();
+        
+        // Get data from modal
+        var loan_no = $('#disburseModal').data('loan_no');
+        var disburse_amount = $('#disburseModal').data('disburse_amount');
+        var disburseAmount = $('#disburseAmount').val();
+        var disburseROI = $('#disburseROI').val();
+        
+        // Confirm box
+        if (confirm('Are you sure you want to Disburse Loan?')) {
+            // Make AJAX request
+            $.ajax({
+                url: 'loan_disbursed',
+                type: "POST",
+                data: { loan_no: loan_no, disburse_amount: disburseAmount, disburseAmount: disburseAmount, disburseROI: disburseROI },
+                dataType: 'json',
+                success: function (response) {
+                    alert(response.message);
+                    location.reload(true);
+                }
+            });
+
+            // Hide the modal
+            $('#disburseModal').modal('hide');
+        }
+    });
+    
+});
+
+$(window).load(function () {
+    $('li').removeClass('active1');
+    $('.user div').removeClass('collapse');
+    $('.list-users').addClass('active1');
+});
 </script>

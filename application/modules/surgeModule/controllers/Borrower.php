@@ -21,6 +21,7 @@ class Borrower extends CI_Controller
 			// $this->check_role();
 		$this->partner_id = $this->session->userdata('partner_id');
 		//	print_r($this->session->userdata());
+		$this->paginationUrl = base_url() . "surgeModule/borrower/";
 	}
 	
 
@@ -31,17 +32,16 @@ class Borrower extends CI_Controller
     {
 		
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
 			// echo base_url();die();
-            $config["base_url"] = base_url() . "borrowerModule/borrower/borrowers";
+            $config["base_url"] = $this->paginationUrl."/borrowers";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
 			// echo $config["total_rows"];die();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 			
@@ -49,7 +49,7 @@ class Borrower extends CI_Controller
 
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers($config["per_page"], $page);
-			// print_r($data['list']);die();
+			$data['base_url'] = $this->paginationUrl;			// print_r($data['list']);die();
             $data['pageTitle'] = "Borrower List";
             $data['title'] = "Admin Dashboard";
 			
@@ -73,7 +73,7 @@ class Borrower extends CI_Controller
             $data['list'] = $this->P2pborrowermodel->get_borrower_details($borrower_id);
            
             $data['basic_response'] = $this->P2pborrowermodel->borrower_basic_filter_response($data['list']['borrower_id']);
-            $data['experian_details'] = $this->P2pborrowermodel->getExperian_details($data['list']['borrower_mobile']);
+           //dated:2024-jan-17 $data['experian_details'] = $this->P2pborrowermodel->getExperian_details($data['list']['borrower_mobile']);
             $data['panresponse'] = $this->P2pborrowermodel->getPanresponse($data['list']['borrower_mobile']);
 //            pr($data['panresponse']);
             $data['bankaccountresponse'] = $this->P2pborrowermodel->bankaccountresponse_v1($data['list']['borrower_mobile']);
@@ -104,20 +104,19 @@ class Borrower extends CI_Controller
     public function step_1()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_1	";
+            $config["base_url"] = $this->paginationUrl."step_1";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_1($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -137,20 +136,20 @@ class Borrower extends CI_Controller
     public function step_2()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          ///*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_2	";
+            $config["base_url"] = $this->paginationUrl."step_2	";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+          //  $config['full_tag_open'] = "<div class='new-pagination'>";
+           // $config['full_tag_close'] = "</div>";
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_2($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -170,20 +169,19 @@ class Borrower extends CI_Controller
     public function step_3()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_3";
+            $config["base_url"] = $this->paginationUrl."step_3";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_3($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -203,20 +201,19 @@ class Borrower extends CI_Controller
     public function step_4()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_4";
+            $config["base_url"] = $this->paginationUrl."step_4";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_4($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -236,20 +233,20 @@ class Borrower extends CI_Controller
     public function step_5()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_5";
+            $config["base_url"] = $this->paginationUrl."step_5";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			
+			$data['base_url'] = $this->paginationUrl;		
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_5($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -269,20 +266,20 @@ class Borrower extends CI_Controller
     public function step_6()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_6";
+            $config["base_url"] = $this->paginationUrl."step_6";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
+			
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_6($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -302,20 +299,20 @@ class Borrower extends CI_Controller
     public function step_7()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
-            $this->load->library("pagination");
+          /*  $this->load->library("pagination");*/
             $config = array();
-            $config["base_url"] = base_url() . "/borrowerModule/borrower/step_7";
+            $config["base_url"] = $this->paginationUrl."step_7";
             $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
             $config["per_page"] = 100;
             $config["uri_segment"] = 3;
             $config['num_links'] = 10;
-            $config['full_tag_open'] = "<div class='new-pagination'>";
-            $config['full_tag_close'] = "</div>";
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
 
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
 
+			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_7($config["per_page"], $page);
             $data['pageTitle'] = "Borrower List";
@@ -428,7 +425,27 @@ class Borrower extends CI_Controller
         $this->load->view('template-surgeModule/footer');
     }
 		
-	
+    public function loan_disbursed(){
+		$postVal = $this->input->post();
+	   if (!empty($postVal['loan_no'])) {
+		   $this->cldb->where('loan_no', $postVal['loan_no']);
+		   $this->cldb->set('loan_status', 1);
+		   $this->cldb->set('approved_interest', $postVal['disburseROI']);
+		   $this->cldb->set('approved_loan_amount', $postVal['disburseAmount']);
+		   $this->cldb->set('disburse_amount', $postVal['disburse_amount']);
+		   $this->cldb->set('disbursement_date', date('Y-m-d h:i:s'));
+		   $this->cldb->update('p2p_loan_list');
+		   $response['status'] = 1;
+		   $response['message'] = 'Amount Disbursed Successfully';
+		   echo json_encode($response);
+		   exit;
+	   }else {
+		   $response['status'] = 0;
+		   $response['message'] = 'Something wrong!';
+		   echo json_encode($response);
+		   exit;
+	   }	
+	}
 
 
 }

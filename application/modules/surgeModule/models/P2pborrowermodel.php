@@ -5,7 +5,7 @@ class P2pborrowermodel extends CI_Model
     public function __construct()
     {
         parent::__construct();
-		$this->money=$this->load->database('money', true);
+	//	$this->money=$this->load->database('money', true);
         $this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
         
     }
@@ -563,6 +563,8 @@ class P2pborrowermodel extends CI_Model
             return false;
         }
     } */
+	
+	/*********dated: 2024-jan-17********
     public function getExperian_details($mobile)
 {
     $this->money->select('score as experian_score');
@@ -578,7 +580,6 @@ class P2pborrowermodel extends CI_Model
     } else {
         return false;
     }
-}
 
     public function getBankresponse($borrower_id)
     {

@@ -1,8 +1,8 @@
 <div class="row">
 <section class="content-header">
-    <h1>
-        <?php echo $pageTitle; ?>
-    </h1>
+     <h1 style="padding-left:40px;">
+              <?php echo $pageTitle; ?>
+        </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Borrower List</li>
@@ -108,7 +108,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                    <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list " data-page-size="100">
+                    <table id="demo-foo-addrow" class="table table-striped table-bordered dataTable no-footer" data-page-size="100">
                         <thead>
                         <tr>
                             <th>No</th>
@@ -130,6 +130,7 @@
                             $i=1;
                             foreach($list as $row){
                                $current_step = $this->Borroweraddmodel->get_current_status_credit_line($row['id']);
+							   
                                 ?>
                                 <tr>
                                     <td><?=$i;?></td>
@@ -140,7 +141,7 @@
 
                                     <td><?=$ff = date('d-M-Y', strtotime($row['created_date']));?></td>
                                     <td></td>
-                                    <td><a href="viewborrower/<?=$row['borrower_id'];?>"> View</a></td>
+                                    <td><a  class="btn btn-primary" href="<?php echo $base_url;?>viewborrower/<?=$row['borrower_id'];?>"> View</a></td>
                                 </tr>
                                 <?php $i++;}}else
                         {?>
@@ -150,17 +151,16 @@
                         <?php }?>
                         </tbody>
                         <tfoot>
-                        <tr>
-                            <td colspan="12">
-                                <?php
-
-                                echo $pagination;
-
-                                ?></td></tr>
-
+                       
                         </tr>
                         </tfoot>
                     </table>
+												 <div class="box-footer clearfix">
+			<nav aria-label="Page navigation">
+				<ul class="setPaginate pull-right pagination">
+					<li><?php echo  $pagination; ?></li>
+				</ul>
+			</nav> </div>
                 </div>
                 </div>
             </div>

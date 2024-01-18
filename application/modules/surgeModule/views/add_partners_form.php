@@ -113,11 +113,11 @@
 	
 		<div class="col-md-4 form-group">
         <label for="lender_product_name">Disbursment Method:</label><br>
-        <select  class="form-control"type="text" required id="partner_type"  name="partner_type" >
+        <select  class="form-control"type="text" required id="disbursment_method"  name="disbursment_method" >
 				<option>Select Disbursment Method</option>
-				<option  value="borrower" <?php echo (($lists['partner_type'] == "borrower") ? 'selected' : ''); ?>>Manual</option>
-				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Hybrid</option>
-				<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Hybrid</option>
+				<option  value="automatic" <?php echo (($lists['disbursment_method'] == "automatic") ? 'selected' : ''); ?>>Automatic</option>
+				<option  value="manual" <?php echo (($lists['disbursment_method'] == "manual") ? 'selected' : ''); ?>>Manual</option>
+				<option  value="both" <?php echo (($lists['disbursment_method'] == "hybrid") ? 'selected' : ''); ?>>Hybrid</option>
 		</select>
 		
 		<!------
