@@ -68,6 +68,11 @@ class disbursementModel extends CI_Model
         else if($loanStatus==1){
             $data['approved_loan_amount']=$amount;
             $data['approved_interest']=$roi;
+            $data['disburse_amount']=$amount;
+        }
+        else if($loanStatus==4){
+            $data['disbursement_date']=date('Y-m-d h:i:s');
+            $data['loan_status']=1;
         }
         $this->cldb->where_in("id", $ids);
         $query = $this->cldb->update("p2p_loan_list", $data);
