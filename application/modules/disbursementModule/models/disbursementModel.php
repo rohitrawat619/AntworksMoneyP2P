@@ -51,9 +51,10 @@ class disbursementModel extends CI_Model
 }
     
 
-    public function update_disburse_status($loanStatus, $ids) {
+    public function update_disburse_status($loanStatus, $ids,$amount,$roi) {
         $data = array(
             "status" => $loanStatus,
+            
         );
         if($loanStatus==3){// 3:status is for  generated bank files 
         $idsArray = explode(",", urldecode($ids));
@@ -64,6 +65,10 @@ class disbursementModel extends CI_Model
 					// You may want to remove empty values if any
 					$ids = array_filter($idsArray);
                 }
+        else if($loanStatus==1){
+            $data['approved_loan_amount']=$amount;
+            $data['approved_interest']=$roi;
+        }
         $this->cldb->where_in("id", $ids);
         $query = $this->cldb->update("p2p_loan_list", $data);
     

@@ -43,12 +43,14 @@ class Disbursement extends CI_Controller{
     public function update_disburse_status(){
         $ids = $this->input->post('ids');
         $loanStatus = $this->input->post('status');
+        $amount = $this->input->post('amount');
+        $roi = $this->input->post('roi');
         // echo $ids."!".$loanStatus;die();
         if($loanStatus==3){ // generate_bank_file 
             
             $csv_data = $this->generate_bank_file_excel($ids);
             // echo $csv_data;die();
-            $update_disburse_status['query'] =	$this->disbursementModel->update_disburse_status($loanStatus, $ids);
+            $update_disburse_status['query'] =	$this->disbursementModel->update_disburse_status($loanStatus, $ids,$amount,$roi);
         if ($update_disburse_status) {
             $update_disburse_status['status'] = 1;
             $update_disburse_status['message'] = 'Update successful';
@@ -64,7 +66,7 @@ class Disbursement extends CI_Controller{
         }
         
         else{
-        $update_disburse_status = $this->disbursementModel->update_disburse_status($loanStatus, $ids);
+        $update_disburse_status = $this->disbursementModel->update_disburse_status($loanStatus, $ids,$amount,$roi);
         
         if ($update_disburse_status) {
             echo json_encode(array('status' => 1, 'message' => 'Update successful'));
