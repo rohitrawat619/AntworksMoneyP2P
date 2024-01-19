@@ -6,7 +6,7 @@ class Borroweraddmodel extends CI_Model
     {
         parent::__construct();
         $this->load->model(array('Borrowermodel', 'P2papi/Commonapimodel'));
-        $this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+        $this->cldb = $this->load->database('credit-line', TRUE);
 		
     }
 

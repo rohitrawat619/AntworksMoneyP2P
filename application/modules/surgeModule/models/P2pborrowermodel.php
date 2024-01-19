@@ -6,7 +6,7 @@ class P2pborrowermodel extends CI_Model
     {
         parent::__construct();
 	//	$this->money=$this->load->database('money', true);
-        $this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+        $this->cldb = $this->load->database('credit-line', TRUE);
         
     }
 

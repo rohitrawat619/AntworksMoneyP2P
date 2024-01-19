@@ -9,7 +9,7 @@ class Surgemodel extends CI_Model
 		parent::__construct();
 	//	$this->db_money_money = $this->load->database('db_money', true);
 	//  $this->cldb = $this->load->database('credit-line', TRUE);
-	$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+	$this->cldb = $this->load->database('credit-line', TRUE);
 	//	$this->load->model('Common_model');
 			// Get the database name
 		$this->partner_id = $this->session->userdata('partner_id');
@@ -30,12 +30,12 @@ class Surgemodel extends CI_Model
 
 		public function getPartnersList($limit, $start,$where)
 	{
-		$this->cldb->select('b.disbursment_method, b.partner_type, invest_vendors1.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name');
-		$this->cldb->from('invest_vendors1');
-		$this->cldb->join('partners_theme as b', 'invest_vendors1.VID=b.partner_id', 'LEFT');
+		$this->cldb->select('b.disbursment_method, b.partner_type, invest_vendors.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name');
+		$this->cldb->from('invest_vendors');
+		$this->cldb->join('partners_theme as b', 'invest_vendors.VID=b.partner_id', 'LEFT');
 		$this->cldb->limit($limit, $start);
 			if($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12){
-		$this->cldb->where("invest_vendors1.VID", $this->partner_id);
+		$this->cldb->where("invest_vendors.VID", $this->partner_id);
 		}
 
 		if($where!=""){
@@ -48,7 +48,7 @@ class Surgemodel extends CI_Model
 	public function getCountPartnersList($where)
 	{
 		$this->cldb->select('id');
-		$this->cldb->from('invest_vendors1');
+		$this->cldb->from('invest_vendors');
 		if($where!=""){
 		$this->cldb->where($where);
 		}
@@ -78,7 +78,7 @@ class Surgemodel extends CI_Model
 }
     
 		
-			  $insertResult = $this->cldb->insert('invest_vendors1', $arr_partners);
+			  $insertResult = $this->cldb->insert('invest_vendors', $arr_partners);
 			  if($insertResult){
 				    $insert_id = $this->cldb->insert_id();
 				  $resp['status'] = 1;
@@ -169,7 +169,7 @@ class Surgemodel extends CI_Model
 }
     
 							$this->cldb->where('VID',$partner_id);	
-			  $insertResult = $this->cldb->update('invest_vendors1', $arr_partners);
+			  $insertResult = $this->cldb->update('invest_vendors', $arr_partners);
 								
 			  if($insertResult){
 				    
@@ -247,7 +247,7 @@ class Surgemodel extends CI_Model
 		$this->cldb->select('p2p_admin_list.*, b.role_name, c.Company_Name as partner_name');
 		$this->cldb->from('p2p_admin_list');
 		$this->cldb->join('p2p_admin_role as b', 'p2p_admin_list.role_id=b.id', 'LEFT');
-		$this->cldb->join('invest_vendors1 c', 'p2p_admin_list.partner_id=c.VID', 'LEFT');
+		$this->cldb->join('invest_vendors c', 'p2p_admin_list.partner_id=c.VID', 'LEFT');
 		
 		if($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12){
 		$this->cldb->where("p2p_admin_list.partner_id", $this->partner_id);
@@ -416,7 +416,7 @@ if($where!=""){
 	{
 		$this->cldb->select('p2p_lender_list.*, a.Company_Name as partner_name');
 		$this->cldb->from('p2p_lender_list');
-		$this->cldb->join('invest_vendors1 a', 'p2p_lender_list.vendor_id=a.VID');
+		$this->cldb->join('invest_vendors a', 'p2p_lender_list.vendor_id=a.VID');
 		$this->cldb->limit($limit, $start);
 
 				if(($this->partner_id!="") and ($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12)){
@@ -439,7 +439,7 @@ if($where!=""){
 	{
 		$this->cldb->select('invest_scheme_details.*, b.Company_name as partners_name');
 		$this->cldb->from('invest_scheme_details');
-		$this->cldb->join('invest_vendors1 as b', 'invest_scheme_details.Vendor_ID =b.VID', 'left');
+		$this->cldb->join('invest_vendors as b', 'invest_scheme_details.Vendor_ID =b.VID', 'left');
 		if($where!=""){
 		$this->cldb->where($where);
 		}
@@ -582,7 +582,7 @@ $this->cldb->limit($limit, $start);
 		$this->cldb->join('p2p_lender_list as b', 'a.lender_id =b.lender_id', 'LEFT');
 		$this->cldb->join('p2p_lender_bank_res AS c', 'c.lender_id = b.user_id', 'LEFT');
 				$this->cldb->join('invest_scheme_details as d', 'a.scheme_id =d.id', 'LEFT');
-				$this->cldb->join('invest_vendors1 as e', 'b.vendor_id =e.VID', 'LEFT');
+				$this->cldb->join('invest_vendors as e', 'b.vendor_id =e.VID', 'LEFT');
 		 $this->cldb->where_in('a.redemption_status' , $status);
 				if(($this->partner_id!="") and ($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12)){
 		$this->cldb->where("b.vendor_id",$this->partner_id);
@@ -624,7 +624,7 @@ $this->cldb->limit($limit, $start);
 					$this->cldb->join('p2p_lender_list as b', 'a.lender_id =b.lender_id', 'LEFT');
 					$this->cldb->join('p2p_lender_bank_res AS c', 'c.lender_id = b.user_id', 'LEFT');
 							$this->cldb->join('invest_scheme_details as d', 'a.scheme_id =d.id', 'LEFT');
-							$this->cldb->join('invest_vendors1 as e', 'b.vendor_id =e.VID', 'LEFT');
+							$this->cldb->join('invest_vendors as e', 'b.vendor_id =e.VID', 'LEFT');
 					
 					 $this->cldb->where_in('a.reinvestment_id',$idsArray);
 					$this->cldb->GROUP_BY("a.reinvestment_id");
@@ -654,6 +654,7 @@ $this->cldb->limit($limit, $start);
 		);
 			$data_entry_id = $this->session->userdata('user_id');
 			if($status!="" && $ids!=""){
+				
 				
 				$idsArray = explode(",", urldecode($ids));
 

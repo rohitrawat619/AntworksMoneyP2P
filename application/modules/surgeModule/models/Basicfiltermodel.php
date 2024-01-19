@@ -4,7 +4,7 @@ class Basicfiltermodel extends CI_Model{
     public function __construct()
     {
         parent::__construct();
-        $this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+        $this->cldb = $this->load->database('credit-line', TRUE);
     }
 
     public function get_occupation()
