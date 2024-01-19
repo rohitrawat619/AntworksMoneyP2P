@@ -299,7 +299,7 @@ class Borroweraddmodel extends CI_Model
         }
     }
     public function get_current_status_credit_line($borrower_id)
-    {       return "dheeraj"; die();
+    {      
         $query = $this->cldb->get_where('p2p_borrower_steps', array('borrower_id' => $borrower_id));
         if ($this->cldb->affected_rows() > 0) {
             $steps = $query->row_array();
