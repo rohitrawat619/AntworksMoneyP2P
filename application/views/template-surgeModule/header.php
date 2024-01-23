@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>P2P Surge | Dashboard</title>
+    <title>Lend Social | Dashboard</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
@@ -91,9 +91,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <!-- Logo -->
         <a href="javascript:void(0)" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>Surge</b></span>
+            <span class="logo-mini"><b>Lend Social</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Surge</span>
+            <span class="logo-lg">Lend Social</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
