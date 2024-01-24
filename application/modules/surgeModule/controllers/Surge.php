@@ -26,8 +26,9 @@ class Surge extends CI_Controller
 	
 	
 	public function dashboard(){	
-			echo "Partner: ".$this->partner_id;
-		print_r($this->session->userdata('role'));
+		
+			// echo "Partner: ".$this->partner_id;
+		// print_r($this->session->userdata('role'));
 			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,"");
 			$data['lists']['schemeList'] = $this->Surgemodel->getSchemeList(100, 0,"");
 			$data['lists']['dashboardData']['TodayInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_reinvestment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
@@ -47,12 +48,14 @@ class Surge extends CI_Controller
 			$data['lists']['dashboardData']['RedeemedInvestmentNoInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_reinvestment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");	
 			//$this->load->view('templates/teamheader');
 				
+			// echo "<pre>"; print_r($data);
 			$this->load->view('template-surgeModule/header');
-
-				
 		$this->load->view('template-surgeModule/nav');
 		$this->load->view('dashboard',$data);
 			$this->load->view('template-surgeModule/footer');
+			
+
+			
 		}
 
 	public function partners_list(){

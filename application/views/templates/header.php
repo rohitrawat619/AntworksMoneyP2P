@@ -11,19 +11,19 @@ error_reporting(E_ALL);
 <meta name="keywords" content="<?=$keywords?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" sizes="16x16" href="https://www.antworksmoney.com/assets/img/favicon.png">
-<link rel="stylesheet" href="<?=base_url();?>assets/css/build.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/css/style.css">
+<link rel="stylesheet" href="../assets/css/build.css">
+<link rel="stylesheet" href="../assets/css/style.css">
 
-<link rel="stylesheet" href="<?=base_url();?>assets/css/mystyle2.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/css/responsive.css">
-<!--<link rel="stylesheet" href="<?=base_url();?>assets/css/datepicker.css">-->
-<link rel="stylesheet" href="<?=base_url();?>assets/css/jquery-ui.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/assets/noUiSlider.9.1.0/nouislider.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/assets/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/css/owl.carousel.min.css">
-<link rel="stylesheet" href="<?=base_url();?>assets/css/mystyle.css">
+<link rel="stylesheet" href="../assets/css/mystyle2.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+<!--<link rel="stylesheet" href="./assets/css/datepicker.css">-->
+<link rel="stylesheet" href="../assets/css/jquery-ui.css">
+<link rel="stylesheet" href="../assets/assets/noUiSlider.9.1.0/nouislider.css">
+<link rel="stylesheet" href="../assets/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../assets/css/owl.carousel.min.css">
+<link rel="stylesheet" href="../assets/css/mystyle.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="<?=base_url();?>assets/js/jquery-latest.min.js"></script>
+<script src="../assets/js/jquery-latest.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/CryptoJS/rollups/sha512.js"></script>
     <script type="text/javascript">
         var baseURL = "<?php echo base_url(); ?>";

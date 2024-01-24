@@ -165,7 +165,7 @@ class Borroweractivitymodel extends CI_Model{
 
     public function getEmidetailstopay()
     {
-     $emi_amount = $this->db->select('emi_amount')->get_where('p2p_borrower_emi_details', array('id'=>$this->input->post('emi_id')))->row()->emi_amount;
+     $emi_amount = $this->db->select('emi_amount')->get_where('p2p_borrower_emi_details', array('id'=>$this->input->post('emi_id')));
      $this->db->select('id')->get_where('p2p_borrower_emi_details', array('loan_id'=>$this->input->post('bid_registration_id')));
      if($this->db->affected_rows()>1)
      {

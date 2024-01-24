@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 if($get_borrower_details['current_step_details']->step=="ALL STEPS DONE"){
 	$link='dashboard';
 }
@@ -9,8 +10,8 @@ else{
 <section class="container creditlinebg">
 	<div class="row">
 		<div class="col-md-12 text-center">
-			<img src="../assets/img/buddy-credit-line.png" class="creditlinelogo">
-			<h2 class="creditline-headr">Credit Line</h2>
+		<img src="<?php echo $borrowerProductInfo['borrowerProductImagePath']; ?>" class="creditlinelogo">
+			<h2 class="creditline-headr"><?=$borrowerProductInfo['borrowerProductName']?></h2>
 			<p class="creditline-subheadr">Here is what you get</p>
 		</div>
 		<div class="col-md-4 col-xs-4 text-center">

@@ -108,19 +108,19 @@
 
 <!--Scroll to top-->
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
-<script src="<?= base_url(); ?>assets/js/jquery-ui.js"></script>
+<script src="../../assets/js/jquery-ui.js"></script>
 
-<script src="<?= base_url(); ?>assets/assets/bootstrap/js/bootstrap.min.js"></script>
-<script src="<?= base_url(); ?>assets/assets/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="../../assets/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../assets/assets/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-<script src="<?= base_url(); ?>assets/assets/owl.carousel-2/owl.carousel.min.js"></script>
-<script src="<?= base_url(); ?>assets/js/custom.js"></script>
-<script src="<?= base_url(); ?>assets/js/validate.js"></script>
-<script src="<?= base_url(); ?>assets/js/tinynav.min.js"></script>
+<script src="../../assets/assets/owl.carousel-2/owl.carousel.min.js"></script>
+<script src="../../assets/js/custom.js"></script>
+<script src="../../assets/js/validate.js"></script>
+<script src="../../assets/js/tinynav.min.js"></script>
 <?php if ($this->router->fetch_class() == 'Emi_calculator') { ?>
-	<script type="text/javascript" src="<?= base_url(); ?>assets/js/materialize.js"></script>
-	<script type="text/javascript" src="<?= base_url(); ?>assets/js/jquery.formset.js"></script>
-	<script type="text/javascript" src="<?= base_url(); ?>assets/js/materialize.forms.js"></script>
+	<script type="text/javascript" src="../../assets/js/materialize.js"></script>
+	<script type="text/javascript" src="../../assets/js/jquery.formset.js"></script>
+	<script type="text/javascript" src="../../assets/js/materialize.forms.js"></script>
 <?php } ?>
 <script>
 	var owl = $('#campaign_owl_carousel');

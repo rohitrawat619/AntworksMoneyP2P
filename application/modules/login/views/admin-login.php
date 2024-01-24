@@ -44,14 +44,14 @@
                 <a href="" class="btn-signup"></a>
             </div>
             <div class="col-md-6 col-xs-12 whitebg">
-                <?=getNotificationHtml();?>
+                
                 <div class="col-md-12">
                     <div class="col-md-12">
                         <ul class="login-tab">
                             <li><a href="javascript:void(0)" class="active">Login As Admin</a></li>
                         </ul>
                     </div>
-             <form action="<?php echo base_url(); ?>login/verify_admin_login" onsubmit="return enc_lender()" method="post">
+             <form action="verify_admin_login" onsubmit="return enc_lender()" method="post">
                         <div class="form-group">
                             <span class="help-block with-errors">
                             <ul class="list-unstyled">
@@ -90,7 +90,7 @@
 <!--                            </div>-->
                             <div class="col-md-12 btn-logsig">
                                 <button class="" type="submit">Login</button>
-                                <a href="<?php echo base_url(); ?>">SignUp</a>
+                                <a href="">SignUp</a>
                             </div>
 
                         </div>

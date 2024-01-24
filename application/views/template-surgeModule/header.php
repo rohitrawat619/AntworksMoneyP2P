@@ -7,35 +7,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Lend Social | Dashboard</title>
+    <title>(Sandbox) Lend Social | Dashboard</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
 
     <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/Ionicons/css/ionicons.min.css">
 
     <!-- daterange picker -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/bootstrap-daterangepicker/daterangepicker.css">
     <!-- bootstrap datepicker -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/plugins/iCheck/all.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/plugins/iCheck/all.css">
 
     <!-- Bootstrap time Picker -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/plugins/timepicker/bootstrap-timepicker.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/plugins/timepicker/bootstrap-timepicker.min.css">
     <!-- jvectormap -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/bower_components/jvectormap/jquery-jvectormap.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/bower_components/jvectormap/jquery-jvectormap.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/dist/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="<?=base_url();?>assets-p2padmin/assets/css/mystyle.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="./../../../assets-p2padmin/assets/css/mystyle.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,8 +51,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         var baseURL = "<?php echo base_url(); ?>";
     </script>
 	<!-- jQuery 3 -->
-	<script src="<?=base_url();?>assets-p2padmin/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="./../../../assets-p2padmin/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap.min.js"></script>
 	<style>
        
 
@@ -91,9 +93,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <!-- Logo -->
         <a href="javascript:void(0)" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>Lend Social</b></span>
+            <span class="logo-mini"><b>(Sandbox)Lend Social</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Lend Social</span>
+            <span class="logo-lg">(Sandbox)Lend Social</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->

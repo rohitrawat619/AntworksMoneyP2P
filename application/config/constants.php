@@ -93,3 +93,4 @@ defined('PAN_API_URL')      OR define('PAN_API_URL', 'https://svcdemo.digitap.wo
 defined('GENERATE_ESIGN_URL')      OR define('GENERATE_ESIGN_URL', 'https://api.digitap.ai/ent/v1/generate-esign');//PAN_API_URL
 defined('GET_E_SIGN_DOC')      OR define('GET_E_SIGN_DOC', 'https://api.digitap.ai/ent/v1/get-esign-doc');//PAN_API_URL
 defined('E_SIGN_PROCESS')      OR define('E_SIGN_PROCESS', 'https://sdk.digitap.ai/e-sign/templateesignprocess.html?docId=');//PAN_API_URL
+defined('ANTWORKS_BANK_AC')      OR define('ANTWORKS_BANK_AC',1234);

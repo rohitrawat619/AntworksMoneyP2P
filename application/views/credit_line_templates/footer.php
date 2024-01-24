@@ -95,7 +95,9 @@
 	<!-- /.container -->
 </section>
 <!-- /.footer-bottom -->
+
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
+<script src="../assets/js/buddy-credit-line.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://www.antworksp2p.com/assets/js/jquery-ui.js"></script>
 <script src="https://www.antworksp2p.com/assets/assets/bootstrap/js/bootstrap.min.js"></script>
