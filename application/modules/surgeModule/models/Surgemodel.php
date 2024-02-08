@@ -64,10 +64,10 @@ class Surgemodel extends CI_Model
 				'phone' => $this->input->post('Phone'),
 				'email' => $this->input->post('Email'),
 				'key' => $this->input->post('key'),
-				'level' => $this->input->post('level'),
-				'ignore_limits' => $this->input->post('ignore_limits'),
-				'is_private_key' => $this->input->post('is_private_key'),
-				'ip_addresses' => $this->input->post('ip_addresses'),
+			//	'level' => $this->input->post('level'),
+			//	'ignore_limits' => $this->input->post('ignore_limits'),
+			//	'is_private_key' => $this->input->post('is_private_key'),
+			//	'ip_addresses' => $this->input->post('ip_addresses'),
 			);
     // Check if any required field is empty
   if (empty($arr_partners['company_name']) || empty($arr_partners['phone'])) {
@@ -77,20 +77,30 @@ class Surgemodel extends CI_Model
     return $resp;
 }
     
-		
+						$emailCount = $this->cldb->from('invest_vendors')->where('email', $arr_partners['email'])->count_all_results();
+					$mobileCount = $this->cldb->from('invest_vendors')->where('phone', $arr_partners['phone'])->count_all_results();
+						 $resp['status'] = 0;
+					if($emailCount>0){
+						$resp['msg'] = "Email ID Already Exist";
+					}else if($mobileCount>0){
+							$resp['msg'] = "Mobile Number Already Exist";
+					}else{
+						
 			  $insertResult = $this->cldb->insert('invest_vendors', $arr_partners);
 			  if($insertResult){
 				    $insert_id = $this->cldb->insert_id();
 				  $resp['status'] = 1;
 				  $resp['msg'] = "Partner Added Successfully: Insert ID:".$insert_id;
 				  $resp['insert_id'] = $insert_id;
-				  return $resp;
+				//  return $resp;
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "Partner Insertion Failed";
 				  $resp['insert_id'] = "";
-				  return $resp;
+				 // return $resp;
 			  }
+					}
+					return $resp;
 	}
 	
 			public function add_theme($partner_id,$logo_path){
@@ -367,9 +377,18 @@ foreach ($postParameters as $param) {
 											
 									$arr_user['password'] = hash('sha512', $arr_user['password']);
 										}
+										
+					$emailCount = $this->cldb->from('p2p_admin_list')->where('email', $arr_user['email'])->count_all_results();
+					$mobileCount = $this->cldb->from('p2p_admin_list')->where('mobile', $arr_user['mobile'])->count_all_results();
+						 $resp['status'] = 0;
+					if($emailCount>0){
+						$resp['msg'] = "Email ID Already Exist";
+					}else if($mobileCount>0){
+							$resp['msg'] = "Mobile Number Already Exist";
+					}else{
     
 							$this->cldb->where('admin_id',$user_id);	
-			  $insertResult = $this->cldb->insert('p2p_admin_list', $arr_user);
+							$insertResult = $this->cldb->insert('p2p_admin_list', $arr_user);
 			  
 								
 			  if($insertResult){
@@ -377,13 +396,16 @@ foreach ($postParameters as $param) {
 				  $resp['status'] = 1;
 				  $resp['msg'] = "User Added Successfully: Update ID:".$insert_id;
 				  $resp['user_id'] = $insert_id;
-				  return $resp;
+				 
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "User Addition Failed";
 				  $resp['user_id'] = "";
-				  return $resp;
+				
 			  }
+					
+					}
+					 return $resp;
 	}
 	
 	public function getAdminRoleList($where, $whereIn)
@@ -396,7 +418,7 @@ $this->cldb->where('status',1);
 		if(($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12)){
 			$whereIn = array('id'=>array(11,12));
 		}else{
-				$whereIn = array('id'=>array(10,11,12));
+				$whereIn = array('id'=>array(11,12));
 				}
 
 if($where!=""){
@@ -610,9 +632,9 @@ $this->cldb->limit($limit, $start);
 					
 					$this->cldb->select('
 					a.amount, 
-			"'.ANTWORKS_BANK_AC.'" as Debited_Account_No,
+			 CONCAT("`","'.ANTWORKS_BANK_AC.'") as Debited_Account_No,
 			 c.ifsc_code as IFSC_CODE,
-			 c.account_no as Benificiary_AC_No,
+			  CONCAT("`",c.account_no) as Benificiary_AC_No,
 			 b.name as Benificiary_Name,
 			 "" as Sender_nd_Receiver_Information,
 					"Antworks P2P" as Sender_Name

@@ -139,7 +139,7 @@
                                             <td><?=$row['email'];?></td>
                                             <td><?=$current_step['step'];?></td>
 
-                                            <td><?=$ff = date('D-M-Y', strtotime($row['created_date']));?></td>
+                                            <td><?=$ff = $row['created_date'];?></td>
                                             <td></td>
                                            <td><a class="btn btn-primary" href="<?php echo $base_url;?>viewborrower/<?=$row['borrower_id'];?>"> View</a></td>
                                         </tr>

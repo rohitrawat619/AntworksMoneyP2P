@@ -17,7 +17,7 @@
 		?>
 		
 		<form class="form form-material" 
-			  action="<?php echo base_url(); ?>surgeModule/surge/<?php echo $path; ?>/" method="POST"  > 
+			  action="<?php echo base_url(); ?>surgeModule/surge/<?php echo $path; ?>/" onsubmit="return validateMobileNumber() && validateEmail()" method="POST"  > 
 			<div class="col-md-12" >
 			<h2><?php echo ($edit == true) ? 'Update User' : 'Add User'; ?></h2>
 
@@ -31,14 +31,14 @@
 
     <div class="col-md-6 form-group">
         <label for="fname">First Name:</label><br>
-        <input  class="form-control" class="form-control"type="text" required value="<?php echo $lists['fname']; ?>"  id="fname" name="fname" placeholder="Enter First Name">
+        <input  class="form-control" class="form-control"type="text" onkeypress="allowAlphabeticInput(event);" required value="<?php echo $lists['fname']; ?>"  id="fname" name="fname" placeholder="Enter First Name">
 		
     </div>
 
     
     <div class="col-md-6 form-group">
         <label for="lname">Last Name:</label><br>
-        <input  class="form-control"type="text" id="lname" required value="<?php echo $lists['lname']; ?>" name="lname" placeholder="Enter Last Name">
+        <input  class="form-control"type="text" id="lname" onkeypress="allowAlphabeticInput(event);" required value="<?php echo $lists['lname']; ?>" name="lname" placeholder="Enter Last Name">
     </div>
 
     <div class="col-md-6 form-group">
@@ -48,7 +48,7 @@
 
  <div class="col-md-6 form-group">
         <label for="mobile">Mobile:</label><br>
-        <input  class="form-control"type="text" id="mobile" required value="<?php echo $lists['mobile']; ?>" name="mobile" placeholder="Enter Mobile">
+        <input  class="form-control"type="text" id="mobile" onkeypress="allowNumericInput(event);"  required value="<?php echo $lists['mobile']; ?>" name="mobile" placeholder="Enter Mobile">
     </div>
 	
 	<div class="col-md-6 form-group">
@@ -96,7 +96,7 @@
                         <label for="status">
 						User Status:</label> <br>
 
-						<input class="form-input" type="radio" name="status" value="1"  required <?php echo ($lists['status'] == 1) ? 'checked' : ''; ?>> Active    
+						<input class="form-input" type="radio" name="status" value="1" required <?php echo ($lists['status'] == 1) ? 'checked' : ''; ?>> Active    
 						<input  class="form-input" type="radio" name="status" value="0" required <?php echo ($lists['status'] == 0) ? 'checked' : ''; ?>> InActive
                     </div>
 
@@ -153,4 +153,51 @@
     }
 </script>
 
+
+<script>
+
+ function allowNumericInput(event) {
+            const inputChar = String.fromCharCode(event.keyCode);
+			//alert(inputChar);
+            // Allow only numeric input (0-9) and some control keys
+            if (!/^\d$/.test(inputChar) && ![8, 9, 13, 27, 37, 39].includes(event.keyCode)) {
+                event.preventDefault();
+            }
+        }
+		
+		 function allowAlphabeticInput(event) {
+            const inputChar = String.fromCharCode(event.keyCode);
+
+            // Allow only alphabetic input and some control keys
+            if (!/^[a-zA-Z\s]$/.test(inputChar) && ![8, 9, 13, 27, 37, 39].includes(event.keyCode)) {
+                event.preventDefault();
+            }
+			
+			
+        }
+		
+function validateEmail() {
+    var email = document.getElementById("email").value;
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (regex.test(email)) {
+        return true;
+    } else {
+        alert("Invalid Email Address"); 
+		return false;
+    }
+}
+
+function validateMobileNumber() {
+    var mobileNumber = document.getElementById("mobile").value;
+    var regex = /^[0-9]{10}$/; // 
+
+    if (regex.test(mobileNumber)) { 
+		return true;// alert("Valid Mobile Number");
+    } else {
+        alert("Invalid Mobile Number");
+		return false;
+    }
+}
+</script>
 

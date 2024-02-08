@@ -562,7 +562,7 @@ class P2pborrowermodel extends CI_Model
         }
     }
 
-     public function getExperian_details($borrower_id)
+ /*    public function getExperian_details($borrower_id)
     {
         $this->cldb->select('experian_score, experian_response');
         $this->cldb->from('ant_borrower_rating');
@@ -574,7 +574,7 @@ class P2pborrowermodel extends CI_Model
         } else {
             return false;
         }
-    } 
+    } */
 	
 	/*********dated: 2024-jan-17********
     public function getExperian_details($mobile)

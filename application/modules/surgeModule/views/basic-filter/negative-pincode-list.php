@@ -19,7 +19,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="<?=base_url('p2padmin/basicfilter/export_pincode_list')?>"><button class="btn btn-primary">Export Pincodes</button></a>
+                <a href="<?=base_url('surgeModule/borrower/export_pincode_list')?>"><button class="btn btn-primary">Export Pincodes</button></a>
             </div>
         </div>
         <div class="box-body">

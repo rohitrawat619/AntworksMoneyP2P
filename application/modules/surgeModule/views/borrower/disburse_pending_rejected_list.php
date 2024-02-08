@@ -55,7 +55,7 @@
                     ?>
                                 <tr>
                                     <td><?php echo $i++; ?></td>
-                                    <td><?php echo date('Y-m-d', strtotime($list['date_created'])); ?></td>
+                                    <td><?php echo $list['date_created']; ?></td>
                                     <td><?php echo $list['borrower_id']; ?></td>
                                     <td><?php echo $list['name']; ?></td>
                                     <td><?php echo $list['loan_no']; ?></td>

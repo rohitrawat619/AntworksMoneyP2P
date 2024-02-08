@@ -51,7 +51,7 @@
     foreach($lists['comments_list'] as $list) {
 		echo ".";
 	 ?> 
-						 <div style="float:<?php echo $list['msg_type']; ?>; "><b><?php echo ($list['msg_type']=="left"? "Team": "You")?></b></div>
+						 <div style="float:<?php echo $list['msg_type']; ?>; "><b><?php echo ($list['msg_type']=="left"? "Other": "You")?></b></div>
 				   <div class="message-container_ticket">
 				<div class="message_ticket <?php echo $list['msg_type']; ?>-message_ticket"><?php echo$list['comment_text']; ?></div>
 
