@@ -53,17 +53,20 @@
 						<div class="col-md-12 col-xs-12 whitebg pull-right">
 							<div class="col-md-12 np">
 								<!-- <form action="registration_borrower"   method="post" class="f1" id="borrower_registration_payment"  onsubmit="return userFunctionvalidate()">  -->
-							<form role="form" action="borrower_payment"  method="post" class="f1" onsubmit="return userFunctionvalidate()">
+							<form role="form" action="registration_borrower"  method="post" class="f1" onsubmit="return userFunctionvalidate()">
 								<?php
 									$error_message = $this->session->flashdata('error_message');
 									if ($error_message) {
 										echo '<div id="errorDiv" class="alert alert-danger">' . $error_message . '</div>';
 									}
 								?>
-									<h2 class="register-hd">Register yourself in 2 easy steps in less than 5 mins.</h2>
+								
+									
+									<fieldset>
+										<p class="borrower-hd">Thanks for your interest in funding <span> <?=$borrower_name?> </span> Please, Register yourself as lender on Antworks P2P Platform</p>
 									<div class="f1-steps">
 										<div class="f1-progress">
-											<div class="f1-progress-line" data-now-value="33.33333" data-number-of-steps="3" style="width: 33.33333%;"></div>
+											<div class="f1-progress-line" data-now-value="50" data-number-of-steps="3" style="width: 50%;"></div>
 										</div>
 										<div class="f1-step active" id="step_1">
 											<div class="f1-step-icon"><i class="fa fa-user"></i></div>
@@ -74,8 +77,6 @@
 											<p>Banking Details</p>
 										</div>
 									</div>
-									
-									<fieldset>
 										<div class="col-md-6 col-xs-12">
 											<div class="form-group">
 												<input type="text" name="name" placeholder="Full name as per PAN card" class="f1-first-name form-control" id="name">
@@ -170,16 +171,30 @@
 									</fieldset>
 
 									<fieldset>
+									<p class="borrower-hd">Thanks for providing your registration details. Please provide your <span>banking details</span> for linking your account </p>
+									<div class="f1-steps">
+										<div class="f1-progress">
+											<div style="width: 100%!important;position: absolute;top: 0;left: 0;height: 4px;background: #004566;"></div>
+										</div>
+										<div class="f1-step " id="step_1">
+											<div class="f1-step-icon"><i class="fa fa-user"></i></div>
+											<p>Personal Details</p>
+										</div>
+										<div class="f1-step active" id="step_2">
+											<div class="f1-step-icon"><i class="fa fa-bank"></i></div>
+											<p>Banking Details</p>
+										</div>
+									</div>
 										<div class="col-md-6 col-xs-12">
 												<div class="form-group">
-													<input class="form-control" placeholder="Account No." type="text" name="account" id="account" value="" onkeyup="checkExist(this.value)">
+													<input class="form-control" placeholder="Account No." type="number" name="account" id="account" value="" onkeyup="checkExist(this.value)">
 													<span class="validation error-validation" id="error_account"></span>
 												</div>
 											</div>
 
 											<div class="col-md-6 col-xs-12">
 												<div class="form-group">
-													<input class="form-control" placeholder="Confirm Account No." type="text" name="confirmaccount" id="confirmaccount" value="" onkeyup="checkExist(this.value)">
+													<input class="form-control" placeholder="Confirm Account No." type="number" name="confirmaccount" id="confirmaccount" value="" onkeyup="checkExist(this.value)">
 													<span class="validation error-validation" id="error_confirmaccount"></span>
 													<div id="accountMatchError" style="color: red; display: none;">Account numbers do not match.</div>
 												</div>
@@ -260,7 +275,7 @@
     <!-- /.container -->
 </section>
 
-
+<!-- <script type="text/javascript" src="https://antworksp2p.com/assets/js/scripts-lender.js"></script> !-->
 <script type="text/javascript" src="<?=base_url()?>assets/js/scripts-lender-social.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -272,7 +287,7 @@ $(document).ready(function() {
         var formData = $("form.f1").serialize();
         // Send AJAX request
         $.ajax({
-            url: "credit-line/social_profile/registration_borrower", // Replace with your server URL
+            url: "<?php echo base_url('credit-line/social_profile/registration_borrower'); ?>", // Replace with your server URL
             type: "POST",
             data: formData,
             success: function(response) {

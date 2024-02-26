@@ -14,19 +14,18 @@
 .amount-entr {width:60%; display:inline-block; text-align:center; padding:25px 10px; border-radius:50px!important;}
 .btn-submit-amount {margin-top:15px;}
 </style>
-
 <section class="sec-pad service-box-one service">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
 				<div class="col-md-2"></div>
                 <div class="col-md-7">
-                <p class="borrower-hd">Your friend <span><?= $borrower_name; ?></span> had required for a loan amount <span><?= $loan_amount; ?></span> via Antworks P2P portal. Details of the borrower are as follows:</p>
+                <p class="borrower-hd">Your friend <span><?= $borrower_name; ?></span> has requested for a loan of INR <span><?= $loan_amount; ?></span> on Antworks P2P platform. Details of the borrower are as follows:</p>
                     <div class="borrower-profile">
-					<!--	<div class="borrowerpic"><img src="assets/img/borrower-pic.png"></div> !-->
-						<div class="borrowerpic"><img src="<?=base_url()?>assets/img/social_profile/borrower-pic.png"></div>
+						<!-- <div class="borrowerpic"><img src="<?=base_url()?>assets/img/borrower-pic.png"></div>  -->
+						<div class="borrowerpic"><img src="https://<?=$profile_pic?>" alt="Profile Pic"/></div>
 					<!--	<h2 class="borrowerpic">Irshad Ahmed</h2> !-->
-					<p class="borrowerpic"><span>Name:</span> <?= $borrower_name; ?></p>
+					<p class="borrowerpic"><span>Name:</span> <?= $borrower_name; ?> Credit Score : <?=$credit_score?></p>
 						<ul class="borrower-criteria">
 							<li>
 							<span>Loan Amount:</span> <?= $loan_amount; ?>
@@ -60,7 +59,7 @@
 					<div class="row">
     				<button type="button" class="btn btn-primary btn-submit-amount" id="submit_amount">Submit</button>
 					</div>
-					<input type="hidden" id="selected-borrower-id" value="<?= $borrower_id; ?>">	
+					<input type="hidden" id="selected-borrower-id" value="<?=$borrower_id?>">	
     			</div>
 			</div>
 
@@ -98,7 +97,7 @@
 
 					if (response.status==1) {
 
-                        window.location.href = "<?php echo base_url('credit-line/social_profile/registration_borrower');?>";
+                        window.location.href = "<?php echo base_url('credit-line/social_profile/registration_borrower'); ?>";
                     } else {
                         alert("Insertion failed. " + response.error_msg);
                     }
