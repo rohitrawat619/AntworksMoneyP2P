@@ -1,3 +1,6 @@
+<?php 
+$available_bal=$investment-$fees-$disbursed;
+?>
 <!-- Main content -->
 <style type="text/css">
     strong {
@@ -34,6 +37,7 @@
         <div class="box-body">
             <table id="example" class="table table-bordered table-hover box">
                 <thead>
+                  <h4>Available Bal Rs.<?php echo $available_bal ?></h4>
                     <tr>
                         <th>S.no.</th>
                         <th>Created Date</th>
@@ -134,6 +138,7 @@
       const amount = $('#amount').val();
       const roi = $('#roi').val();
       const status = 1;
+      if(<?=$available_bal?>>=amount){
     // console.log(ids+" "+amount+" "+roi+" "+status);return;
       $.ajax({
         type: 'POST',
@@ -161,7 +166,10 @@
         }
       });
 
-      
+    }
+    else{
+      alert("Not sufficient funds");
+    }
       $('#approvalModal').modal('hide');
     });
   }

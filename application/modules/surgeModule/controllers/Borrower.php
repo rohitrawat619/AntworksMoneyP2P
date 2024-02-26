@@ -667,13 +667,15 @@ public function filter_report()
     
         $this->pagination->initialize($config);
         $page = $this->uri->segment(4) ? $this->uri->segment(4) : 0;
-    
+        $data['investment'] =  $this->disbursementModel->getInvestmentAmount();
+        $data['fees']=0;
+        $data['disbursed']= $this->disbursementModel->getDisbursedAmount();
         $data["links"] = $this->pagination->create_links();   
         $data['lists'] = $this->disbursementModel->getDisburseRequestList($config["per_page"], $page, $disburseRequest, $status);
     
         // Debugging
         // echo "<pre>";
-        // print_r($config);
+        // print_r($data['disbursed']);
         // die();
     
         $data['page'] = $page;
