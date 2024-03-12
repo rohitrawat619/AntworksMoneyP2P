@@ -35,7 +35,7 @@ $investmentData = $lists['investmentList'];
 			<?php } ?>
 				<?php foreach($investmentData['investment_details']['current_investment'] as $current_investment){ ?>
 					<form action="redeemRequestPreview" method="post" >
-			<div class="col-md-6 col-sm-6 col-xs-6">
+			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="surge-list">
 					<p class="investmentno">Investment No.: <?php echo $current_investment['investment_No']; ?></p>
 					<p class="investmentname"><?php echo $current_investment['scheme_name']; ?></p>

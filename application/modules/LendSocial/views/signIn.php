@@ -15,13 +15,13 @@ echo phpinfo()."--------------"; */
 				<img src="<?php echo $logo_path; ?>" class="surgeant-icon">
 				<h2 class="success-">Sign In</h2>
 			<!--	<form role="form" action="" method="post"> ---->
-				<form role="form" action="otp" method="post" id="otpForm">
+				<form role="form" action="otp" method="post" onsubmit="return validateMobileNumber();" id="otpForm">
 					<div class="col-md-12 col-xs-12 text-left">
 					<div class="col-md-3 col-xs-12"></div>
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
 								<label>Mobile</label>
-								<input type="number" name="mobile"  id="mobile" placeholder="Enter Mobile" class="form-control" >
+								<input type="number" name="mobile" required id="mobile" placeholder="Enter Mobile" class="form-control" >
 								<span class="validation error-validation" id="error_mobile"></span>
 							</div>
 						</div>
@@ -39,6 +39,18 @@ echo phpinfo()."--------------"; */
 </section>
 
 <script>
+function validateMobileNumber() {
+    var mobileNumber = document.getElementById("mobile").value;
+    var regex = /^[0-9]{10}$/; // 
+
+    if (regex.test(mobileNumber)) { 
+		return true;// alert("Valid Mobile Number");
+    } else {
+        alert("Invalid Mobile Number");
+		return false;
+    }
+}
+
 $(document).ready(function() {
    $('#mobile').on('input', function() {
     // Remove non-numeric characters using a regular expression

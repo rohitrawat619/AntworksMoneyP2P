@@ -9,7 +9,7 @@ $redeemReqestData = $lists['redeemRequestPreviewData']['redemption_request'];
 
 
 					<form action="redeemRequestProcessing" method="post" >
-			<div class="col-md-6 col-sm-6 col-xs-6">
+			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="surge-list">
 					<ul class="invest-details">
 						<li>Investment No</li> <li> <span><?php echo $redeemReqestData['investment_No']; ?></span></li>

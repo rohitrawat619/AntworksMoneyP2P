@@ -1,7 +1,7 @@
-
+  <?= getNotificationHtml(); ?>
 <section class="container surgebg">
 	<div class="row">
-		<div class="col-md-12 text-center">
+		<div class="col-md-12 col-xs-12 text-center">
 			<img src="<?php echo $logo_path; ?>" class="surgelogo">
 			<!-- <h2 class="main-headr">Build short-term wealth with AntPay</h2>
 			<p class="main-subheadr">Here is what you get</p> -->
@@ -20,7 +20,7 @@
 		</div>
 	</div>
 </section>
-  
+
 <section class="container mainsurge-plans">
 	<div class="row">
 			<?php  //  echo "<pre>"; print_r($lists['allSchemeList']['schemes']);
@@ -28,7 +28,7 @@
 					foreach($lists['allSchemeList']['schemes'] as $data){
 							//	echo json_encode($data)."<hr>";
 									?>
-			<div class="col-md-6">
+			<div class="col-md-6 col-xs-12">
 			
 							<form action="investmentAmount" method="post" >
 			<div class="surge-plans">
@@ -44,7 +44,7 @@
 
 				
 				<input type="hidden" name="scheme_id" value="<?php echo $data['id']; ?>" id="scheme_id"  >
-						<div class="col-md-12 text-right"><input type="submit" value="Invest Now" class="surge-plans-btn"></div>
+						<div class="col-md-12 col-xs-12 text-right"><input type="submit" value="Invest Now" class="surge-plans-btn"></div>
 						
 				<p class="remarks-txt">*10%p.a pre-mature interest rate to apply on redemption before lockin period</p>
 			</div>
@@ -55,7 +55,7 @@
 								?>
 		
 		
-		<div class="col-md-12">
+		<div class="col-md-12 col-xs-12">
 			<p>Offered in partnership with Antworks P2P Fianncing Pvt. ltd., bearing RBI License No. N-14.03483. Refer to the Terms and Conditions before investing.</P>
 		</div>
 	</div>

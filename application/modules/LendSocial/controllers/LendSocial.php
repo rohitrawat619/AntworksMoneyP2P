@@ -7,43 +7,48 @@ class LendSocial extends CI_Controller
 		parent::__construct();
 	//	$this->surgeInvestmentDynamiCss();
 		$this->load->model('LendSocialmodel');
+		$this->load->model('credit_line_model');
 		$this->load->model('login/Loginmodel');
 		$this->load->helper('url');
-		$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+	//	$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
 		//$this->load->library('form_validation');
 		$this->load->helper('custom');
 		$this->load->helper('cookie');
 		//$this->load->library('pagination');
 		$this->vendor_id = 1;
 		error_reporting(0);
-					$database_name = $this->cldb->database;
+				//	$database_name = $this->cldb->database;
 			//	echo "Database Name: ".$database_name;
 		//	$this->check_role();
+		//echo base64_decode($this->input->get('p'));
 		 if($this->input->get('q')!=""){
-					$this->setCookieData($this->input->get('q'),"firstBlock");
+					$this->setCookieData($this->input->get('q'),"firstBlock",$this->input->get('p'));
 					 }
-		$this->sessionMobileData = $this->session->userdata();
-				if($this->sessionMobileData['partner_id']==""){
+		$this->sessionVariableData = $this->session->userdata();
+				if($this->sessionVariableData['partner_id']==""){
 					$userCookieValue = $this->input->cookie('partner_id');
-					
-					$this->setCookieData($userCookieValue,"secondBlockCookieSet");
+					$lenderSocialProductType = $this->input->cookie('lenderSocialProductType');
+					$this->setCookieData($userCookieValue,"secondBlockCookieSet",$lenderSocialProductType);
 				}
-				$this->sessionMobileData = $this->session->userdata();
+				$this->sessionVariableData = $this->session->userdata();
+			//	print_r($this->sessionVariableData['lenderSocialProductType']); //borrowerBullet/lender/borrowerEmi 
 				
-		print_r($sessionMobileData);
+		// print_r($this->sessionVariableData);
 	//	 $this->session->sess_destroy();
-				$this->sessionData = $this->LendSocialmodel->getUserDetail($this->sessionMobileData['mobile']);
+				$this->sessionData = $this->LendSocialmodel->getUserDetail($this->sessionVariableData['mobile']);
 			
 				
 				if($this->sessionData['partners_id']==""){
-				$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionMobileData['partner_id']);
+				$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);
 				}else{
-					$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionData['partners_id']);
+					$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);//$this->sessionData['partners_id']);
 				}
+				
 			////	print_r($partnerInfo['partner_id']);
-					$partnerInfo['logo_path'] =	str_replace('D:/public_html/antworksp2p.com','..',$partnerInfo['logo_path'])."?q=".rand();
+					$partnerInfo['logo_path'] =	str_replace('D:/public_html/antworksp2p.com','../../',$partnerInfo['logo_path'])."?q=".rand();
 						$this->partnerInfo = $partnerInfo;
 					
+					//print_r($this->sessionVariableData);
 	}
 
 		
@@ -63,6 +68,7 @@ class LendSocial extends CI_Controller
 			
 			
 			$data['logo_path'] = $this->partnerInfo['logo_path']; //".a./document/surge/img/surge-logo.png";
+		//	print_r($data); die();
 			$this->load->view('template-LendSocial/header',$data);
 			$this->load->view('signIn',$data);
 			$this->load->view('template-LendSocial/footer',$data);
@@ -100,7 +106,30 @@ class LendSocial extends CI_Controller
 				$this->session->set_userdata(array("otpStatus"=>$respData['status']));
 			if($respData['status']==1){ // verified
 							
-				$kycStatus =  json_decode($this->LendSocialmodel->getKycStatus($this->sessionData["mobile"]),true);
+									//	echo"<pre>";
+								//	print_r($this->sessionVariableData); die();
+									if($this->sessionVariableData['lenderSocialProductType']=="borrowerEmi"){
+										echo"<h2>EMI Option Coming Soon";
+									}else if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+										
+										 $get_user_details=$this->credit_line_model->get_borrower_details($this->sessionData["mobile"]);
+	//	echo"<pre>";
+		//$dataVar = json_encode($get_user_details);
+	//	print_r(json_decode($dataVar,true)); die();
+		if($get_user_details['status']==0){
+			 redirect(base_url('LendSocial/').'personalDetails');
+		}else{ 
+										$updateUserBorrowerIdIdStatus = $this->LendSocialmodel->updateUserBorrowerId($this->sessionData["id"],$this->sessionData["mobile"],$get_user_details['borrower_id'],$this->sessionVariableData['partner_id'],"-",$get_user_details);
+				redirect(base_url('LendSocial/').'Borrowwer_bullet/info');
+		}
+										
+									}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
+									/******************start of lender logic**************/
+			//	$kycStatus =  json_decode($this->LendSocialmodel->getKycStatus($this->sessionData["mobile"]),true);
+			//	echo $this->sessionData["mobile"].$this->sessionVariableData['partner_id']; //die(); //$this->sessionVariableData['partner_id']; die();
+				$kycStatus =  json_decode($this->LendSocialmodel->getKycStatus($this->sessionData["mobile"],$this->sessionVariableData['partner_id']),true);
+					//print_r($kycStatus); die();
+					//print_r($kycStatus); die();
 							$updateUserLenderIdStatus = $this->LendSocialmodel->updateUserLenderId($this->sessionData["id"],$this->sessionData["mobile"],$kycStatus['kyc_status']['lender_id'],$kycStatus['kyc_status']['vendor_id'],"-");
 							
 						if($kycStatus=="Unauthorised" && $kycStatus['status']!=1){
@@ -125,7 +154,9 @@ class LendSocial extends CI_Controller
 								}else if($kycStatus['kyc_status']['step']==3){ // atleast one payment done
 										redirect(base_url('LendSocial/').'lenderDashboard');
 									}
-
+							/***************end of lender logic***************/
+									}else{ echo"Else block of LendSocial"; }
+									
 						}else{	// not verified
 							$error = 1;
 							$msg = $respData['response'];
@@ -154,6 +185,7 @@ class LendSocial extends CI_Controller
 		}
 		
 		public function processingInvestmentPayment(){
+			
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 			$this->checkSessionMobileNo();
@@ -164,8 +196,14 @@ class LendSocial extends CI_Controller
 			$data['lists']['generateOrderResp'] = $generateOrderResp;
 			$data['lists']['sessionData'] = $this->sessionData;
 			$data['lists']['scheme_id'] = $scheme_id;
+			//echo "<pre>"; print_r($data);
 			$this->load->view('processingInvestmentPayment',$data);
 			$this->load->view('template-LendSocial/footer',$data);
+			//  echo"<pre>";	print_r($data); die();
+					if($generateOrderResp=="Unauthorised"){
+					$this->session->set_flashdata('notification',array('error'=>1,'message'=>"Unauthorised Token"));
+				redirect(base_url('LendSocial/surgeInvestmentPlans'));
+					}
 		}
 		
 				public function redeemRequestPreview(){
@@ -174,6 +212,7 @@ class LendSocial extends CI_Controller
 		$this->load->view('template-LendSocial/header',$data);
 		$data['lists']['redeemRequestPreviewData'] = json_decode($this->LendSocialmodel->getRedeemRequestPreview($this->sessionData["mobile"],
 		$this->input->post('investment_no')),true); 
+	//	echo "<pre>";	print_r($data); die();
 			$data['lists']['sessionData'] = $this->sessionData;
 		$this->load->view('redeemRequestPreview',$data);
 		$this->load->view('template-LendSocial/footer',$data);
@@ -189,6 +228,7 @@ class LendSocial extends CI_Controller
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 			$data['lists']['investmentList'] = json_decode($this->LendSocialmodel->getInvestmentList($this->sessionData["mobile"],$this->sessionData["lender_id"]),true); // getInvestmentList($mobile,$lender_id)
+			
 			$data['lists']['sessionData'] = $this->sessionData;
 			$this->load->view('lenderDashboard',$data);
 			$this->load->view('template-LendSocial/footer',$data);
@@ -198,7 +238,11 @@ class LendSocial extends CI_Controller
 		
 		public function personalDetails(){
 				
-							$this->checkSessionMobileNo();
+			$this->checkSessionMobileNo();
+
+			$data['states'] = $this->LendSocialmodel->get_state();
+			$data['qualification'] = $this->LendSocialmodel->highest_qualification();
+			//echo "<pre>";print_r($data);die();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 				$data['lists']['sessionData'] = $this->sessionData;
@@ -207,14 +251,31 @@ class LendSocial extends CI_Controller
 		$this->load->view('template-LendSocial/footer',$data);
 		//$this->load->view('template-LendSocial/footer');
 				}
+				
+				public function get_company_list(){
+    $keyword = $this->input->get('keyword');  // Use get instead of post to retrieve the keyword
+    $result = $this->LendSocialmodel->get_company_list($keyword);
+
+    // Assuming you want to return the result as JSON
+    echo json_encode($result);
+}
+
 
 			public function accountDetails(){
+				
 					$this->checkSessionMobileNo();
 				if($this->sessionData["mobile"]){
-			$this->session->set_userdata($this->input->post()); 
-			}				
+			//$this->session->set_userdata(array("personalDetailsSessionData"=>$this->input->post())); 
+			}			
 						$updateUserDetailStatus = $this->LendSocialmodel->updateUserDetail();
-				//print_r($updateUserDetailStatus);
+				// echo json_encode($updateUserDetailStatus);
+				
+				
+				if($updateUserDetailStatus['status']==2){
+				$this->session->set_flashdata('notification',array('error'=>1,'message'=>$updateUserDetailStatus['msg']));
+				redirect(base_url('LendSocial/personalDetails'));
+				}
+				
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 		$data['lists']['sessionData'] = $this->sessionData;
@@ -237,7 +298,7 @@ class LendSocial extends CI_Controller
 		}
 		
 		public function otpAadhaarProcessing(){
-			echo"<pre>";
+			//echo"<pre>";
 			//print_r($this->input->post('adhaarOtp'));
 			//print_r($this->sessionData);
 			
@@ -257,28 +318,39 @@ class LendSocial extends CI_Controller
 					$kyc_unique_id = $this->input->post('kyc_unique_id');			
 			$allInOneKycSubmitOtpStatus = json_decode($this->LendSocialmodel->allInOneKycSubmitOtp($mobile,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code,$otp,$transactionId,$codeVerifier,$fwdp,$kyc_unique_id),true);   // vender_id =partner_id
 						$allInOneKycSubmitOtpStatus = $allInOneKycSubmitOtpStatus['response'];
-			//	echo"<pre>------------------"; print_r($allInOneKycSubmitOtpStatus); die();
-		if($allInOneKycSubmitOtpStatus['aadhar_kyc']['status']==1){
+				
+		if($allInOneKycSubmitOtpStatus['aadhar_kyc']['status']==1 && ($allInOneKycSubmitOtpStatus['aadhar_kyc']['name_match']==true || $allInOneKycSubmitOtpStatus['aadhar_kyc']['name_match']==1) ){ 
+	//	echo"one"; die();
 				$kycStatus['status'] = 1;
 				$kycStatus['msg']  = $allInOneKycSubmitOtpStatus['aadhar_kyc']['msg'];
+			}else if($allInOneKycSubmitOtpStatus['aadhar_kyc']['status']==0 && ($allInOneKycSubmitOtpStatus['aadhar_kyc']['name_match']==false || $allInOneKycSubmitOtpStatus['aadhar_kyc']['name_match']==0)){
+				//echo "two"; die();
+				$kycStatus['status'] = 2;
+				$kycStatus['msg']  = "Aadhaar Name Mismatch.";
 			}else{
+				//echo "three"; die();
 				$kycStatus['status'] =0;
 				$kycStatus['msg'] = $allInOneKycSubmitOtpStatus['aadhar_kyc']['msg'].$allInOneKycSubmitOtpStatus['error_msg']; // "Aadhaar OTP verification failed, Please try again."
 			}
-			
-			
-			if($kycStatus['status']==1){ 
+		//	echo"<pre>------------------"; print_r($allInOneKycSubmitOtpStatus['aadhar_kyc']['name_match']); die();
+			if($kycStatus['status']==2){
+					$msg = urlencode(base64_encode($kycStatus['msg']));
+			 //     redirect(base_url('LendSocial/') . 'kycSuccessful?msg='.$msg);		
+					redirect(base_url('LendSocial/') . 'kycFailed?msg='.$msg);		
+							
+			}else if($kycStatus['status']==1){ 
 					$msg = urlencode(base64_encode($kycStatus['msg']));
 					redirect(base_url('LendSocial/') . 'kycSuccessful?msg='.$msg);
 				}else{
 					
-					$msg = $kycStatus['msg'];
+				$msg = $kycStatus['msg'];
 				$this->session->set_flashdata('notification',array('error'=>1,'message'=>$msg));
 				redirect(base_url('LendSocial/') . 'otpAadhaar?msg='.base64_encode($msg).'&transactionId='.$transactionId.'&fwdp='.$fwdp.'&codeVerifier='.$codeVerifier.'&kyc_unique_id='.$kyc_unique_id);
 			}
 		}
 				
 			public function verifyKYC(){
+				$this->checkSessionMobileNo();
 				$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 				$this->load->view('verifyKYC',$data);
@@ -286,7 +358,7 @@ class LendSocial extends CI_Controller
 					$updateUserDetailStatus = $this->LendSocialmodel->updateUserDetail();
 					
 					
-					$getUserDetailResp = $this->LendSocialmodel->getUserDetail($this->sessionMobileData['mobile']);
+					$getUserDetailResp = $this->LendSocialmodel->getUserDetail($this->sessionVariableData['mobile']);
 					$dob = $this->formatted_dob($getUserDetailResp['date_of_birth']); 
 					$email = $getUserDetailResp['email_id'];
 					$fullname = $getUserDetailResp['name'];
@@ -299,58 +371,146 @@ class LendSocial extends CI_Controller
 					$ifsc_code = $getUserDetailResp['ifsc_code'];
 					$aadhaar = $getUserDetailResp['aadhaar'];
 					$bank_name = $getUserDetailResp['bank_name'];
+					$bank_name = $getUserDetailResp['bank_name'];
+					$r_city = $getUserDetailResp['bank_name'];
 					
-					$saveUserPersonalDetailStatus = json_decode($this->LendSocialmodel->saveUserPersonalDetail($dob,$email,$fullname,$gender,$pan,$phone,$vendor_id),true);   // vender_id =partner_id
+					$company_type = $getUserDetailResp['company_type'];
+					$company_name = $getUserDetailResp['company_name'];
+					$company_code = $getUserDetailResp['company_code'];
+					
+					$highest_qualification = $getUserDetailResp['highest_qualification'];
+					$r_pincode = $getUserDetailResp['r_pincode'];
+					$r_city = $getUserDetailResp['r_city'];
+					$r_state = $getUserDetailResp['r_state'];
+					$net_monthly_income = $getUserDetailResp['net_monthly_income'];
+					//  $user_type = $getUserDetailResp['user_type'];
+					
+					//  $company_type,$company_name,$company_code,$user_type
+					
+					
+					if($this->sessionVariableData['lenderSocialProductType']=="lender"){
+						$user_type = "lender";
+					}else if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet" ||  $this->sessionVariableData['lenderSocialProductType']=="borrowerEmi"){
+						$user_type = "borrower";
+					}
+					
+					
+							
+					
 						
-					if($saveUserPersonalDetailStatus['status']==1){ // saveUserPersonalDetailStatus
-						$lender_id = $saveUserPersonalDetailStatus['lender_id'];
 						
-						$this->LendSocialmodel->updateUserLenderId($this->sessionData["id"],$this->sessionData["mobile"],$lender_id,"","NewUser"); // updated  lender's Id.
-						
-						$userBankKYCStatus = json_decode($this->LendSocialmodel->userBankKYC($account_no,$caccount_no,$fullname,$ifsc_code,$lender_id,$phone),true);
-						
-						/*if($userBankKYCStatus['status']!=1){  //userBankKYCStatus 1:done; 0:failed
-								$kycStatus['status'] = $userBankKYCStatus['status'];
-								$kycStatus['msg'] = $userBankKYCStatus['msg'];
-							*/	
-							$allInOneKycStatus =	json_decode($this->LendSocialmodel->allInOneKyc($phone,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code),true); //dated:2023-dec-21
+							
+							$allInOneKycStatus =	json_decode($this->LendSocialmodel->allInOneKyc($phone,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id),true); //dated:2023-dec-21
+							
+							//echo$phone; echo"--";
+							 //	echo"<pre>";	print_r($allInOneKycStatus); die();
+								$userTypeAllInOneKyc = $allInOneKycStatus['user_details']['user_type']; // lender/borrower			
+									$userIdAllInOneKyc = $allInOneKycStatus['user_details']['user_id']; // lender/borrower id		
+									$lender_idAllInOneKyc = $allInOneKycStatus['user_details']['lender_id']; // lender
+											
+															
+							
+									/*************starting of Pan KYC**********/
+											//print_r($allInOneKycStatus['pan_kyc']); die();
+							if($allInOneKycStatus['pan_kyc']['status']!="Invalid"){
+								$kycStatus['status'] = 2;
+								$kycStatus['msg'] = "PAN ".$allInOneKycStatus['pan_kyc']['msg'].$allInOneKycStatus['pan_kyc']['error_msg'];
+								$kycStatus['pan_kyc'] = 1;
+							}else{
+								$kycStatus['status'] = 0;
+								$kycStatus['msg'] = $allInOneKycStatus['pan_kyc']['status']." PAN ".$allInOneKycStatus['pan_kyc']['error_msg'];
+								$kycStatus['bank_kyc'] = 0;
+							}			
+									/************End of Pan KYC****************/	
 									
-							if($allInOneKycStatus['aadhar_response']['code']==200){
+						//	print_r($kycStatus); die();
+							
+										/************starting of Bank KYC***********/
+								if($kycStatus['status'] == 2){
+							if($allInOneKycStatus['bank_kyc']['status']==1){
+								$kycStatus['status'] = 2;
+								$kycStatus['msg'] = "Bank `".$allInOneKycStatus['bank_kyc']['msg'].$allInOneKycStatus['bank_kyc']['error_msg'].$allInOneKycStatus['error_msg'];
+								$kycStatus['bank_kyc'] = 1;
+							
+							}else{
+								$kycStatus['status'] = 0;
+								$kycStatus['msg'] = "Bank ``".$allInOneKycStatus['bank_kyc']['msg'].$allInOneKycStatus['bank_kyc']['error_msg'].$allInOneKycStatus['error_msg'];
+								$kycStatus['bank_kyc'] = 0;
+							}		
+								}
+								/**************ending of Bank KYC**************/	
+								
+								
+								/********starting of Aadhaar Function******/
+										if($kycStatus['status']==2){
+							if($allInOneKycStatus['aadhar_kyc']['aadhar_response']['code']==200){
 								$kycStatus['status'] = "1";
-								$kycStatus['msg'] = $allInOneKycStatus['aadhar_response']['msg'].$allInOneKycStatus['error_msg'];
-								if($allInOneKycStatus['aadhar_response']['model']['adharNumber']!=""){
+								$kycStatus['msg'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['msg'].$allInOneKycStatus['error_msg'];
+								if($allInOneKycStatus['aadhar_kyc']['aadhar_response']['model']['adharNumber']!=""){
 									$kycStatus['status'] = 2;  // aadhaar is already verified (that means kyc done sucessfull)
 								$kycStatus['msg'] = "Aadhaar Verification Already Done.";
+								$kycStatus['aadhar_kyc'] = 1;
 								}else{
 									$kycStatus['status'] = 1;
-									$kycStatus['data']['kyc_unique_id'] = $allInOneKycStatus['kyc_unique_id'];
-									$kycStatus['data']['transactionId'] = $allInOneKycStatus['aadhar_response']['model']['transactionId'];
-									$kycStatus['data']['fwdp'] = $allInOneKycStatus['aadhar_response']['model']['fwdp'];
-									$kycStatus['data']['codeVerifier'] = $allInOneKycStatus['aadhar_response']['model']['codeVerifier'];
-								$kycStatus['msg'] = $allInOneKycStatus['aadhar_response']['model']['uidaiResponse']['message'].$allInOneKycStatus['error_msg'];
+									$kycStatus['data']['kyc_unique_id'] = $allInOneKycStatus['aadhar_kyc']['kyc_unique_id'];
+									$kycStatus['data']['transactionId'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['model']['transactionId'];
+									$kycStatus['data']['fwdp'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['model']['fwdp'];
+									$kycStatus['data']['codeVerifier'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['model']['codeVerifier'];
+								$kycStatus['msg'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['model']['uidaiResponse']['message'].$allInOneKycStatus['aadhar_kyc']['error_msg'];
 								}
 								
 							}else{
 								$kycStatus['status'] = 0;
 								$kycStatus['msg'] = json_encode($allInOneKycStatus); //$allInOneKycStatus['aadhar_kyc']['msg'].$allInOneKycStatus['error_msg'];
-							}
-								
-							/*}else{
-								$kycStatus['status']= $userBankKYCStatus['status'];
-								$kycStatus['msg'] = $userBankKYCStatus['msg'].$userBankKYCStatus['error_msg'];
-								$kycStatus['resp'] = json_encode($userBankKYCStatus);
-							} */
-					}else{
-						$kycStatus['status'] = 0;
-						$kycStatus['msg'] = $saveUserPersonalDetailStatus['msg'].$saveUserPersonalDetailStatus['error_msg'];
-						$kycStatus['resp'] = json_encode($saveUserPersonalDetailStatus);
-					}
-						//	echo"<pre>";
-			//	print_r($kycStatus); die();
+							}		
+										}
+								/***********Ending of Aadhaar Function********/
+							
+
+									
+												/*aaaaa****************************starting of update function*************************************/			if($kycStatus['status']!=0){	
+											if($userTypeAllInOneKyc=="lender"){
+						$this->LendSocialmodel->updateUserLenderId($this->sessionData["id"],$this->sessionData["mobile"],$lender_idAllInOneKyc,"","NewUser"); // updated  lender's Id.
+												}else if($userTypeAllInOneKyc=="borrower"){
+													$postData = $getUserDetailResp;
+													$postData['borrower_id'] = $userIdAllInOneKyc; 
+													$postData['partner_id'] = $this->sessionVariableData['partner_id'];
+												//	print_r($this->sessionVariableData['partner_id']);
+												$updateBorrowerDetailResp =	$this->credit_line_model->update_borrower_details($postData);
+											//	echo"<pre>"; print_r($updateBorrowerDetailResp);	 die();
+												
+												if($updateBorrowerDetailResp['borrower_status']==0){
+												$kycStatus['status'] = 0;
+												$kycStatus['msg'] = $updateBorrowerDetailResp['error_msg'];
+												}
+												
+											$getUserDetailResp['aadhaar_status'] = $kycStatus['aadhar_kyc'];
+											$getUserDetailResp['pan_status'] = $kycStatus['pan_kyc'];
+											$getUserDetailResp['account_status'] =	$kycStatus['bank_kyc'];
+								$updateUserBorrowerIdIdStatus = $this->LendSocialmodel->updateUserBorrowerId($this->sessionData["id"],$this->sessionData["mobile"],$userIdAllInOneKyc,$this->sessionVariableData['partner_id'],"-",$getUserDetailResp);		
+						//	echo"<pre>";	print_r($allInOneKycStatus); 
+										//			print_r($updateUserBorrowerIdIdStatus); die();
+												}
+												}
+									/*****************************ending of update function***************************************/	
+						
 				
 				
 				$data['lists']['sessionData'] = $this->sessionData;
-				
+					
+					
+					/**************starting of borrower Registration**********
+					if(($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet" || $this->sessionVariableData['lenderSocialProductType']=="borrowerEmi") && $kycStatus['status']==1){
+						$registration_credit_line_1_status=$this->credit_line_model->registration_credit_line_1($this->sessionData);
+					
+						if($registration_credit_line_1_status['status']==1){
+								$kycStatus['status'] = "1";
+								$kycStatus['msg'] = $registration_credit_line_1_status['msg'];
+						}else if($registration_credit_line_1_status['error_msg']!=""){
+							$msg = $registration_credit_line_1_status['error_msg']; //"Failed due to wrong pan card");
+							$kycStatus['status'] = "0";
+							$kycStatus['msg'] = $msg; } 
+							} /***************ending of borrower registration**************/
 					
 				if($kycStatus['status']==1){
 					$msg = urlencode(base64_encode($kycStatus['msg']));
@@ -373,6 +533,7 @@ class LendSocial extends CI_Controller
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 			$data['lists']['msg']  = ($this->input->get('msg'));
+			$data['lenderSocialProductType'] = $this->sessionVariableData['lenderSocialProductType'];
 		$this->load->view('template-LendSocial/header',$data);
 			$this->load->view('kycSuccessful',$data);
 			$this->load->view('template-LendSocial/footer',$data);
@@ -428,10 +589,12 @@ class LendSocial extends CI_Controller
 							$scheme_id = $this->input->post('scheme_id');
 				//	echo"<pre>";
 			$socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
-		//	print_r($socialAfterPaymentRequest);
+			//echo "<pre>";
+			//print_r($socialAfterPaymentRequest);
 			$lenderInvestmentRequest = json_decode($this->LendSocialmodel->lenderInvestment($mobile,$lender_id,$amount,$scheme_id,$ant_txn_id),true);
 			//	print_r($lenderInvestmentRequest);
-				// print_r($this->input->post());
+			//	 print_r($this->input->post());
+				// die();
 			//	 print_r($reponseRedeemptionRequest);
 $data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
@@ -453,10 +616,12 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 		
 
 			public function surgeInvestmentPlans(){
+				
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
-				$data['lists']['allSchemeList'] = json_decode($this->LendSocialmodel->getAllSchemes($this->sessionData["mobile"],1),true); // getAllSchemes($mobile,$partner_id)
+		
+				$data['lists']['allSchemeList'] = json_decode($this->LendSocialmodel->getAllSchemes($this->sessionData["mobile"],$this->partnerInfo['partner_id']),true); // getAllSchemes($mobile,$partner_id)
 		$this->load->view('surgeInvestmentPlans',$data);
 		$this->load->view('template-LendSocial/footer',$data);
 		//print_r($data);
@@ -464,7 +629,7 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 		
 		public function sign_out(){
 						$this->session->sess_destroy();
-				redirect(base_url('LendSocial/') . 'signIn?q='.base64_encode(base64_encode($this->sessionData['partners_id'])));
+				redirect(base_url('LendSocial/') . 'signIn?q='.base64_encode(base64_encode($this->sessionData['partners_id'])).'&p='.base64_encode($this->sessionVariableData['lenderSocialProductType']));
 		}
 		
 		public function checkSessionMobileNo(){
@@ -476,15 +641,26 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 						
 			
 		
-					public function setCookieData($q,$block){
+					public function setCookieData($q,$block,$p){ // $p:lender/borrowerBullet/borrowerEmi 
 						
-				//	echo "{".$block."---}";
-						 $this->session->set_userdata(array("partner_id"=>base64_decode(base64_decode($q))));
+						if($q!=""){
+						 $this->session->set_userdata(array("partner_id"=>base64_decode(base64_decode($q))));	
 				    // Set a cookie expires in 1 hour (3600 seconds)
 					$cookie = array('name'=>'partner_id','value'=>"",'expire'=> time() - 3600,'path'   => '/',);
 					$this->input->set_cookie($cookie);
-					$cookie = array('name'=>'partner_id','value'=>$q,'expire'=> time() + 3600,'path'   => '/',);
+					$cookie = array('name'=>'partner_id','value'=>$p,'expire'=> time() + 3600,'path'   => '/',);
 					$this->input->set_cookie($cookie);
+						}
+						/******************lenderSocialProductType*****************/
+						if($p!=""){
+					 $this->session->set_userdata(array("lenderSocialProductType"=>base64_decode($p)));
+					$cookie = array('name'=>'lenderSocialProductType','value'=>"",'expire'=> time() - 3600,'path'   => '/',);
+					$this->input->set_cookie($cookie);
+					$cookie = array('name'=>'lenderSocialProductType','value'=>$p,'expire'=> time() + 3600,'path'   => '/',);
+					$this->input->set_cookie($cookie);
+						}
+					
+					
 					}
 					public function formatted_dob($dob){
 						return date("d/m/Y",strtotime($dob));
@@ -671,6 +847,82 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 .footer-bottom {background: #0D0D0D; padding: 17.5px 0;}
 
 .footer-bottom p {margin: 0; font-size:14px; color: #999; line-height: 35px;}
+
+
+
+
+/******************starting of borrower css**********/
+ul {margin:0; padding:0;}
+.creditlinebg {background:#c5e6eb; padding:80px 30px;}
+.creditlinelogo {max-width:200px; margin-bottom:10px;}
+.creditline-headr {font-size: 30px; font-weight:bold; margin:15px 0 0 0;}
+.creditline-subheadr {font-size: 21px; font-weight:400; margin-bottom:15px;}
+.clsub-subheadr {font-size: 21px; font-weight:400;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.creditline-hd {font-size:30px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline {width:100%; float:left; position:relative; padding:30px; margin-bottom:30px; border-radius:8px; border:1px solid #e1e1e1; box-shadow:1px 1px 10px 5px #e8e8e8;}
+.maincreditline ul {padding:0 0 0 15px;}
+.maincreditline h2 {font-size:24px; font-weight:bold; margin:0 0 20px 0;}
+.maincreditline li {font-size:18px; font-weight:400; margin:0 0 10px 0; display:block;}
+.maincreditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.maincreditline-btn:hover {background:#7eb3bb; color:#fff;}
+.remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
+.maincreditline .f1 fieldset {margin-top:15px;}
+.creditline-icon {max-width:360px; margin-bottom:30px;}
+.creditline-sucs {max-width:160px; margin-bottom:30px;}
+.creditline-waittxt {font-size: 24px; color:#0d8c03; font-weight:600;}
+.creditline-p {font-size: 18px; color:#333; font-weight:600;}
+.creditline-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0;}
+.creditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.creditline-btn:hover {background:#7eb3bb; color:#fff;}
+.creditloan-dtls {width:100%; float:left;}
+.creditloan-dtls li {display:inline-block; width:50%; float:left; padding:15px 0; font-size:16px;}
+.creditloan-dtls li span {display:block; font-weight:bold; font-size:20px;}
+.e-signbox-loanbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:30px 30px; margin:50px 0;}
+.e-signbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:10px 0 10px 0;}
+.e-signbox-txt {max-height:500px; overflow-y: scroll;}
+.e-signbox-btn {background:#26499a; padding:15px 60px; margin-top:10px; margin-bottom:50px; color:#fff; display: inline-block; border-radius:30px;}
+.e-signbox-btn:hover {background:#7eb3bb; color:#fff;}
+.signbox-p {font-size: 18px; color:#333; font-weight:600; margin:0;}
+.creditloan-box {background:#a0cfd7; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:30px 0 0 0;}
+.creditloan-box-hd {font-size: 24px; color:#333; font-weight:600; margin:0;}
+.creditshare-btn {padding-top:20px; font-weight:bold;}
+.bordr-btm {border-bottom:1px solid #bcdbdf; margin-bottom:15px;}
+.credit-lender {font-size: 21px; color:#333; font-weight:600; margin:0;}
+.credit-loanno {font-size: 21px; color:#333; font-weight:600; margin:0; padding:10px 0; margin-bottom:10px; border-bottom:1px solid #ccc;}
+.credit-disbursement {font-size: 21px; color:#04a82d; font-weight:600; margin:5px 0;}
+/*OTP Screen*/
+.otpverify {font-size:24px; color:#000; font-weight:bold; text-transform:auto;}
+.otpinfo {font-size:18px; color:#118a44; font-weight:bold; text-transform:auto;}
+.otpmsg {font-size:18px; color:#000; font-weight:bold; text-transform:auto;}
+.otp-input-fields {margin: auto; width: auto; display: flex; justify-content: center; gap: 10px; padding: 40px;}
+.otp-input-fields>input {height: 42px; width: 42px; background-color: transparent; border: 1px solid #000; border-radius:4px!important; text-align: center; outline: none; font-size: 16px;}
+.otp-input-fields>input::-webkit-outer-spin-button, .otp-input-fields input::-webkit-inner-spin-button {
+-webkit-appearance: none; margin: 0;}
+.otp-input-fields input[type=number] {-moz-appearance: textfield;}
+/*OTP Screen*/
+
+
+@media(max-width:767px){
+.creditlinelogo {max-width:160px; margin-bottom:5px;}
+.creditlinebg {padding:40px 20px;}
+.surge-badge img {max-width:130px;}
+.topfeature {max-width:60px; margin-top:10px;}
+.creditline-hd, .creditline-headr {font-size: 24px;}
+.creditline-subheadr {font-size:14px;}
+.creditline-feature {padding-top:60px; padding-bottom:60px;}
+.maincreditline li {font-size: 14px;}
+.maincreditline-btn {width:100%; text-align:center;}
+.maincreditline ul, .maincreditline {min-height:auto;}
+.credit-disbursement {font-size: 14px;}
+.creditloan-box-hd {font-size:18px;}
+.creditloan-box {padding: 30px 20px;}
+.creditloan-dtls li {font-size:14px; padding: 7px 0;}
+.credit-lender, .credit-loanno {font-size:14px;}
+.creditloan-dtls li span {font-size:14px; font-weight:bold;}
+}
+
+/*************ending of borrower css*******/
 ";
 
 

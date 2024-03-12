@@ -7,7 +7,11 @@ $generateOrderResp = $lists['generateOrderResp'];
 $sessionData = $lists['sessionData'];
 ?>
 
-<h2 align="center" ><div id="waitTextId" ></div></h2>
+<div class="surge-success">
+	<h2 class="success-txt">
+		<div id="waitTextId" ></div>
+	</h2>
+</div>
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

@@ -35,13 +35,14 @@ $account_status = "";
 					<div>
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
+							 <label for="company_name" >Account Number</label>
 								<input type="text" class="form-control" placeholder="Account No" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['account_number']; ?>" name="account_number" id="account_number" rows="3" autocomplete="off">
 								<span class="validation error-validation" id="error_address1"></span>
 							</div>
 						</div>
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
-
+									 <label for="company_name" >Re enter Account Number</label>
 								<input type="text" class="form-control" placeholder="Confirm Account No" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['account_number']; ?>"  id="account_number_confirm" rows="3" autocomplete="off">
 								<span class="validation error-validation" id="error_account_number"></span>
 							</div>
@@ -49,15 +50,15 @@ $account_status = "";
 						
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
-
+								 <label for="ifsc_code" >IFSC Code</label>
 								<input class="form-control" type="text" placeholder="IFSC Code" name="ifsc_code" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['ifsc_code']; ?>" id="ifsc_code" onkeypress="return isNumberKey(event)" >
 								<span class="validation error-validation" id="error_pincode"></span>
 							</div>
 						</div>
 						
-						<div class="col-md-6 col-xs-12">
+						<div class="col-md-6 col-xs-12" style="display:none;">
 							<div class="form-group">
-
+									 <label for="bank_name" >Bank Name</label>
 								<input class="form-control" type="text" placeholder="Bank Name" name="bank_name" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['bank_name']; ?>" id="bank_name" onkeypress="return isNumberKey(event)" >
 								<span class="validation error-validation" id="error_bank_name"></span>
 							</div>
@@ -106,3 +107,15 @@ $(document).ready(function() {
     }
 });
 </script>
+
+<script>
+        function autoCapitalize(inputId) {
+            $('#' + inputId).on('keyup', function() {
+                $(this).val($(this).val().toUpperCase());
+            });
+        }
+        
+       
+        autoCapitalize('ifsc_code');
+		
+    </script>

@@ -9,9 +9,18 @@ class LendSocialmodel extends CI_Model
 		parent::__construct();
 	//	$this->db_money_money = $this->load->database('db_money', true);
 	//  $this->cldb = $this->load->database('credit-line', TRUE);
-	$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+	$this->cldb = $this->load->database('', TRUE);
+	//$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
 	//	$this->load->model('Common_model');
 			// Get the database name
+		//	$this->apiBaseUrlLender = "https://www.antworksp2p.com/surgeapi/investapi/"; dated: 2024-feb-19
+			$this->apiBaseUrlLender = "https://www.antworksp2p.com/surgeapi/Investapip2p/"; // dated: 2024-feb-19
+			$this->apiBaseUrlKycApi = "https://antworksp2p.com/kycapi/";
+			
+			
+			$this->authorization = 'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==';
+			$this->oath_token = "oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjAyMDU1Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTIxMzg1NTcwMyIsImRldmljZV9pZCI6IiIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyNC0wMi0yMCAxNjowODozNSIsImlwX2FkZHJlc3MiOiI1NC44Ni41MC4xMzkifQ.6o3tDNV52ntG-C26VXjsnCnVk24F9rslkoIRz7cDwiM";
+			
 		
 	}
 		
@@ -45,7 +54,7 @@ class LendSocialmodel extends CI_Model
 
 							$this->cldb->where('id',$arr_user_detail['id']);	
 							$this->cldb->where('mobile',$arr_user_detail['mobile']);
-							$this->cldb->where('lender_id',"");
+							$this->cldb->where('lender_id',""); //one
 			  $insertResult = $this->cldb->update('master_user', $arr_user_detail);
 								
 			  if($insertResult){
@@ -61,8 +70,70 @@ class LendSocialmodel extends CI_Model
 				  return $resp;
 			  }
 	}
+	
+	
+/*******************starting of borrower ID update**************/
+				public function updateUserBorrowerId($id,$mobile,$borrower_id,$partners_id,$oldNew,$get_user_details){
+					$get_user_details = json_encode($get_user_details);
+					$borrowerDetails = json_decode($get_user_details,true);
+			$arr_user_detail = array(
+				'status'=> 1,
+				'id' => $id,
+				'mobile' => $mobile,
+				
+				'userType' => $oldNew
+					);	
+					
+				
+
+		foreach ($arr_user_detail as $key => $value) {
+    if (empty($value)) {
+        $resp['status'] = 2;
+        $resp['msg'] = "Field '$key' is empty";
+        $resp['mobile'] = "";
+        return $resp;
+    }
+}								if($borrower_id!=""){
+									$arr_user_detail['borrower_id'] = $borrower_id;
+									}
+							
+							if($partners_id!=""){
+								$arr_user_detail['partners_id'] = $partners_id;
+							}
+								
+							$arr_user_detail['name'] =	$borrowerDetails['name'];
+							$arr_user_detail['email_id'] =	$borrowerDetails['email_id'];
+							$arr_user_detail['highest_qualification'] =	$borrowerDetails['highest_qualification'];
+							$arr_user_detail['pan_card'] =	$borrowerDetails['pan_card'];
+
+							$arr_user_detail['aadhaar_status'] =	$borrowerDetails['aadhaar_status'];
+							$arr_user_detail['pan_status'] =	$borrowerDetails['pan_status'];
+							$arr_user_detail['account_status'] =	$borrowerDetails['account_status'];
+
+							$this->cldb->where('id',$arr_user_detail['id']);	
+							$this->cldb->where('mobile',$arr_user_detail['mobile']);
+							//$this->cldb->where('borrower_id',"");
+			  $insertResult = $this->cldb->update('master_user', $arr_user_detail);
+								
+			  if($insertResult){
+				    
+				  $resp['status'] = 1;
+				  $resp['msg'] = "Borrower ID Updated Successful".$this->cldb->last_query();
+				  $resp['mobile'] = $arr_user_detail['mobile'];
+				  return $resp;
+			  }else{
+				    $resp['status'] = 0;
+				  $resp['msg'] = "Borrower ID  Updation Failed".$this->cldb->last_query();
+				  $resp['mobile'] =  $arr_user_detail['mobile'];
+				  return $resp;
+			  }
+	}
+		/******************ending of borrower ID update*********************/
+		
+		
 /***********************************************/
 						public function updateUserDetail(){
+					//	echo"<pre>";	print_r($this->input->post()); die();
 					$formName = $this->input->post('form');
 				$arr_user_detail = "";
 					if($formName=="personalDetail"){
@@ -78,17 +149,41 @@ class LendSocialmodel extends CI_Model
 				'aadhaar' => $this->input->post('aadhaar'),
 				
 					);	
+				
+					$arr_user_detail['r_address'] = $this->input->post('r_address');
+					$stateData = explode(",",$this->input->post('r_state'));
+					$arr_user_detail['r_state'] = $stateData[0]; //$this->input->post('r_state');
+					$arr_user_detail['r_city'] = $this->input->post('r_city');
+					$arr_user_detail['r_pincode'] = $this->input->post('r_pincode');
+					
+					$arr_user_detail['r_state_code'] = $stateData[1]; //$this->input->post('r_state_code');
+				
+				
+					$arr_user_detail['highest_qualification'] = $this->input->post('highest_qualification');
+
+					
+					$arr_user_detail['occuption_id'] = 1; // static occupation id will be one because 2024-feb-13 $this->input->post('occuption_id');
+					$arr_user_detail['company_type'] = $this->input->post('company_type');
+					
+
+					$arr_user_detail['company_name'] = $this->input->post('company_name');
+					 $arr_user_detail['company_code'] = $this->input->post('company_code');
+					
+					$arr_user_detail['salary_process'] = $this->input->post('salary_process');
+					$arr_user_detail['net_monthly_income'] = $this->input->post('net_monthly_income');
+
+					
 					}else if($formName=="accountDetail"){
 					$arr_user_detail = array(
 				'id' => $this->input->post('id'),
 				'mobile' => $this->input->post('mobile'),
 				'account_number' => $this->input->post('account_number'),
 				'ifsc_code' => $this->input->post('ifsc_code'),
-				'bank_name' => $this->input->post('bank_name'),
+				//'bank_name' => $this->input->post('bank_name'),
 					);	
 									}
 				
-
+		
 		foreach ($arr_user_detail as $key => $value) {
     if (empty($value)) {
         $resp['status'] = 2;
@@ -101,7 +196,7 @@ class LendSocialmodel extends CI_Model
 							$this->cldb->where('id',$arr_user_detail['id']);	
 							$this->cldb->where('mobile',$arr_user_detail['mobile']);	
 			  $insertResult = $this->cldb->update('master_user', $arr_user_detail);
-								
+							//	echo $this->cldb->last_query(); die();
 			  if($insertResult){
 				    
 				  $resp['status'] = 1;
@@ -122,29 +217,73 @@ class LendSocialmodel extends CI_Model
 	{
 		$this->cldb->select('master_user.*, a.Company_Name as partner_name');
 		$this->cldb->from('master_user');
-		$this->cldb->join('invest_vendors1 a',"master_user.partners_id = a.VID", "LEFT");
-		
-			$this->cldb->where(array("master_user.mobile"=>$mobile));
+		$this->cldb->join('invest_vendors a',"master_user.partners_id = a.VID", "LEFT");
+		$this->cldb->where(array("master_user.mobile"=>$mobile));
 		$res = $this->cldb->get();
 
 		 $result = $res->result_array();
 			return $result[0];
 	}
 	
-			public function getPartnersTheme($partner_id)
+		public function get_company_list($searchTerm)
 	{
+		$this->db->select('id,company_name');
+		$this->db->from('p2p_list_company');
+		$this->db->like('company_name', $searchTerm); 
+		$this->db->limit(40);	
+		$query = $this->db->get();
+
+		return $query->result();  
+	}
+
+
+	
+	
+	public function get_state()
+    {
+        $this->db->select('state, code');
+        $this->db->from('p2p_state_experien');
+        $query = $this->db->get();
+        if($this->db->affected_rows()>0)
+        {
+            return $query->result_array();
+        }
+        else
+        {
+            return false;
+        }
+    }
+	
+	public function highest_qualification()
+    {
+        $this->db->select('*');
+        $this->db->from('p2p_qualification');
+        $query = $this->db->get();
+        if($this->db->affected_rows()>0)
+        {
+            return $query->result_array();
+        }
+        else
+        {
+            return false;
+        }
+    }
+	
+			public function getPartnersTheme($partner_id)
+				{
 		
 		
 		$this->cldb->select('partners_theme.*');
 		$this->cldb->from('partners_theme');
-		//$this->cldb->join('invest_vendors1 a',"master_user.partners_id = a.VID", "LEFT");
+		//$this->cldb->join('invest_vendorssss1 a',"master_user.partners_id = a.VID", "LEFT");
 		
 			$this->cldb->where(array("partners_theme.partner_id"=>$partner_id));
 		$res = $this->cldb->get();
 
 		 $result = $res->result_array();
+
 			return $result[0];
-	}
+			}
 
 
 
@@ -157,17 +296,11 @@ $curl = curl_init();
 
 $postData = json_encode(array(
     'kyc_unique_id' => $kyc_unique_id,
-    'mobile' => $mobile,
-    'fullname' => $fullname,
-    'email' => $email,
-    'pan' => $pan,
-    'aadhar' => $aadhar,
-    'account_no' => $account_no,
-    'caccount_no' => $account_no,
-    'bank_name' => $bank_name,
-    'ifsc_code' => $ifsc_code,
+	'mobile' => $mobile,
+	'fullname' => $fullname,
     'user_type' => 'lender',
     'source' => 'Surge',
+	 "product"=> "Lend Social",
     'otp' => $otp,
     'transactionId' => $transactionId,
     'codeVerifier' => $codeVerifier,
@@ -177,7 +310,7 @@ $postData = json_encode(array(
 
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://antworksp2p.com/kycapi/all_in_one_kyc_submit_otp',
+  CURLOPT_URL => $this->apiBaseUrlKycApi.'all_in_one_kyc_submit_otp',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
@@ -190,7 +323,8 @@ curl_setopt_array($curl, array(
 
 		CURLOPT_HTTPHEADER => array(
     'Content-Type: application/json',
-    'Cookie: p2p_2018_2019_session=e8duebnem634m2db5fj7vfh3ul0kqlbr'
+    'Cookie: p2p_2018_2019_session=e8duebnem634m2db5fj7vfh3ul0kqlbr',
+	'Authorization:NTk0MDcxOmJhMjUzZTM4ZmM0NDBkMjQ4Yjk1NWRmOGYzMzZmNzRl'
   ),
 			));
 
@@ -214,14 +348,14 @@ curl_setopt_array($curl, array(
 
 
 /******************starting of allInOneKyc here*************/
-		public function allInOneKyc($mobile,$fullname,$email,$pan,$aadhar,$account_no,$bank_name,$ifsc_code){  
-							
+		public function allInOneKyc($mobile,$fullname,$email,$pan,$aadhar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id){  
+						
 		
 			$curl = curl_init();
 
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://antworksp2p.com/kycapi/all_in_one_kyc',
+  CURLOPT_URL => $this->apiBaseUrlKycApi.'all_in_one_kyc',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
@@ -239,12 +373,28 @@ curl_setopt_array($curl, array(
 					"caccount_no": "'.$account_no.'",
 					"bank_name": "'.$bank_name.'",
 					"ifsc_code": "'.$ifsc_code.'",
-					"user_type": "lender",
-					"source": "Surge" }',
+					"dob": "'.$dob.'",
+					 "gender":  "'.$gender.'",
+					  "occuption_id": "1",
+					  "company_type": "'.$company_type.'",
+					"company_name": "'.$company_name.'",
+					"company_code": "'.$company_code.'",
+					 "highest_qualification":  "'.$highest_qualification.'",
+					"r_pincode": "'.$r_pincode.'",
+					"net_monthly_income": "'.$net_monthly_income.'",
+					"r_city": "'.$r_city.'",
+					"r_state": "'.$r_state.'",
+					"user_type": "'.$user_type.'",
+					"vendor_id": "'.$vendor_id.'",
+					"source": "LendSocialWebApp",
+					"product": "Lend Social"
+					}',
+
 
 			  CURLOPT_HTTPHEADER => array(
     'Content-Type: application/json',
-    'Cookie: p2p_2018_2019_session=e8duebnem634m2db5fj7vfh3ul0kqlbr'
+    'Cookie: p2p_2018_2019_session=e8duebnem634m2db5fj7vfh3ul0kqlbr',
+	'Authorization:NTk0MDcxOmJhMjUzZTM4ZmM0NDBkMjQ4Yjk1NWRmOGYzMzZmNzRl'
   ),
 			));
 
@@ -269,7 +419,7 @@ curl_setopt_array($curl, array(
 
 			curl_setopt_array($curl, array(
 		//2023-dec-20	  CURLOPT_URL =>  'https://webhook.site/b0d5ff61-d3a7-40a6-bee0-4ffdcc7e1412/surgeapi/investapi/user_bank_detail',
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/user_bank_detail',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'user_bank_detail',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -284,7 +434,7 @@ curl_setopt_array($curl, array(
 					"ifsc_code": "'.$ifsc_code.'",
 					"lender_id": "'.$lender_id.'",
 					"phone": "'.$phone.'",	
-				   "source":"SurgeWebApp"
+				   "source":"surge"
 						} ',
 
 
@@ -292,7 +442,7 @@ curl_setopt_array($curl, array(
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -307,22 +457,8 @@ curl_setopt_array($curl, array(
 
 
 /******************starting of PAN KYC / User Personal Detail here*************/
-		public function saveUserPersonalDetail($DOB,$email,$fullname,$gender,$PAN,$phone,$vendor_id){   // vender_id =partner_id
-							
-		
-			$curl = curl_init();
-
-			curl_setopt_array($curl, array(
-			//  CURLOPT_URL => /*'https://www.antworksp2p.com*/ 'https://webhook.site/b0d5ff61-d3a7-40a6-bee0-4ffdcc7e1412/surgeapi/investapi/user_personal_detail',
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/user_personal_detail',
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => '',
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 0,
-			  CURLOPT_FOLLOWLOCATION => true,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS =>'{
+		public function saveUserPersonalDetailApi($DOB,$email,$fullname,$gender,$PAN,$phone,$vendor_id){   // vender_id =partner_id
+					$postData = '{
 				     "device_id":"SurgeWebAppID",
 						"app_version":"2",
 						"DOB": "'.$DOB.'", 
@@ -332,19 +468,32 @@ curl_setopt_array($curl, array(
 						"PAN": "'.$PAN.'",
 						"phone": "'.$phone.'",
 						"vendor_id": "'.$vendor_id.'",
-				 "source":"SurgeWebApp"
-						} ',
+				 "source":"LendSocialWebApp"
+						}';				
+		
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => $this->apiBaseUrlLender.'user_personal_detail',
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => '',
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 0,
+			  CURLOPT_FOLLOWLOCATION => true,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => 'POST',
+			  CURLOPT_POSTFIELDS =>$postData,
 
 						
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
-
+				
 			$response = curl_exec($curl);
 
 			curl_close($curl);
@@ -374,7 +523,7 @@ curl_setopt_array($curl, array(
 			  "channel":"PG",
               "mobile":"'.$mobile.'", 
               "service":"social-lending",
-				 "source":"SurgeWebApp"
+				 "source":"surge"
 						} ',
 						
 						
@@ -382,7 +531,7 @@ curl_setopt_array($curl, array(
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -421,7 +570,7 @@ curl_setopt_array($curl, array(
 				"razorpay_order_id": "'.$razorpay_order_id.'",
 				"razorpay_payment_id": "'.$razorpay_payment_id.'",
 				"razorpay_signature": "'.$razorpay_signature.'",
-				"source":"SurgeWebApp"
+				"source":"surge"
 				}',
 						
 						
@@ -429,7 +578,7 @@ curl_setopt_array($curl, array(
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -451,12 +600,21 @@ curl_setopt_array($curl, array(
 
 /******************starting of lenderInvestment here*************/
 		public function lenderInvestment($mobile,$lender_id,$amount,$scheme_id,$ant_txn_id){  
-							
+						
+			$postData =  json_encode(array(
+				 "phone"=>$mobile,
+				 "lender_id"=>$lender_id,
+				 "amount"=>$amount,
+				 "scheme_id"=>$scheme_id,
+                 "ant_txn_id"=>$ant_txn_id,
+				 "source" => "Surge",
+				 "product"=> "Lend Social",
+			));							
 		
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/lender_investment',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'lender_investment',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -464,21 +622,14 @@ curl_setopt_array($curl, array(
 			  CURLOPT_FOLLOWLOCATION => true,
 			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS =>'{
-				 "phone":"'.$mobile.'",
-				 "lender_id": "'.$lender_id.'",
-				 "amount": "'.$amount.'",
-				 "scheme_id": "'.$scheme_id.'",
-                 "ant_txn_id": "'.$ant_txn_id.'",
-				 "source":"SurgeWebApp"
-						} ',
+			  CURLOPT_POSTFIELDS =>$postData,
 						
 						
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -500,7 +651,7 @@ curl_setopt_array($curl, array(
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/redemption_status',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'redemption_status',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -511,13 +662,13 @@ curl_setopt_array($curl, array(
 			  CURLOPT_POSTFIELDS =>'{
 				 "phone":"'.$mobile.'",
 				 "investment_no":"'.$investment_no.'",
-				 "source":"SurgeWebApp"
+				 "source":"surge"
 						}',
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -542,7 +693,7 @@ curl_setopt_array($curl, array(
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/redemption_request',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'redemption_request',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -553,13 +704,13 @@ curl_setopt_array($curl, array(
 			  CURLOPT_POSTFIELDS =>'{
 				 "phone":"'.$mobile.'",
 				 "investment_no":"'.$investment_no.'",
-				 "source":"SurgeWebApp"
+				 "source":"surge"
 						}',
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -578,7 +729,7 @@ curl_setopt_array($curl, array(
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/all_schemes',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'all_schemes',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -589,13 +740,13 @@ curl_setopt_array($curl, array(
 			  CURLOPT_POSTFIELDS =>'{
 				 "phone":"'.$mobile.'",
 				 "vendor_id":"'.$partner_id.'",
-				 "source":"SurgeWebApp"
+				 "source":"surge"
 						}',
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -613,7 +764,7 @@ curl_setopt_array($curl, array(
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/lender_investment_details',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'lender_investment_details',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -624,13 +775,13 @@ curl_setopt_array($curl, array(
 			  CURLOPT_POSTFIELDS =>'{
 				 "phone":"'.$mobile.'",
 				 "lender_id":"'.$lender_id.'",
-				 "source":"SurgeWebApp"
+				 "source":"surge"
 						}',
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
@@ -642,13 +793,13 @@ curl_setopt_array($curl, array(
 
 				}
 		
-		public function getKycStatus($mobile){
-							
+		public function getKycStatus($mobile,$vendor_id){
+					$postData =  json_encode(array("phone"=>$mobile, "vendor_id"=>$vendor_id));		
 						
 			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => 'https://www.antworksp2p.com/surgeapi/investapi/kyc_status',
+			  CURLOPT_URL => $this->apiBaseUrlLender.'kyc_status',
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => '',
 			  CURLOPT_MAXREDIRS => 10,
@@ -656,15 +807,12 @@ curl_setopt_array($curl, array(
 			  CURLOPT_FOLLOWLOCATION => true,
 			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			  CURLOPT_CUSTOMREQUEST => 'POST',
-			  CURLOPT_POSTFIELDS =>'{
-				 "phone":"'.$mobile.'",
-				 "source":"SurgeWebApp"
-						}',
+			  CURLOPT_POSTFIELDS =>$postData,
 
 			  CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==',
-				'oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjI0Nzc4Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTM1NDUxMjI0MSIsImRldmljZV9pZCI6Ik5XVmtNV1UwTldSaE1qSTVPR0UzWXc9PSIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyMy0xMi0yMiAxMTozMDo1NiIsImlwX2FkZHJlc3MiOiIxODIuNjkuMTc5LjIwNCJ9.ubx5l6O1gSaYk2Pp4oT5BfY9GDnBBCpx1Rhyt5CcGWg',
+				$this->oath_token,
 				'Cookie: p2p_2018_2019_session=hbo2sb7l00q1113m4pe76sutmpeb6kkq'
 			  ),
 			));
