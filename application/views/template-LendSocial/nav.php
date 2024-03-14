@@ -1,5 +1,4 @@
-
-
+<header class="header header-fixed header-1">
 <nav class="navbar navbar-default header-navigation stricky">
 <div class="top-nav">
 	<div class="container">

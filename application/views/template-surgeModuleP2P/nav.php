@@ -1,4 +1,4 @@
-<?php $path = "/surgeModule/";
+<?php $path = "surgeModuleP2P/";
 				$this->load->library('uri');
 $controller_name = $this->uri->segment(3);
 

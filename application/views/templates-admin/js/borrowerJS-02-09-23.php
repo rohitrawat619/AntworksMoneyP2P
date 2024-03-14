@@ -173,33 +173,6 @@
 		}
 
 	}
-	//Bypass the mail verification
-	function bypass_mail_verification(borrowerId) {
-		var email_id = $("#update_email").val();
-		if(borrowerId){
-			$.ajax({
-				async: true,
-				type: "POST",
-				url: baseURL+"P2padmin/p2pborrower/bypass_mail_verification",
-				data: {borrowerId:borrowerId},
-				success: function (data) {
-					var response =  $.parseJSON(data);
-					if(response.status == 1)
-					{
-						alert(response.msg);
-						location.reload();
-					}
-					else {
-						alert(response.msg);
-					}
-				}
-			});
-		}
-		else{
-			alert("Please enter borrower email ID");
-		}
-
-	}
 
 	function clearForm(){
 		$('#search_admin').find("input[type=text], select").val("");

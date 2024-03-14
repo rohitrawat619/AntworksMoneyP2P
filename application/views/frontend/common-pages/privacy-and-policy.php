@@ -125,7 +125,7 @@
                     <p>You may write to </p>
                     <p>The Grievance Redressal Officer<br>
                         Address : 165, Tower B1. Spaze IT Park, Gurgaon<br>
-                        Telephone: 9773986991<br>
+                        Telephone: 7042307683<br>
                         Email id : support[at]antworksmoney[dot]com</p>
 
 

@@ -107,7 +107,7 @@
 						</div><!-- /.icon-box -->
 						<div class="text-box">
 							<h3>Call Us:</h3>
-							<p> 9773986991</p>
+							<p> 7042307683</p>
 						</div><!-- /.text-box -->
 					</li>
 				</ul><!-- /.info-items -->
