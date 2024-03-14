@@ -5,7 +5,7 @@ class Loginmodel extends CI_Model{
     {
         parent::__construct();
         $this->load->database();
-		$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+		//$this->cldb = $this->load->database('credit-line', TRUE);
     }
 
     public function validity_ip_base_login_failed()
@@ -129,7 +129,7 @@ class Loginmodel extends CI_Model{
     }
 
     public function validateAdmin($username, $password, $hash) {
-        $this->db-> select('P.admin_id, P.email, P.fname, P.mobile, P.password, P.role_id, P.status, R.role_name');
+        $this->db-> select('P.admin_id, P.email, P.fname, P.mobile, P.password, P.role_id, P.status, R.role_name, R.admin_access, P.partner_id');
         $this->db-> from('p2p_admin_list AS P');
         $this->db->join('p2p_admin_role AS R', 'R.id = P.role_id', 'left');
         $this->db->where('email', $username);
@@ -167,12 +167,12 @@ class Loginmodel extends CI_Model{
 			//echo $number."--";
             $otp = rand(100000,999999);
 			//$otp = '876420';
-            $this->cldb->select('*');
-            $this->cldb->from('p2p_otp_details_table');
-            $this->cldb->where('mobile', $number);
-            $this->cldb->where('date_added >= now() - INTERVAL 10 MINUTE');
-            $query = $this->cldb->get();
-            if($this->cldb->affected_rows()>0)
+            $this->db->select('*');
+            $this->db->from('p2p_otp_details_table');
+            $this->db->where('mobile', $number);
+            $this->db->where('date_added >= now() - INTERVAL 10 MINUTE');
+            $query = $this->db->get();
+            if($this->db->affected_rows()>0)
             {
                 $result = count($query->result_array());
                 if($result>10)
@@ -182,26 +182,28 @@ class Loginmodel extends CI_Model{
                 else{
                     $arr["mobile"]=$number;
                     $arr["otp"]=$otp;
+                    $arr["source"]='sendLendSocialOtp';
 					
-                    $query = $this->cldb-> insert('p2p_otp_details_table',$arr);
+                    $query = $this->db-> insert('p2p_otp_details_table',$arr);
                 }
 
             }
             else{
                 $arr["mobile"]=$number;
                 $arr["otp"]=$otp;
-                $query = $this->cldb-> insert('p2p_otp_details_table',$arr);
+				$arr["source"]='sendLendSocialOtp2';
+                $query = $this->db-> insert('p2p_otp_details_table',$arr);
             }
 
 
 			/****************/
 			$mobileToInsert = $_POST['mobile'];
-			$this->cldb->where('mobile', $mobileToInsert);
-			$query = $this->cldb->get('master_user');
+			$this->db->where('mobile', $mobileToInsert);
+			$query = $this->db->get('master_user');
 
 			if ($query->num_rows() == 0) {
 				// Mobile number doesn't exist, proceed with the insert
-				$this->cldb->insert('master_user', array("mobile" => $mobileToInsert));
+				$this->db->insert('master_user', array("mobile" => $mobileToInsert));
 				
 			}
 				/******************/
@@ -215,7 +217,7 @@ class Loginmodel extends CI_Model{
             // Prepare data for POST request
             $data = array('username' => SMS_GATEWAY_USERNAME, 'hash' => SMS_GATEWAY_HASH_API, 'numbers' => $number, "sender" => SMS_GATEWAY_SENDER, "message" => $message);
 
-            /* dated: 2023-dec-12 / Send the POST request with cURL 
+            /* dated: 2023-dec-12 / Send the POST request with cURL */
             $ch = curl_init('https://api.textlocal.in/send/');
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -239,14 +241,14 @@ class Loginmodel extends CI_Model{
             $data = array(
                 'csrf_token' => $this->security->get_csrf_hash(),
             );
-            $this->cldb->select('id, otp, ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(date_added)) / 60) AS MINUTE');
-            $this->cldb->from('p2p_otp_details_table');
-            $this->cldb->where('mobile', $mobile);
-            $this->cldb->where('status', '0');
-            $this->cldb->order_by('id', 'desc');
-            $this->cldb->limit(1);
-            $query = $this->cldb->get();
-            if ($this->cldb->affected_rows() > 0) {
+            $this->db->select('id, otp, ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(date_added)) / 60) AS MINUTE');
+            $this->db->from('p2p_otp_details_table');
+            $this->db->where('mobile', $mobile);
+            $this->db->where('status', '0');
+            $this->db->order_by('id', 'desc');
+            $this->db->limit(1);
+            $query = $this->db->get();
+            if ($this->db->affected_rows() > 0) {
                 $result = $query->row();
                 if($otp == $result->otp)
                 {
@@ -254,10 +256,10 @@ class Loginmodel extends CI_Model{
 						
 						 $data['status'] = 1;
                         $data['response'] = "verify";
-                        $this->cldb->where('otp', $otp);
-                        $this->cldb->where('mobile', $mobile);
-                        $this->cldb->set('status', '1');
-                        $this->cldb->update('p2p_otp_details_table');
+                        $this->db->where('otp', $otp);
+                        $this->db->where('mobile', $mobile);
+                        $this->db->set('status', '1');
+                        $this->db->update('p2p_otp_details_table');
                     } else {
 						$data['status'] = 0;
                         $data['response'] = "OTP Expired, Please Resend and try again";
@@ -280,12 +282,12 @@ class Loginmodel extends CI_Model{
     }  /**************verify SurgeApp OTP ending here**************/
 
 	public function validateSurgeAdmin($username, $password, $hash) { // Dated: 2023-Nov-29
-        $this->cldb-> select('P.admin_id, P.email, P.fname, P.mobile, P.password, P.role_id, P.status, R.role_name, R.admin_access, P.partner_id');
-        $this->cldb-> from('p2p_admin_list AS P');
-        $this->cldb->join('p2p_admin_role AS R', 'R.id = P.role_id', 'left');
-        $this->cldb->where('email', $username);
-        $query = $this->cldb->get();
-        if($this->cldb->affected_rows()>0)
+        $this->db-> select('P.admin_id, P.email, P.fname, P.mobile, P.password, P.role_id, P.status, R.role_name, R.admin_access, P.partner_id');
+        $this->db-> from('p2p_admin_list AS P');
+        $this->db->join('p2p_admin_role AS R', 'R.id = P.role_id', 'left');
+        $this->db->where('email', $username);
+        $query = $this->db->get();
+        if($this->db->affected_rows()>0)
         {
             $result = $query->row();
             $current_password_with_key = $result->password.$hash;

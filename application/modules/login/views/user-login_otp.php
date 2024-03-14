@@ -11,7 +11,12 @@
     @media(max-width:767px){
 
     }
-
+ .coundown {
+    font-size: 21px;
+    font-weight: 600;
+    color: #000;
+    margin-top: 6px;
+}
 </style>
 <?=getNotificationHtml();?>
 <section class="sec-pad">
@@ -37,6 +42,7 @@
                                                 <label for="id_email">Mobile<span>*</span> <span style="color:red" id="error_mobile"></span> </label>
                                                 <input class="form-control" type="text" name="mobile" id="mobile">
 												<button type="button" class="btn btn-primary" id="resend_otp" onclick="sendLoginOtp()" >Send OTP <i class="fa fa-paper-plane" ></i></button>
+												<div class="countdown"></div>
 																							 
 										 </div>
                                         </div>

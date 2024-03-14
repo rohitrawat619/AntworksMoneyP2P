@@ -61,7 +61,7 @@ foreach($row as $row1)   { ?>
             <td><?php echo $row1['Repemail']; ?></td>
             <td><?php echo $row1['created_date']; ?></td>
             <td><a class="btn btn-success" href="<?= base_url(); ?>Surgeadmin/editrepersent/<?= $row1['rid']; ?>"> Edit</a></td>
-            <td><a class="btn btn-danger" href="<?= base_url(); ?>Surgeadmin/deleterepersent/<?=$row1['rid']; ?>" class="btn btn-danger" onclick="return confirm('Are You Sure Want To Delete This')">Delete</a></td>
+            <td></td>
 
              </tr>
         <?php $i++;

@@ -64,7 +64,7 @@ class Invest_model extends CI_Model{
     }
 	public function get_kyc_status($mobile)
     {
-        $query = $this->cldb->select('PLL.lender_id, PLL.pan_kyc, PLL.account_kyc, PLI.ant_txn_id, PLI.investment_No')
+        $query = $this->cldb->select('PLL.lender_id, PLL.vendor_id, PLL.pan_kyc, PLL.account_kyc, PLI.ant_txn_id, PLI.investment_No')
 		->join('p2p_lender_reinvestment as PLI', 'PLI.mobile = PLL.mobile', 'left')
 		->order_by('PLI.reinvestment_id', 'DESC')
 		->get_where('p2p_lender_list PLL', array('PLL.mobile' => $mobile));
@@ -74,6 +74,7 @@ class Invest_model extends CI_Model{
             if ($steps['ant_txn_id'] != '' && $steps['investment_No'] != '') {
 				return $current_step = array(
 					'lender_id' => $steps['lender_id'],
+					'vendor_id' => $steps['vendor_id'],
 					'step' => 3,
 					'msg' => 'Payment Done'
 				);
@@ -81,6 +82,7 @@ class Invest_model extends CI_Model{
 			if ($steps['pan_kyc'] == 1 && $steps['account_kyc'] == 1) {
 				return $current_step = array(
 					'lender_id' => $steps['lender_id'],
+					'vendor_id' => $steps['vendor_id'],
 					'step' => 2,
 					'msg' => 'Fully kyc Done'
 				);
@@ -88,6 +90,7 @@ class Invest_model extends CI_Model{
 			if ($steps['pan_kyc'] == 1 && $steps['account_kyc'] == 0) {
 				return $current_step = array(
 					'lender_id' => $steps['lender_id'],
+					'vendor_id' => $steps['vendor_id'],
 					'step' => 1,
 					'msg' => 'Basic KYC Done'
 				);
@@ -95,6 +98,7 @@ class Invest_model extends CI_Model{
 			if ($steps['pan_kyc'] == 0 && $steps['account_kyc'] == 0) {
 				return $current_step = array(
 					'lender_id' => $steps['lender_id'],
+					'vendor_id' => $steps['vendor_id'],
 					'step' => 0,
 					'msg' => 'KYC Not Done'
 				);
@@ -102,6 +106,7 @@ class Invest_model extends CI_Model{
         }else{
 			return $current_step = array(
                 'lender_id' => '',
+				'vendor_id' => "",
                 'step' => 0,
                 'msg' => 'User Not found'
             );
@@ -170,7 +175,8 @@ class Invest_model extends CI_Model{
 }
 
 public function basic_bank_kyc($details) {
-
+     $headers = $this->input->request_headers();
+	 //pr($headers);exit;
        $bank_url = "https://antworksmoney.com/credit-line/p2papiborrower/borrowerres/addBank"; 
        $anchor = "Investent";
         $curl = curl_init();
@@ -193,7 +199,10 @@ public function basic_bank_kyc($details) {
             'anchor'=> $details['anchor'],
         )),
         CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
+            'Content-Type: application/json',
+            'Authorization:'.$headers['Authorization'],
+            'oath_token:'.$headers['oath_token'],
+			
         ),
     ));
     $response = curl_exec($curl);
@@ -204,23 +213,26 @@ public function basic_bank_kyc($details) {
      }
    	 public function addaccount($response,$lender_details)
     {
+		$bank_registered_name = strtoupper($response['bank_response']['results']['registered_name']);
 		$bank_res = array(
                 'lender_id' => $lender_details->user_id,
                 'mobile' => $lender_details->mobile,
                 'account_no' => $this->input->post('account_no'),
                 'ifsc_code' => $this->input->post('ifsc_code'),
-                'fav_id' => $response['id'] ? $response['id'] : '',
-                'razorpay_response_bank_ac' => json_encode($response),
+                'fav_id' => $response['bank_response']['id'] ? $response['bank_response']['id'] : '',
+                'razorpay_response_bank_ac' => json_encode($response['bank_response']),
+                'bank_registered_name' => $bank_registered_name ? $bank_registered_name : '',
             );
+		//print_r($bank_res);	
          $this->cldb->insert('p2p_lender_bank_res', $bank_res);
-		 
+		 //echo $this->cldb->last_query();exit;
         
         if($this->cldb->affected_rows()>0)
         {
 		$query = $this->cldb->get_where('p2p_lender_account_info',array('lender_id' => $lender_details->user_id));
 		$bankdetails = array(
                 'lender_id' => $lender_details->user_id,
-                'bank_name' => $response['fund_account']['bank_account']['bank_name']?$response['fund_account']['bank_account']['bank_name']:'',
+                'bank_name' => $response['bank_response']['fund_account']['bank_account']['bank_name']?$response['bank_response']['fund_account']['bank_account']['bank_name']:'',
                 'account_number' => $this->input->post('account_no'),
                 'ifsc_code' => $this->input->post('ifsc_code'),
                 'is_verified' => 1,
@@ -260,6 +272,7 @@ public function basic_bank_kyc($details) {
         $current_value = 0;
         $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as investment_date')
 		->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
+		->order_by('LI.created_date','DESC')
 		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.redemption_status'=>0));
 		
         if($this->cldb->affected_rows()>0)
@@ -461,10 +474,12 @@ public function basic_bank_kyc($details) {
         $query = $this->cldb->select('ISD.Scheme_Name, ISD.Lockin, ISD.Lockin_Period, ISD.Cooling_Period, LI.investment_No ,LI.lender_id, LI.mobile, LI.scheme_id, LI.amount, LI.basic_rate, LI.hike_rate, LI.pre_mat_rate, LI.redemption_date, LI.redemption_status, LI.created_date as invest_date, bank.razorpay_response_fav')
 		->join('invest_scheme_details as ISD', 'ISD.id = LI.scheme_id', 'left')
 		->join('p2p_borrower_bank_res as bank', 'bank.mobile = LI.mobile', 'left')
-		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.investment_No'=>$postVal['investment_no']));
+		->get_where('p2p_lender_reinvestment as LI',array('LI.mobile'=>$postVal['phone'],'LI.source'=>'surge','LI.investment_No'=>$postVal['investment_no'],'bank.fav_id !='=> ''));
+		//echo $this->cldb->last_query();exit;
         if($this->cldb->affected_rows()>0)
         {
             $result = $query->row();
+			
 			if($result->redemption_date == '0000-00-00 00:00:00'){
 				   $redemption_date = '00-00-0000';
 		    }else{
@@ -532,5 +547,25 @@ public function basic_bank_kyc($details) {
 		$end_date = strtotime(date('Y-m-d'));
 		return $days = (($end_date - $start_date) / 60 / 60 / 24);
 	}
+	public function create_investment_no()
+    {
+        $this->cldb->select("investment_No");
+        $this->cldb->from('p2p_lender_reinvestment');
+        $this->cldb->order_by('investment_No', 'DESC');
+        $this->cldb->where('source', 'surge');
+        $this->cldb->limit(1);
+        $query = $this->cldb->get();
+        $row = (array)$query->row();
+        if($this->cldb->affected_rows()>0)
+        {
+            $lid = $row['investment_No'];
+            $lid++;
+           return $investment_No = $lid;
+        }
+        else
+        {
+           return $investment_No = "INV10000001";
+        }
+    }
 }
 ?>

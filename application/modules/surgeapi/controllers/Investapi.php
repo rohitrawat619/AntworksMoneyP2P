@@ -4,10 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
 class Investapi extends REST_Controller{
+
     public function __construct($config = 'rest')
     {
         parent::__construct($config);
-		//$this->investDB = $this->load->database('invest', TRUE);
+		$this->app = $this->load->database('app', TRUE);
 		$this->cldb = $this->load->database('credit-line', TRUE);
         $this->load->library('form_validation');
         $this->load->library('middleware');
@@ -18,7 +19,7 @@ class Investapi extends REST_Controller{
 	public function all_schemes_post()
     {
         /* $auth = $this->middleware->auth();
-        if ($auth) { */
+        if ($auth) { */ 
                 $_POST = json_decode(file_get_contents('php://input'),true);
 				$this->form_validation->set_rules('phone', 'Mobile No', 'trim|required|regex_match[/^[6-9]\d{9}$/]');
 				if ($this->form_validation->run() == TRUE) {
@@ -52,13 +53,13 @@ class Investapi extends REST_Controller{
 					$this->set_response($errmsg, REST_Controller::HTTP_OK);
 					return;
                 }
-        /* }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
+          /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */  
     }
 	public function user_personal_detail_post()
     {
-        /* $auth = $this->middleware->auth();
-        if ($auth) { */
+         /* $auth = $this->middleware->auth();
+        if ($auth) { */ 
                 $_POST = json_decode(file_get_contents('php://input'),true);
 				$postData = $this->input->post();
 				$this->form_validation->set_rules('vendor_id','Vendor ID','required|trim');
@@ -88,7 +89,7 @@ class Investapi extends REST_Controller{
 							
 						}
 						if($user_exist_in_p2p['status'] == 1 && $user_exist_in_p2p['msg'] == 'Already Exist'){
-							//echo 'Not exist in new p2p IFFFF';exit;
+							//echo 'Not exist in new p2p';exit;
 							$query = $this ->cldb
 									   -> select('*')
 									   -> where('mobile', $this->input->post('phone'))
@@ -121,6 +122,7 @@ class Investapi extends REST_Controller{
 									$phone = $postData['phone'];
 									$lenderID = $this->cldb->insert_id();
 								}
+								//echo $phone.'='.$pan.'='.$lenderID.'2nd If';exit;
 						#update Lender id in borrower_pan_api_details Table After PAN KYC
 						$this->Invest_model->update_lender_id_in_pan_kyc_table($phone,$pan,$lenderID);
 						
@@ -152,26 +154,21 @@ class Investapi extends REST_Controller{
 										'pan' => $postData['PAN']
 									));
 									$lenderID = $this->cldb->insert_id();
+						
 						#update Lender id in borrower_pan_api_details Table After PAN KYC
 						$this->Invest_model->update_lender_id_in_pan_kyc_table($postData['phone'],$postData['PAN'],$lenderID);		
 						}
-                        #Genrate Token  Start
-						$tokenData['user_id'] = $lender_id;
-						$token_data['fullname'] = $postData['fullname']; 
-						$tokenData['email'] = $postData['email'];
-						//pr($tokenData);exit;
-						//$tokenData['generated_timestamp'] = date('Y-m-d H:i:s');
-						$oath_token = AUTHORIZATION::generateToken($tokenData);
-						#Genrate Token End
+                        
 						
-                        $this->cldb->where('mobile', $postData['phone']);
-                        $this->cldb->update('p2p_lender_list', array('pan_kyc' => 1,'oath_token' => $oath_token,'modified_date'=>date("Y-m-d H:i:s")));
+						$this->cldb->update('p2p_lender_list', array('pan_kyc' => 1,'modified_date'=>date("Y-m-d H:i:s")));
+                        //$this->cldb->update('p2p_lender_list', array('pan_kyc' => 1,'oath_token' => $oath_token,'modified_date'=>date("Y-m-d H:i:s")));
 						
 						
 						$response = array(
 							'status'=>1,
+							'user_id'=>$lenderID,
 							'lender_id'=>$lender_id,
-							'Authorization' => $oath_token,
+							//'Authorization' => $oath_token,
 							'msg'=>"User Basic KYC Done!"
 							);
 						
@@ -179,7 +176,7 @@ class Investapi extends REST_Controller{
 						return;
                     } else {
                         if ($arr_response['result']['status'] == 'Invalid') {
-                            $this->cldb->where('phone', $postData['phone']);
+                            $this->cldb->where('mobile', $postData['phone']);
                             $this->cldb->update('p2p_lender_list', array('pan_kyc' => 0));
                         } 
 						$response = array(
@@ -198,13 +195,14 @@ class Investapi extends REST_Controller{
 					$this->set_response($errmsg, REST_Controller::HTTP_OK);
 					return;
                 }
-        /* }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
+         /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */ 
     }
 	public function user_bank_detail_post()
     {
-        $auth = $this->middleware->auth();
-        if ($auth) {
+        /* $auth = $this->middleware->auth();
+        if ($auth) { */ 
+			
                 $_POST = json_decode(file_get_contents('php://input'),true);
 				$postData = $this->input->post();
 				//pr($postData);exit;
@@ -219,13 +217,17 @@ class Investapi extends REST_Controller{
 					 //echo $this->cldb->last_query();exit;
                     if ($this->cldb->affected_rows() > 0) {
 						$lender_details = $query->row();
+						
 						$bank_kyc_response = $this->Invest_model->basic_bank_kyc($postData);
-					   $arr_response = json_decode($bank_kyc_response, true);
+							$response_arr = json_decode($bank_kyc_response, true);
+					   //print_r($response_arr);exit;
+					  
 					   ## Insert bank Account details response in table 
-					   $this->Invest_model->addaccount($arr_response,$lender_details);
-					   if ($arr_response['results']['account_status'] == 'active') {
+					   $this->Invest_model->addaccount($response_arr,$lender_details);
+					   
+					   if ($response_arr['bank_response']['results']['account_status'] == 'active') {
 						   $name = strtoupper($lender_details->name);
-					       $razorpay_bankname = strtoupper($arr_response['results']['registered_name']);
+					       $razorpay_bankname = strtoupper($response_arr['bank_response']['results']['registered_name']);
 						   
 						   if (str_replace(' ', '', $name) == str_replace(' ', '', $razorpay_bankname)) {
 							$this->cldb->where('mobile', $this->input->post('phone'));
@@ -235,7 +237,7 @@ class Investapi extends REST_Controller{
 							$response = array(
 								'status' => 1,
 								'lender_id'=>$lender_details->lender_id,
-								'msg' => "Bank verified successfully!",
+								'msg' => "Bank verified successfully in surg!!",
 							);
 					    #Send Mail Registration Successful
 							$product_type = 'AntpaySurge';
@@ -252,13 +254,29 @@ class Investapi extends REST_Controller{
 					    #end
 							$response = array(
 								'status' => 0,
-								'msg' => "Bank not verified successfully!",
+								'msg' => "Name not verified successfully in surg!",
 							);
 							
 							$this->set_response($response, REST_Controller::HTTP_OK);
 						return;
 						}
+					}else{
+						$response = array(
+								'status' => 0,
+								'msg' => "Bank not verified successfully in surg!!",
+							);
+							
+							$this->set_response($response, REST_Controller::HTTP_OK);
+						return;
 					}
+				}else{
+							
+						$response = array('status' => 0,
+								'msg' => "User Data already exist",
+							);
+							
+							$this->set_response($response, REST_Controller::HTTP_OK);
+						return;
 				}
 					
 			}else {
@@ -266,13 +284,13 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
-        }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+        /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
     }
 	public function kyc_status_post()
     {
         /* $auth = $this->middleware->auth();
-        if ($auth) {  */
+        if ($auth) {  */ 
                 $_POST = json_decode(file_get_contents('php://input'),true);
 				$this->form_validation->set_rules('phone', 'Mobile No', 'trim|required|regex_match[/^[6-9]\d{9}$/]');
 				//$this->form_validation->set_rules('vendor_id', 'Vendor ID', 'trim|required');
@@ -291,12 +309,12 @@ class Investapi extends REST_Controller{
 					$this->set_response($errmsg, REST_Controller::HTTP_OK);
 					return;
                 }
-        //}
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); 
+        /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);  */
     }
 	public function lender_investment_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
+		 /* $auth = $this->middleware->auth();
+        if ($auth) {  */
 			 $_POST = json_decode(file_get_contents('php://input'), true);
 			 $this->form_validation->set_rules('lender_id','Lender ID','required');
 			$this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
@@ -306,7 +324,7 @@ class Investapi extends REST_Controller{
 			  if ($this->form_validation->run() == TRUE) {
 				  $query = $this->cldb->select('Interest_Rate,hike_rate,Pre_Mat_Rate')->get_where('invest_scheme_details',array('id'=>$this->input->post('scheme_id')));
 				   if($this->cldb->affected_rows()>0){
-					   $investment_no = $this->create_investment_no();
+					   $investment_no = $this->Invest_model->create_investment_no();
 						   $result = (array)$query->row();
 						   //pr($result);exit;
 						   
@@ -342,8 +360,8 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+		 /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
 	}
 	public function create_lender_id()
     {
@@ -364,29 +382,10 @@ class Investapi extends REST_Controller{
            return $lender_id = "LR10000001";
         }
     }
-	public function create_investment_no()
-    {
-        $this->cldb->select("investment_No");
-        $this->cldb->from('p2p_lender_reinvestment');
-        $this->cldb->order_by('investment_No', 'DESC');
-        $this->cldb->where('source', 'surge');
-        $this->cldb->limit(1);
-        $query = $this->cldb->get();
-        $row = (array)$query->row();
-        if($this->cldb->affected_rows()>0)
-        {
-            $lid = $row['investment_No'];
-            $lid++;
-           return $investment_No = $lid;
-        }
-        else
-        {
-           return $investment_No = "INV10000001";
-        }
-    }
+	
 	public function lender_investment_details_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
+		/*  $auth = $this->middleware->auth();
+        if ($auth) { */ 
 			 $_POST = json_decode(file_get_contents('php://input'), true);
 			 //$this->form_validation->set_rules('lender_id','Lender ID','required');
 			 $this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
@@ -404,12 +403,12 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+		 /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
 	}
 	public function redemption_request_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
+		 /* $auth = $this->middleware->auth();
+        if ($auth) { */ 
 			 $_POST = json_decode(file_get_contents('php://input'), true);
 			
 			 $this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
@@ -429,12 +428,12 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+		 /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
 	}
 	public function redemption_status_post(){
-		$auth = $this->middleware->auth();
-        if ($auth) {
+		 /* $auth = $this->middleware->auth();
+        if ($auth) { */ 
 			$_POST = json_decode(file_get_contents('php://input'), true);
 			
 			 $this->form_validation->set_rules('phone','phone','required|trim|regex_match[/^[0-9]{10}$/]');
@@ -458,10 +457,12 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
-		 }
-        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+		 /* }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
 	}
 	public function lender_mismatch_post(){
+		/* $auth = $this->middleware->auth();
+        if ($auth) { */
 			 $_POST = json_decode(file_get_contents('php://input'), true);
 			 
 			 $this->form_validation->set_rules('lender_id','Lender ID','required');
@@ -484,6 +485,8 @@ class Investapi extends REST_Controller{
 				$this->set_response($errmsg, REST_Controller::HTTP_OK);
 				return;
 			}
+		/* }
+		$this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED); */
 		 
 	}
     public function authdb($str, $field)

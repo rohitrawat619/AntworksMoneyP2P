@@ -811,13 +811,13 @@ class Borroweraddmodel extends CI_Model
         $this->ektara_second_api($this->input->post('borrower_id'));
         $where = "(CreditCategory = 'Green' or CreditCategory = 'Amber')";
         $this->db->where($where)->order_by('id', 'desc')->limit(1)->get_where('ektara_response', array('borrower_id' => $this->input->post('borrower_id')));
-		echo $this->db->last_query();exit;
+	//	echo $this->db->last_query();exit;
         if ($this->db->affected_rows() > 0) {
             $query = $this->db->get_where('p2p_borrower_steps_credit_line', array('borrower_id' => $this->input->post('borrower_id')));
 			
             if ($this->db->affected_rows() > 0) {
                 $result = $query->row_array();
-				
+				pr($result);exit;
                 if ($result['step_2'] == 1 || $result['step_2'] == 2) {
 					$loan_data = $this->db->get_where('p2p_loan_list', array('borrower_id' => $this->input->post('borrower_id')))->row();
 					if ($this->db->affected_rows() > 0) {

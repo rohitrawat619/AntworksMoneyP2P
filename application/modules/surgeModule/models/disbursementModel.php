@@ -29,61 +29,6 @@ class disbursementModel extends CI_Model
     return $this->cldb->count_all_results();
 }
 
-public function getInvestmentAmount() {
-    $total_amount = 0;
-
-    if ($this->partner_id != 0) {
-        $this->cldb->select("id");
-        $this->cldb->where("Vendor_ID", $this->partner_id);
-        $query = $this->cldb->get('invest_scheme_details');
-        $scheme_ids = $query->row_array();
-
-        if (!empty($scheme_ids)) {
-            $scheme_ids = array_column($scheme_ids, 'id');
-
-            $this->cldb->select_sum('amount', 'total_amount');
-            $this->cldb->where('redemption_status', 0);
-            $this->cldb->where_in("scheme_id", $scheme_ids);
-            $query = $this->cldb->get('p2p_lender_reinvestment');
-            $result = $query->row();
-            
-            if (!empty($result) && isset($result->total_amount)) {
-                $total_amount = $result->total_amount;
-            }
-        }
-    } else {
-        $this->cldb->select_sum('amount', 'total_amount');
-        $this->cldb->where('redemption_status', 0);
-        $query = $this->cldb->get('p2p_lender_reinvestment');
-        $result = $query->row();
-        
-        if (!empty($result) && isset($result->total_amount)) {
-            $total_amount = $result->total_amount;
-        }
-    }
-
-    return $total_amount;
-}
-
-
-
-public function getDisbursedAmount() {
-    $this->cldb->select_sum('disburse_amount', 'total_amount');
-    $this->cldb->where('status', 4);
-    
-    if ($this->partner_id != 0) {
-        $this->cldb->where('vendor_id', $this->partner_id);
-    }
-    
-    $query = $this->cldb->get('p2p_loan_list');
-    $result = $query->row();
-
-    if (!empty($result) && isset($result->total_amount)) {
-        return $result->total_amount;
-    } else {
-        return 0; 
-    }
-}
 
 
 
