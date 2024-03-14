@@ -51,6 +51,20 @@ class Loan extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 
+    public function surge()
+	{
+		$this->load->model('Blogmodel');
+		$data['list'] = $this->Blogmodel->get_blogs();
+		$data['title']='P2P Lending | Quick and Easy P2P Loan Services in India';
+		$data['description']="The most trusted P2P Loan services in India enabling low interest loans for bad credit Borrowers and increased earnings for Lenders. Compare and Apply now.";
+		$data['keywords']='';
+		$this->load->view('templates/header',$data);
+		$this->load->view('templates/nav',$data);
+		$this->load->view('templates/collapse-nav',$data);
+		$this->load->view('loan/lender/surge',$data);
+		$this->load->view('templates/footer');
+	}
+
 	public function lenderBusinessLoan()
 	{
 		$this->load->model('Blogmodel');
