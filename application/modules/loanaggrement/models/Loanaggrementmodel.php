@@ -21,7 +21,6 @@ class Loanaggrementmodel extends CI_Model{
 					BAD.r_pincode AS BORROWERR_Pincode,										
 					BDT.aadhaar AS BORROWERR_aadhaar,
                     BDT.father_name AS BORROWERFATHERNAME,
-                    
 					LL.user_id AS user_id_lender,
 					LL.name AS LENDER_fNAME,
 					LL.dob AS LENDER_dob,
@@ -86,7 +85,85 @@ class Loanaggrementmodel extends CI_Model{
             return false;
         }
     }
+   #add 18-01-24 for credit-line new_p2p to antworks_p2pdevelopment
+   public function loanaGGrementCreditLine()
+    {
+        $sql = "SELECT
+					BL.borrower_id AS BORROWER_REGISTRATIONID,
+					BL.name AS BORROWERNAME,
+					BL.email AS BORROWEREMAIL,
+					BL.mobile AS BORROWERMOBILE,
+					BL.dob AS BORROWERDOB,
+					BL.pan AS BORROWERR_pan,
+					BAD.r_address AS BORROWERR_Address,
+					BAD.r_address1 AS BORROWERR_Address1,
+					BAD.r_city AS BORROWERR_City,
+					SE.state AS BORROWERR_State,
+					BAD.r_pincode AS BORROWERR_Pincode,										
+					BDT.aadhaar AS BORROWERR_aadhaar,
+                    BDT.father_name AS BORROWERFATHERNAME,
+					LL.user_id AS user_id_lender,
+					LL.name AS LENDER_fNAME,
+					LL.dob AS LENDER_dob,
+					LL.pan AS LENDER_PAN,
+					LL.lender_id AS LENDER_ID,
+					LL.email AS LENDER_email,
+					LL.mobile AS LENDER_mobile,
+					LA.pincode AS LENDER_pincode,
+					LA.state AS LENDER_state_code,
+					LA.city AS LENDER_city,
+					LA.address1 AS LENDER_address,
+					LA.address2 AS LENDER_address1,					
+					PD.loan_amount AS LOANAMOUNT,
+					PD.loan_description AS Loan_Description,
+					PD.PLRN AS PLRN,
+					PD.borrower_id AS BORROWER_ID,
+					LO.loan_no,					
+					LO.approved_tenor AS TENORMONTHS,
+					LO.approved_loan_amount AS APPROVERD_LOAN_AMOUNT,
+					LO.approved_interest AS LOAN_Interest_rate,
+					LO.lender_id AS LOAN_lenders_id,
+					LAS.borrower_signature,
+					LAS.lender_signature,
+					LAS.borrower_signature_date,
+					LAS.lender_signature_date
+					FROM p2p_borrowers_list AS BL
+					
+					LEFT JOIN p2p_proposal_details PD
+					ON PD.borrower_id=BL.id
+					
+					LEFT JOIN p2p_borrower_address_details AS BAD
+					ON BAD.borrower_id = BL.id
+					
+					LEFT JOIN p2p_state_experien  AS SE
+					ON SE.code = BAD.r_state
+					
+					LEFT JOIN p2p_borrowers_details_table AS BDT
+					ON BAD.borrower_id = BL.id
 
+					LEFT JOIN p2p_loan_list AS LO
+					ON LO.borrower_id = BL.id
+					
+					LEFT JOIN p2p_lender_list AS LL
+					ON LL.user_id = LO.lender_id
+					
+					LEFT JOIN p2p_lender_address AS LA
+					ON LA.lender_id = LL.user_id
+					
+					LEFT JOIN p2p_loan_aggrement_signature AS LAS
+					ON LAS.bid_registration_id = BL.id
+					
+					WHERE BL.id=".$this->input->post('borrower_id')."
+			";
+        $query = $this->db->query($sql);
+        if($this->db->affected_rows()>0)
+        {
+            return (array)$query->row();
+        }
+        else{
+            return false;
+        }
+    }
     public function convert_number_to_words($number) {
         $no = round($number);
         $point = round($number - $no, 2) * 100;
