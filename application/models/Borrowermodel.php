@@ -175,6 +175,7 @@ class Borrowermodel extends CI_Model
                 if($this->db->affected_rows()>0)
                 {
                     $email_config = (array)$query->row();
+						$this->email->initialize($email_config); // initialize with smtp configs
                     $verify_code = hash('SHA512', $borrower_info->email);
                     $verify_hash_create = $borrower_info->password.'_'.$borrower_info->email;
                     $verify_hash = hash('SHA512', $verify_hash_create);
@@ -250,6 +251,7 @@ body {
 </table>';
 
                     $this->load->library('email', $email_config);
+						$this->email->initialize($email_config); // initialize with smtp configs
                     $this->email->set_mailtype("html");
                     $this->email->set_newline("\r\n");
                     $this->email->from('support@antworksmoney.com', 'Antworks P2P Financing');
@@ -359,6 +361,7 @@ body {
             $this->db->where('status', 1);
             $query= $this->db->get();
             $email_config = (array)$query->row();
+				$this->email->initialize($email_config); // initialize with smtp configs
             $verify_code = hash('SHA512', $borrower_info->email);
             $verify_hash_create = $borrower_info->password.'_'.$borrower_info->email;
             $verify_hash = hash('SHA512', $verify_hash_create);
@@ -433,6 +436,7 @@ body {
   </tr>
 </table>';
             $this->load->library('email', $email_config);
+				$this->email->initialize($email_config); // initialize with smtp configs
             if($borrower_info->email == $this->input->post('email'))
             {
                 $this->email->set_mailtype("html");
