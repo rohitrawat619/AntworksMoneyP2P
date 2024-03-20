@@ -42,8 +42,7 @@
                                 <!-- Brand and toggle get grouped for better mobile display -->
 
                                                 <div class="navbar-header">
-
-                                                                <a class="navbar-brand" href=""> <img src="<?php echo $logo_path; ?>" alt="P2P" height="71"/> </a>
+			<a class="navbar-brand lendsocial-logo" href=""> <!--img src="<?php echo $logo_path; ?>" alt="P2P" height="71"/--> lend-social</a>
 
                                                 </div>
 

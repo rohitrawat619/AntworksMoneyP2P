@@ -10,7 +10,7 @@ $user_permissions = explode(',',str_replace(["\n", "\r"],'',$this->session->user
 
 $sessionVariableData = $this->session->userdata();
 
-
+$partner_id = $sessionVariableData['partner_id'];
 if($sessionVariableData['role_id']==10){
 	$partnerType = "both";
 }else{
@@ -18,6 +18,8 @@ if($sessionVariableData['role_id']==10){
 }
 //echo "<script>alert('".json_encode($sessionVariableData)."');</script>"; // 10 super admin
 //print_r($this->sessionVariableData['partnerInfo']);
+
+//print_r($partner_id); die();
 				?>
 				<style>
 				.sidebar {
@@ -45,6 +47,21 @@ if($sessionVariableData['role_id']==10){
 
                 </a>
             </li>  ---->
+			
+			
+							<?php if(in_array('profile', $user_permissions)){?>
+            <li  class="commoneSection  <?php echo ($controller_name === 'partners_list' || $controller_name === 'add_partners_form') ? 'active' : ''; ?>">
+                <a href="<?=base_url().$path.'surge/add_partners_form?id='.$partner_id;?>">
+                    <i class="fa fa-user"></i>
+                    <span>Profile</span>
+                    
+                </a>
+                
+            </li>
+				<?php } ?>
+			
+			
+			
 				<?php if(in_array('partners', $user_permissions)){?>
             <li  class="commoneSection treeview <?php echo ($controller_name === 'partners_list' || $controller_name === 'add_partners_form') ? 'active' : ''; ?>">
                 <a href="#">
@@ -219,6 +236,8 @@ if($sessionVariableData['role_id']==10){
                     <li class="profile2 <?php echo ($controller_name === 'step_5') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/step_5';?>">STAGE-5 E SIGN</a></li>
                     <li class="profile2 <?php echo ($controller_name === 'step_6') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/step_6';?>">STAGE-6 DISBURSMENT REQUEST</a></li>
                     <li class="profile2 <?php echo ($controller_name === 'step_7') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/step_7';?>">STAGE-7 NBSP DISBURSMENT(LOAN NUMEBER/LOAN SCHEDULE GENERATE)</a></li>
+					
+					 <li class="profile2 <?php echo ($controller_name === 'step_9') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/step_9';?>">FINAL  DISBURSMENT REQUEST</a></li>
                 </ul>
             </li>
 				<?php } ?>

@@ -34,7 +34,7 @@
 					<li>The customer support team should identify the type of enquiry (i.e. borrower related / lender related / website or app related, etc) and forward it to the appropriate team internally within 24 hours.</li>
 					<li>The appropriate team should respond to the enquiry within 24 hours; if it’s a technical issue which requires some rectification, timeline of the same should be informed to the borrower / lender.</li>
 					<li>If the participants enquiries / complaints are not addressed within 5 working days, grievances should be addressed to the grievance officer.</li>
-					<li>The grievance officer is Shantanu Tewary available on shantanu[at]antworksmoney[dot]com and +91-7042307683</li>
+					<li>The grievance officer is Shantanu Tewary available on shantanu[at]antworksmoney[dot]com and +91-0124- 6526008</li>
 					<li>If the participants enquiries / complaints are still not addressed after 10 working days, grievances should be marked by mail to the Director,support[at]antworksmoney[dot]com</li>
 					<li>Any and all complaints / comments received through any other medium other than email (such as Facebook, whatsapp, twitter, etc) should also be handled within the same timelines as mentioned above. The first line of escalation will be the grievance officer followed by the Director, Mr. Subhayu Ghose.</li> 
 				</ol>
