@@ -182,16 +182,31 @@ class Borrowerres extends REST_Controller
             $this->form_validation->set_rules('borrower_id', 'borrower_id', 'trim|required');
             $this->form_validation->set_rules('loan_id', 'loan_id', 'trim|required');
             if ($this->form_validation->run() == TRUE) {
+                if ($partner_id != 0) {
+                    $this->db->select('disbursement_method');
+                    $this->db->where('partner_id',$partner_id);
+                    $method=$this->db->from('partners_theme')->get()->row_array();
+                    
+            
+                }
+
 
                 $this->db->where('borrower_id', $this->input->post('borrower_id'));
                 $this->db->where('id', $this->input->post('loan_id'));
                 $this->db->set('disbursement_request', 1);
                 $this->db->update('p2p_loan_list');
 
+
+                if($method['disbursement_method']=="both" || $method['disbursement_method']=="manual"){
+                    $this->db->where('borrower_id', $this->input->post('borrower_id'));
+                    $this->db->set('step_9', 1);
+                    $this->db->update('p2p_borrower_steps_credit_line');   
+                }
+                else{
                 $this->db->where('borrower_id', $this->input->post('borrower_id'));
                 $this->db->set('step_6', 1);
                 $this->db->update('p2p_borrower_steps_credit_line');
-
+                }
                 $response = array('status' => 1, 'msg' => 'Accepted successfully');
 
                 //$response = $this->Borroweraddmodel->disbursement_request();
