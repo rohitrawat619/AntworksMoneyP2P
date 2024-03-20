@@ -182,6 +182,7 @@ class Borrowerres extends REST_Controller
             $this->form_validation->set_rules('borrower_id', 'borrower_id', 'trim|required');
             $this->form_validation->set_rules('loan_id', 'loan_id', 'trim|required');
             if ($this->form_validation->run() == TRUE) {
+                $partner_id=$this->input->post('partner_id');
                 if ($partner_id != 0) {
                     $this->db->select('disbursement_method');
                     $this->db->where('partner_id',$partner_id);
