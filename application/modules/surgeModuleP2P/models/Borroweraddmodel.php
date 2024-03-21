@@ -377,6 +377,14 @@ class Borroweraddmodel extends CI_Model
                     'msg' => 'Credit decisioning not done'
                 );
             }
+			if($steps['step_9']){
+				if($steps['step_9']==1){
+					return $current_step = array(
+                        'step' => 'Disbursement Requested',
+                        'msg' => 'Disbursement Requested by user'
+                    );
+				}
+			}
 
            /*  if ($steps['step_3']) {
                 if ($steps['step_3'] == 2) {
