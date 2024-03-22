@@ -1,7 +1,9 @@
 
 <!-- Main content -->
 <section class="content" >
-	<?= getNotificationHtml(); ?>
+	<?= getNotificationHtml(); 
+   // print_r($lists); die(); 
+    ?>
 	<div class="box">
 
 		<?php // print_r($lists); 
@@ -108,8 +110,30 @@
 				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Lender</option>
 				<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Both</option>
 		</select>		<?php } ?>
-						</div>			
-	
+						</div>
+                        
+<div class="col-md-3 form-group">
+    <label for="Lender Registration Fees" id="lenderRegistrationFees"> Lender Registration Charges</label><br>
+    <input class="form-input" type="radio" name="lenderFeesStatus" onclick="showLenderFeesAmount()" value="1" required <?php echo ($lists['lenderFeesStatus'] == 1) ? 'checked' : '';  ?>> Yes
+    <input class="form-input" type="radio" name="lenderFeesStatus" onclick="hideLenderFeesAmount()" value="0" required <?php echo ($lists['lenderFeesStatus'] == 0) ? 'checked' : ''; ?>> No
+
+    <?php echo (($lists['lenderFeesStatus'] == 1) ? 'Rs '. $lists['lenderRegistrationCharges']: ''); ?>
+    <div id="lenderFees"></div>
+</div>
+
+
+<div class="col-md-3 form-group">
+    <label for="Borrower Registration Fees" id="borrowerRegistrationFees"> Borrower Registration Charges</label><br>
+    <input class="form-input" type="radio" name="borrowerFeesStatus" onclick="showBorrowerFeesAmount()" value="1" required <?php echo ($lists['borrowerFeesStatus'] == 1) ? 'checked' : ''; ?>> Yes
+    <input class="form-input" type="radio" name="borrowerFeesStatus" onclick="hideBorrowerFeesAmount()" value="0" required <?php echo ($lists['borrowerFeesStatus'] == 0) ? 'checked' : ''; ?>> No
+
+    <?php echo (($lists['borrowerFeesStatus'] == 1) ? 'Rs '. $lists['borrowerRegistrationCharges']: ''); ?>
+    <div id="borrowerFees"></div>
+</div>
+<div class="col-md-3 form-group"></div>
+<div class="col-md-3 form-group"></div>
+
+
 		<div class="col-md-4 form-group" id="disbursmentMethodDiv">
         <label for="lender_product_name">Disbursment Method:</label><br>
         <select  class="form-control"type="text" required id="disbursment_method"  name="disbursment_method" >
@@ -361,3 +385,22 @@ function validateMobileNumber() {
 	display:none
 }
 </style>
+
+
+<script>
+    function showLenderFeesAmount() {
+        document.getElementById("lenderFees").innerHTML = '<label for="lenderAmount">Amount:</label><input type="number" name="lenderAmount" class="form-input">';
+    }
+
+    function hideLenderFeesAmount() {
+        document.getElementById("lenderFees").innerHTML = '';
+    }
+
+    function showBorrowerFeesAmount() {
+        document.getElementById("borrowerFees").innerHTML = '<label for="borrowerAmount">Amount:</label><input type="number" name="borrowerAmount" class="form-input">';
+    }
+
+    function hideBorrowerFeesAmount() {
+        document.getElementById("borrowerFees").innerHTML = '';
+    }
+</script>

@@ -37,6 +37,7 @@ class Surgemodel extends CI_Model
 		$this->cldb->limit($limit, $start);
 			if($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12){
 		$this->cldb->where("invest_vendors.VID", $this->partner_id);
+		
 		}
 
 		if($where!=""){
@@ -45,6 +46,7 @@ class Surgemodel extends CI_Model
 		$res = $this->cldb->get();
 
 		return $result = $res->result_array();
+		echo "<pre>";print_r($result);die();
 	}
 	public function getCountPartnersList($where)
 	{
@@ -57,7 +59,16 @@ class Surgemodel extends CI_Model
 	}
 	
 		public function add_partner(){
-		
+			
+			$lenderAmount=$this->input->post('lenderAmount');
+			$borrowerAmount=$this->input->post('borrowerAmount');
+			
+		if($this->input->post('lenderFeesStatus')==0){
+			$lenderAmount=0;
+		}
+		if($this->input->post('borrowerFeesStatus')==0){
+			$borrowerAmount=0;
+		}
 			$arr_partners = array(
 				'status' => 1,
 				'company_name' => $this->input->post('Company_Name'),
@@ -65,11 +76,15 @@ class Surgemodel extends CI_Model
 				'phone' => $this->input->post('Phone'),
 				'email' => $this->input->post('Email'),
 				'key' => $this->input->post('key'),
+				'lenderRegistrationCharges' => $lenderAmount,
+				'borrowerRegistrationCharges' => $borrowerAmount
 			//	'level' => $this->input->post('level'),
 			//	'ignore_limits' => $this->input->post('ignore_limits'),
 			//	'is_private_key' => $this->input->post('is_private_key'),
 			//	'ip_addresses' => $this->input->post('ip_addresses'),
 			);
+			// echo "<pre>";
+			// print_r($arr_partners);die();
     // Check if any required field is empty
   if (empty($arr_partners['company_name']) || empty($arr_partners['phone'])) {
     $resp['status'] = 2;
@@ -157,6 +172,15 @@ class Surgemodel extends CI_Model
 	}
 	
 			public function update_partner(){
+				$lenderAmount=$this->input->post('lenderAmount');
+			$borrowerAmount=$this->input->post('borrowerAmount');
+			
+		if($this->input->post('lenderFeesStatus')==0){
+			$lenderAmount=0;
+		}
+		if($this->input->post('borrowerFeesStatus')==0){
+			$borrowerAmount=0;
+		}
 		
 			$arr_partners = array(
 				'status' => 1,
@@ -169,6 +193,12 @@ class Surgemodel extends CI_Model
 				'ignore_limits' => $this->input->post('ignore_limits'),
 				'is_private_key' => $this->input->post('is_private_key'),
 				'ip_addresses' => $this->input->post('ip_addresses'),
+				'lenderFeesStatus' => $this->input->post('lenderFeesStatus'),
+				'borrowerFeesStatus' => $this->input->post('borrowerFeesStatus'),
+				'lenderFeesStatus' => $this->input->post('lenderFeesStatus'),
+				'borrowerFeesStatus' => $this->input->post('borrowerFeesStatus'),
+				'lenderRegistrationCharges' => $lenderAmount,
+				'borrowerRegistrationCharges' => $borrowerAmount
 			);
 			$partner_id = $this->input->post('VID');
     // Check if any required field is empty
