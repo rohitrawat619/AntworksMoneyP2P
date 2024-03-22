@@ -673,12 +673,12 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
         $backgroundColor = "#c5e6eb";
 		$buttonBackgroundColor = $this->partnerInfo['background_color']; //"#b61e37";
 		$headerColor = $this->partnerInfo['color']; 
-		$redeembtncolor = "#3a9cd9";
+		$redeembtncolor = $buttonBackgroundColor; //"#3a9cd9";
 		$font_family = $this->partnerInfo['font_family'];
 		//  $css = "body{font-family:'$font_family'}
         // Your dynamic CSS rules
         $css = "body{font-family: Helvetica Neue,Helvetica,Arial,sans-serif;}
-		.surge-redeem-btn-color{background-color:$redeembtncolor; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius: 30px !important;
+		.surge-redeem-btn-color{background-color:$redeembtncolor; padding:12px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius: 30px !important;
   border: none;}
 		.surgebg {background:$backgroundColor; padding:80px 30px;}
 .surgelogo {max-width:220px; margin-bottom:50px;}
@@ -692,15 +692,15 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 .surge-plans ul {padding:0 0 0 15px; min-height: 145px;}
 .surge-plans h2 {font-size:24px; font-weight:bold; margin:0 0 10px 0;}
 .surge-plans li {font-size:14px; font-weight:400; margin:0 0 10px 0; display:block;}
-.surge-plans-btn {background:$buttonBackgroundColor; padding:15px 60px; margin-top:5px; color:#fff; display: inline-block; border-radius: 30px !important;
+.surge-plans-btn {background:$buttonBackgroundColor; padding:12px 60px; margin-top:5px; color:#fff; display: inline-block; border-radius: 30px !important;
   border: none;}
 .surge-plans-btn:hover {background:#7eb3bb; color:#fff;}
 .remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
 .surge-plans .f1 fieldset {margin-top:15px;}
-.surgeant-icon {max-width:150px; margin-bottom:15px;}
+.surgeant-icon {max-width:190px; margin-bottom:15px;}
 .success-txt {font-size: 18px; color:#0d8c03; font-weight:600;}
 .fail-txt {font-size: 18px; color:red; font-weight:600;}
-.surge-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0;}
+.surge-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0 100px 0;}
 .investment-box {padding:0; margin:30px 0 0 0;}
 .investment-box li {display:inline-block; padding:15px 30px; border-radius:10px; font-size:16px; color:#fff; font-weight:600; margin:5px; width:25%;}
 .investment-box li span {display:block;}

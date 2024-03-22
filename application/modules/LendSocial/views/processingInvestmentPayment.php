@@ -7,12 +7,18 @@ $generateOrderResp = $lists['generateOrderResp'];
 $sessionData = $lists['sessionData'];
 ?>
 
-<div class="surge-success">
-	<h2 class="success-txt">
-		<div id="waitTextId" ></div>
-	</h2>
+<div class="col-md-2 col-xs-12"></div>
+<div class="col-md-8 col-xs-12 text-center">
+	<div class="surge-success">
+	<!----	<img class="success-txt" src="repeat.png">   ---->
+		<img src="../document/surge/img/repeat.png" class="surgeant-icon">
+		<h2 class="success-txt">
+			<div id="waitTextId" ></div>
+		</h2>
+	</div>
 </div>
 
+<div class="clearfix"></div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
