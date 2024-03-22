@@ -19,7 +19,7 @@
 		<form class="form form-material" 
 			  action="../surge/<?php echo $path; ?>/" method="POST"  onsubmit="return validateMobileNumber() && validateEmail()" enctype="multipart/form-data" > 
 			<div class="col-md-12" >
-				<h2>Add Partners</h2>
+				<h2></h2>
 			
 				<div class="box-body">
 					<div class="row">
@@ -39,8 +39,8 @@
     </div>
 
     <div class="col-md-3 form-group">
-        <label for="Phone">Phone:</label><br>
-        <input  class="form-control"type="text" id="phone" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['Phone']; ?>" name="Phone" placeholder="Enter Phone"><br><br>
+        <label for="Phone">Mobile:</label><br>
+        <input  class="form-control"type="text" id="phone" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['Phone']; ?>" name="Phone" placeholder="Enter Mobile"><br><br>
     </div>
 
     <div class="col-md-3 form-group">

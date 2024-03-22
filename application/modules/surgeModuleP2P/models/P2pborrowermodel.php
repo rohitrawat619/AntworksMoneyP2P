@@ -322,7 +322,39 @@ class P2pborrowermodel extends CI_Model
         }
 
     }
+	
+	
+	public function getborrowers_Step_9($pageLimit, $setLimit)
+    {
+        $this->cldb->select('BL.id,
+                           BL.borrower_id,
+                           BL.name,
+                           BL.email,
+                           BL.mobile,
+                           BL.dob,
+                           BL.status,
+                           BL.created_date,
+                           BS.step_2,
+						   BS.step_9
+                          ');
+        $this->cldb->where('BS.step_9', 1);
+        $this->cldb->from('p2p_borrowers_list AS BL');
+        $this->cldb->join('p2p_borrower_steps_credit_line AS BS', 'ON BS.borrower_id = BL.id', 'left');
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	   $this->cldb->limit($pageLimit, $setLimit);
+        $this->cldb->order_by('id', 'desc');
+        $query = $this->cldb->get();
+        if ($this->cldb->affected_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        }
 
+    }
+
+	
+	
+	
     public function getborrowers_Step_7($pageLimit, $setLimit)
     {
         $this->cldb->select('BL.id,

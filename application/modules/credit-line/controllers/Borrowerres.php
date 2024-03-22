@@ -184,7 +184,7 @@ class Borrowerres extends REST_Controller
 
             if ($this->form_validation->run() == TRUE) {
                 $partner_id=$this->input->post('partner_id');
-                if ($partner_id!="" ||  $partner_id!=null || !empty($partner_id)) {
+                if ($partner_id!="" &&  $partner_id!=null && !empty($partner_id)) {
                     $this->db->select('disbursement_method');
                     $this->db->where('partner_id',$partner_id);
                     $method=$this->db->from('partners_theme')->get()->row_array();

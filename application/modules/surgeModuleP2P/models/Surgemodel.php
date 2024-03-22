@@ -160,12 +160,12 @@ class Surgemodel extends CI_Model
 			  if($insertResult){
 				    $insert_id = $this->cldb->insert_id();
 				  $resp['status'] = 1;
-				  $resp['msg'] = "Partner Theme Added Successfully: Insert ID:".$insert_id;
+				  $resp['msg'] = "Partner Added Successfully"; // Insert ID:".$insert_id;
 				  $resp['insert_id'] = $insert_id;
 				  return $resp;
 			  }else{
 				    $resp['status'] = 0;
-				  $resp['msg'] = "Partner Theme Insertion Failed";
+				  $resp['msg'] = "Partner Insertion Failed";
 				  $resp['insert_id'] = "";
 				  return $resp;
 			  }
@@ -425,12 +425,12 @@ foreach ($postParameters as $param) {
 			  if($insertResult){
 				     $insert_id = $this->cldb->insert_id();
 				  $resp['status'] = 1;
-				  $resp['msg'] = "User Added Successfully: Update ID:".$insert_id;
+				  $resp['msg'] = "User Added Successfully"; //: Update ID:".$insert_id;
 				  $resp['user_id'] = $insert_id;
 				 
 			  }else{
 				    $resp['status'] = 0;
-				  $resp['msg'] = "User Addition Failed";
+				  $resp['msg'] = "User Creation Failed";
 				  $resp['user_id'] = "";
 				
 			  }

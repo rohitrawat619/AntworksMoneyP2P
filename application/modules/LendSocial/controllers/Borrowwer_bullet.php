@@ -26,10 +26,16 @@ class Borrowwer_bullet extends CI_Controller{
 		$this->borrowerProductName=$this->partnerInfo['borrower_product_name'];
 	//	print_r($this->partnerInfo['borrower_product_name']);
 		
-		
+		$this->checkSessionMobileNo();
         
     }
 
+public function checkSessionMobileNo(){
+						if($this->sessionData["mobile"]==""){
+						 $this->session->set_flashdata('notification',array('error'=>0,'message'=>"Session Failed"));	
+						 redirect(base_url('LendSocial/').'signIn');
+								}
+						}
     public function getBorrowerId(){
     		return $_SESSION['borrower_id'];
     }

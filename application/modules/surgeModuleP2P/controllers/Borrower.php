@@ -505,6 +505,38 @@ public function filter_report()
         // }
     }
 
+
+	public function step_9()
+    {
+        
+            $config = array();
+            $config["base_url"] = $this->paginationUrl."step_9";
+            $config["total_rows"] = $this->P2pborrowermodel->get_count_borrowers();
+            $config["per_page"] = 100;
+            $config["uri_segment"] = 3;
+            $config['num_links'] = 10;
+            /* $config['full_tag_open'] = "<div class='new-pagination'>"; */
+
+            $this->pagination->initialize($config);
+
+            $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+			
+			$data['base_url'] = $this->paginationUrl;
+            $data["pagination"] = $this->pagination->create_links();
+            $data['list'] = $this->P2pborrowermodel->getborrowers_Step_9($config["per_page"], $page);
+            $data['pageTitle'] = "Borrower List";
+            $data['title'] = "Admin Dashboard";
+            $this->load->view('template-surgeModuleP2P/header');
+		$this->load->view('template-surgeModuleP2P/nav');
+            $this->load->view('borrower_steps/step_9', $data);
+            
+           $this->load->view('template-surgeModuleP2P/footer');
+        
+    }
+
+	
+	
+	
     public function step_7()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {

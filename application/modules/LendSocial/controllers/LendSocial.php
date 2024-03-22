@@ -675,9 +675,9 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 		$headerColor = $this->partnerInfo['color']; 
 		$redeembtncolor = "#3a9cd9";
 		$font_family = $this->partnerInfo['font_family'];
-
+		//  $css = "body{font-family:'$font_family'}
         // Your dynamic CSS rules
-        $css = "body{font-family:'$font_family'}
+        $css = "body{font-family: Helvetica Neue,Helvetica,Arial,sans-serif;}
 		.surge-redeem-btn-color{background-color:$redeembtncolor; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius: 30px !important;
   border: none;}
 		.surgebg {background:$backgroundColor; padding:80px 30px;}
