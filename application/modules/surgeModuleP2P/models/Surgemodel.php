@@ -16,6 +16,163 @@ class Surgemodel extends CI_Model
 		$this->partner_id = $this->session->userdata('partner_id');
 	}
 		
+							public function getInvestmentNoOfInvestor($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('lender_id');
+		$this->cldb->from('p2p_lender_investment');
+		$this->cldb->GROUP_BY('lender_id');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+		$this->cldb->where_in('scheme_id',$scheme_ids);
+		return $this->cldb->count_all_results();
+	}
+	
+						public function getOutstandingInvestmentNoInvestor($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('lender_id');
+		$this->cldb->from('p2p_lender_investment');
+		$this->cldb->GROUP_BY('lender_id');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status!=',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+		return $this->cldb->count_all_results();
+	}
+		
+				public function getRedeemedInNoOfInvestor($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('lender_id');
+		$this->cldb->from('p2p_lender_investment');
+		$this->cldb->GROUP_BY('lender_id');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+		return $this->cldb->count_all_results();
+	}
+		
+				public function getInvestmentAmount($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('sum(amount) AS amount');
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return '&#x20B9;'.round($res[0]['amount'],2); //$this->cldb->count_all_results();
+	}
+		
+		
+	
+				public function getlInvestmentOutstandingAmount($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('sum(amount) AS amount'); 
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status!=',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return '&#x20B9;'.number_format($res[0]['amount']); //$this->cldb->count_all_results();
+	}
+	
+		public function getInterestOutstanding($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('ROUND(SUM(total_interest),2) AS total_interest');
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status!=',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return '&#x20B9;'.number_format($res[0]['total_interest']); //$this->cldb->count_all_results();
+	}
+	
+						public function getRedemptionAmount($type) // today  
+	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
+				$this->cldb->select('sum(amount) AS amount');
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return '&#x20B9;'.number_format($res[0]['amount']); //$this->cldb->count_all_results();
+	}
+	
+	
+
+	
+	
+						public function getInterestPaidOnRedeemedInvestment($type) // today  
+	{ $scheme_ids = $this->getlSchemeIdsByPartnerId();
+				$this->cldb->select('ROUND(SUM(total_interest),2) AS total_interest');
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where('redemption_status',4);
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return '&#x20B9;'.($res[0]['total_interest']+0); //$this->cldb->count_all_results();
+	}
+	
+	
+
+			public function getlAverageROI($type) // today  
+	{	$scheme_ids = $this->getlSchemeIdsByPartnerId();
+		$this->cldb->select('SUM(basic_rate) AS brsum, COUNT(basic_rate) AS bscount, (SUM(basic_rate)/COUNT(basic_rate)) as average_roi'); 
+		$this->cldb->from('p2p_lender_investment');
+		if($type=="today"){
+		$this->cldb->where('Date(created_date)',date("Y-m-d"));
+		}		
+			$this->cldb->where_in('scheme_id',$scheme_ids);
+			$res = $this->cldb->get()->result_array();
+		 return round($res[0]['average_roi'],2); //$this->cldb->count_all_results();
+	}
+	
+	
+			public function getlSchemeIdsByPartnerId() // today  
+	{
+		$this->cldb->select('a.id as scheme_id'); 
+		$this->cldb->from('invest_scheme_details a'); /// invest_scheme_details
+		
+		if($this->input->post('scheme_id')!=""){
+			$this->cldb->where('id',$this->input->post('scheme_id'));
+		}
+		
+		if($this->input->post('partner_id')!="allPartners"){
+		if($this->input->post('partner_id')!=""){
+					$this->cldb->where('Vendor_ID',$this->input->post('partner_id'));
+		}else if($this->partner_id!="0"){
+		$this->cldb->where('Vendor_ID',$this->partner_id);
+				}
+				
+		}
+			$res = $this->cldb->get()->result_array();
+						
+								$ids = [];
+			foreach ($res as $item) {
+				$ids[] = $item['scheme_id'];
+			}
+
+			$comma_separated_ids = implode(',', $ids);
+			//echo $comma_separated_ids; // Output: 10,11,17,18,19
+			if($comma_separated_ids==""){
+				$comma_separated_ids = "11111123456789,234567";
+			}
+		 return  $comma_separated_ids; 
+	}
+	
+	
+	
 		public function getDashboardDataCount($table,$where,$groupBy)
 	{
 		$this->cldb->select('id');
@@ -26,27 +183,44 @@ class Surgemodel extends CI_Model
 			if($groupBy!=""){
 			$this->cldb->GROUP_BY("$groupBy");
 				}
-		return $this->cldb->count_all_results();
-	}		
+		//$abcd = $this->cldb->count_all_results();
+		 return $this->cldb->count_all_results(); //$abcd.$this->cldb->last_query();
+	}
+
+	
 
 		public function getPartnersList($limit, $start,$where)
 	{
-		$this->cldb->select('b.disbursment_method, b.partner_type, invest_vendors.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name');
+		$this->cldb->select('b.disbursment_method, b.partner_type, invest_vendors.*, b.font_family, b.color, b.background_color, b.logo_path, b.borrower_product_name, b.lender_product_name,
+		b.borrower_logo_path, b.lender_logo_path,
+		c.borrower_platform_registration_fee,
+		c.borrower_partner_registration_fee,
+		c.borrower_processing_fee_rupee,
+		c.borrower_processing_fee_percent,
+		c.type_of_Lender_platform_fee,
+		c.lender_platform_fee_percentage,
+		c.lender_platform_fee_rupee,
+		c.lender_partner_registration_fee,
+		c.lender_processing_fee_rupee,
+		c.lender_processing_fee_percent,
+		c.lender_pg_charges_bearer
+		');
 		$this->cldb->from('invest_vendors');
 		$this->cldb->join('partners_theme as b', 'invest_vendors.VID=b.partner_id', 'LEFT');
+		$this->cldb->join('master_fee_structure as c', 'invest_vendors.VID=c.partner_id', 'LEFT');
 		$this->cldb->limit($limit, $start);
 			if($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12){
 		$this->cldb->where("invest_vendors.VID", $this->partner_id);
-		
 		}
 
 		if($where!=""){
 		$this->cldb->where($where);
+		}else{
+			//echo "test";
 		}
 		$res = $this->cldb->get();
-
+			//echo $this->cldb->last_query(); die();
 		return $result = $res->result_array();
-		echo "<pre>";print_r($result);die();
 	}
 	public function getCountPartnersList($where)
 	{
@@ -59,16 +233,7 @@ class Surgemodel extends CI_Model
 	}
 	
 		public function add_partner(){
-			
-			$lenderAmount=$this->input->post('lenderAmount');
-			$borrowerAmount=$this->input->post('borrowerAmount');
-			
-		if($this->input->post('lenderFeesStatus')==0){
-			$lenderAmount=0;
-		}
-		if($this->input->post('borrowerFeesStatus')==0){
-			$borrowerAmount=0;
-		}
+		
 			$arr_partners = array(
 				'status' => 1,
 				'company_name' => $this->input->post('Company_Name'),
@@ -76,15 +241,11 @@ class Surgemodel extends CI_Model
 				'phone' => $this->input->post('Phone'),
 				'email' => $this->input->post('Email'),
 				'key' => $this->input->post('key'),
-				'lenderRegistrationCharges' => $lenderAmount,
-				'borrowerRegistrationCharges' => $borrowerAmount
 			//	'level' => $this->input->post('level'),
 			//	'ignore_limits' => $this->input->post('ignore_limits'),
 			//	'is_private_key' => $this->input->post('is_private_key'),
 			//	'ip_addresses' => $this->input->post('ip_addresses'),
 			);
-			// echo "<pre>";
-			// print_r($arr_partners);die();
     // Check if any required field is empty
   if (empty($arr_partners['company_name']) || empty($arr_partners['phone'])) {
     $resp['status'] = 2;
@@ -119,7 +280,46 @@ class Surgemodel extends CI_Model
 					return $resp;
 	}
 	
-			public function add_theme($partner_id,$logo_path){
+	
+			public function add_master_fee_structure($partner_id){
+				
+			//	print_r($this->input->post());
+			$arr_mst_fee_struc = array(
+				'status' => 1,
+				'borrower_platform_registration_fee' => $this->input->post('borrower_platform_registration_fee'),
+				'borrower_processing_fee_rupee' => $this->input->post('borrower_processing_fee_rupee'),
+				'borrower_processing_fee_percent' => $this->input->post('borrower_processing_fee_percent'),
+				'lender_partner_registration_fee' => $this->input->post('lender_partner_registration_fee'),
+				'lender_processing_fee_rupee' => $this->input->post('lender_processing_fee_rupee'),
+				'lender_processing_fee_percent' => $this->input->post('lender_processing_fee_percent'),
+				'type_of_Lender_platform_fee' => $this->input->post('type_of_Lender_platform_fee'),
+				'lender_platform_fee_percentage' => $this->input->post('lender_platform_fee_percentage'),
+				'lender_platform_fee_rupee' => $this->input->post('lender_platform_fee_rupee'),
+				'lender_pg_charges_bearer' => $this->input->post('lender_pg_charges_bearer'),
+				'data_entry_time' => date("Y-m-d H:i:s"),
+				'data_entry_id' => $this->session->userdata('user_id'),
+				'partner_id' => $partner_id,
+			);
+
+
+    
+							
+			  $insertResult = $this->cldb->insert('master_fee_structure', $arr_mst_fee_struc);
+								
+			  if($insertResult){
+				    
+				  $resp['status'] = 1;
+				  $resp['msg'] = "Partner Fee Structure Add Successfully: Update ID:".$partner_id;
+				  $resp['partner_id'] = $partner_id;
+				  return $resp;
+			  }else{
+				    $resp['status'] = 0;
+				  $resp['msg'] = "Partner Fee Structure Addition Failed";
+				  $resp['partner_id'] = "";
+				  return $resp;
+			  }
+	}
+			public function add_theme($partner_id,$logo_path,$lender_logo_path,$borrower_logo_path){
 		
 			$arr_partners_theme = array(
 				'status' => 1,
@@ -128,6 +328,8 @@ class Surgemodel extends CI_Model
 				'name' => $this->input->post('Company_Name'),
 				'background_color' => $this->input->post('background_color'),
 				'logo_path' => $logo_path,
+				'borrower_logo_path' => $borrower_logo_path,
+				'lender_logo_path' => $lender_logo_path,
 				'font_family' => $this->input->post('font_family'),
 				'created_date' => date("Y-m-d H:i:s"),
 				'created_user_id' => $this->session->userdata('user_id'),
@@ -172,16 +374,8 @@ class Surgemodel extends CI_Model
 	}
 	
 			public function update_partner(){
-				$lenderAmount=$this->input->post('lenderAmount');
-			$borrowerAmount=$this->input->post('borrowerAmount');
-			
-		if($this->input->post('lenderFeesStatus')==0){
-			$lenderAmount=0;
-		}
-		if($this->input->post('borrowerFeesStatus')==0){
-			$borrowerAmount=0;
-		}
-		
+				
+				print_r($this->input->post());
 			$arr_partners = array(
 				'status' => 1,
 				'company_name' => $this->input->post('Company_Name'),
@@ -193,12 +387,6 @@ class Surgemodel extends CI_Model
 				'ignore_limits' => $this->input->post('ignore_limits'),
 				'is_private_key' => $this->input->post('is_private_key'),
 				'ip_addresses' => $this->input->post('ip_addresses'),
-				'lenderFeesStatus' => $this->input->post('lenderFeesStatus'),
-				'borrowerFeesStatus' => $this->input->post('borrowerFeesStatus'),
-				'lenderFeesStatus' => $this->input->post('lenderFeesStatus'),
-				'borrowerFeesStatus' => $this->input->post('borrowerFeesStatus'),
-				'lenderRegistrationCharges' => $lenderAmount,
-				'borrowerRegistrationCharges' => $borrowerAmount
 			);
 			$partner_id = $this->input->post('VID');
     // Check if any required field is empty
@@ -226,7 +414,54 @@ class Surgemodel extends CI_Model
 			  }
 	}
 	
-			public function update_theme($partner_id,$logo_path){
+	
+			public function update_master_fee_structure(){
+				
+				print_r($this->input->post());
+			$arr_mst_fee_struc = array(
+				'status' => 1,
+				'borrower_platform_registration_fee' => $this->input->post('borrower_platform_registration_fee'),
+				'borrower_processing_fee_rupee' => $this->input->post('borrower_processing_fee_rupee'),
+				'borrower_processing_fee_percent' => $this->input->post('borrower_processing_fee_percent'),
+				'lender_partner_registration_fee' => $this->input->post('lender_partner_registration_fee'),
+				'lender_processing_fee_rupee' => $this->input->post('lender_processing_fee_rupee'),
+				'lender_processing_fee_percent' => $this->input->post('lender_processing_fee_percent'),
+				'type_of_Lender_platform_fee' => $this->input->post('type_of_Lender_platform_fee'),
+				'lender_platform_fee_percentage' => $this->input->post('lender_platform_fee_percentage'),
+				'lender_platform_fee_rupee' => $this->input->post('lender_platform_fee_rupee'),
+				'lender_pg_charges_bearer' => $this->input->post('lender_pg_charges_bearer'),
+				'borrower_partner_registration_fee' => $this->input->post('borrower_partner_registration_fee'),
+				'data_update_time' => date("Y-m-d H:i:s"),
+				'data_update_id' => $this->session->userdata('user_id'),
+			);
+			
+			foreach ($arr_mst_fee_struc as $key => $value) {
+    // Check if the input value is not empty
+    if (!empty($value)) {
+        $updateData[$key] = $value; // Add to the update data array
+    }
+		}
+			$partner_id = $this->input->post('VID');
+
+    
+							$this->cldb->where('partner_id',$partner_id);	
+			  $insertResult = $this->cldb->update('master_fee_structure', $updateData);
+								
+			  if($insertResult){
+				    
+				  $resp['status'] = 1;
+				  $resp['msg'] = "Partner Fee Structure Updated Successfully: Update ID:".$partner_id;
+				  $resp['partner_id'] = $partner_id;
+				  return $resp;
+			  }else{
+				    $resp['status'] = 0;
+				  $resp['msg'] = "Partner Fee Structure Updation Failed";
+				  $resp['partner_id'] = "";
+				  return $resp;
+			  }
+	}
+			//public function update_theme($partner_id,$logo_path){
+			public function update_theme($partner_id,$logo_path,$lender_logo_path,$borrower_logo_path){
 			
 			$arr_partners_theme = array(
 				'status' => 1,
@@ -244,6 +479,16 @@ class Surgemodel extends CI_Model
 				if($logo_path!="<"){
 					$arr_partners_theme['logo_path'] = $logo_path;
 				}
+				
+				if($lender_logo_path!="<"){
+					$arr_partners_theme['lender_logo_path'] = $lender_logo_path;
+				}
+				
+				if($borrower_logo_path!="<"){
+					$arr_partners_theme['borrower_logo_path'] = $borrower_logo_path;
+				}
+				
+				
 						// Check if any required field is empty
 					  if ($partner_id=="" || empty($arr_partners_theme['name'])) {
 						$resp['status'] = 2;
@@ -893,6 +1138,42 @@ $this->cldb->select('b.comment_id, b.user_id, b.comment_text, CASE WHEN b.user_i
 		//  echo $this->cldb->last_query();
 		return $result = $res->result_array();
 	}
+	
+	
+	public function getNoOfBorrower($partner_id){
+		 $count=0;
+        if (!empty($partner_id)) {
+        $this->db->where('vendor_id', $partner_id);
+		}
+        $this->db->from('p2p_borrowers_list');
+        $count = $this->db->count_all_results();
+		return $count;
+		//echo "<pre>";print_r($count);die();
+		
+	}
+	
+	public function getBorrowerAmount($partner_id) {
+    
+    $sum = 0;
+
+   
+    
+        
+        $this->db->select_sum('approved_loan_amount');
+        $this->db->from('p2p_loan_list');
+        
+ 
+        $query = $this->db->get();
+        $result = $query->row();
+
+
+        if ($result) {
+            $sum = $result->approved_loan_amount;
+        }
+	//echo "<pre>";print_r($count);die();
+    return $sum;
+}
+
 		/*
 	public function get_count_premiumplanuserlist()
 	{

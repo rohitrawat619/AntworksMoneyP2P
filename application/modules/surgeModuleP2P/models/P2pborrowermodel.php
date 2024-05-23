@@ -255,6 +255,7 @@ class P2pborrowermodel extends CI_Model
                            BS.step_2
                           ');
         $this->cldb->where('BS.step_4', 2);
+		$this->cldb->or_where('(BS.step_4 IS NULL AND BS.step_2 = 1)');
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps_credit_line AS BS', 'ON BS.borrower_id = BL.id', 'left');
 			if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
@@ -425,10 +426,13 @@ class P2pborrowermodel extends CI_Model
             $this->cldb->set('step_8', 1);
             $this->cldb->update('p2p_borrower_steps_credit_line');
         }
-
+		
         if (isset($_POST['skip_credit_decisioning'])){
             $this->cldb->where('borrower_id', $this->input->post('borrower_id'));
-            $this->cldb->set('step_2', 1);
+            $this->cldb->set(array(
+			'step_2'=> 1,
+			'experian_step' => 1
+			));
             $this->cldb->update('p2p_borrower_steps_credit_line');
         }
 
@@ -479,12 +483,87 @@ class P2pborrowermodel extends CI_Model
             'remarks' => $this->input->post('remarks'),
         );
         $this->cldb->insert('p2p_borrower_action_remarks_steps', $log_steps);
+		
+		$data = array("id" => $this->input->post('borrower_id'));
+		
+		$this->cldb->select("borrower_id");
+		$this->cldb->where($data);
+		$query = $this->cldb->get("p2p_borrowers_list")->row_array();
+		
+	// new starts
+		
+		$this->cldb->select("borrower_id");
+		$this->cldb->where($data);
+		$this->cldb->get("p2p_loan_list")->row_array();
+		
+
+		 if ($this->cldb->affected_rows() > 0){}
+		 else{
+	// insert data in p2p_bidding_proposal_details start
+						
+						$proposal_submit_array = array(
+                    'borrowers_id'=> $this->input->post('borrower_id'),
+                    'bid_loan_amount'=>2500,
+                    'loan_amount'=>2500,
+                    'accepted_tenor'=>36,
+                    'interest_rate'=>36,
+                    'proposal_added_date'=>date("Y-m-d H:i:s"),
+					'source'=>'lsBrSkip' // lsBrElig->lendsocialBorrowerEligiblity or lsBrSkip->lendsocialBorrowerSkipStep
+
+                );
+
+ 
+
+                $proposal_submit = $this->cldb->insert('p2p_bidding_proposal_details',$proposal_submit_array); // created at 19/04/2024
+						
+						// insert data in p2p_bidding_proposal_details ends
+						$bid_registration_id = $this->cldb->insert_id();
+						$loan_no_plus =  10000000000 + $bid_registration_id;
+						$loan_no = 'LN' . $loan_no_plus;
+						$this->cldb->where('bid_registration_id',$bid_registration_id);
+						$this->cldb->update("p2p_bidding_proposal_details",array('loan_no'=>$loan_no));
+						
+						$this->cldb->insert('p2p_loan_list', array(
+							'borrower_id' => $this->input->post('borrower_id'),
+							'loan_no' => $loan_no,
+							'lender_id' => '1',
+							'approved_loan_amount' => '2500',
+							'approved_interest' => '2',
+							'approved_tenor' => '1',
+							'loan_processing_charges' => '0',
+							'disburse_amount' => '0',
+						));
+						$loan_id = $this->cldb->insert_id();
+
+					}
+	
+	// new ends 
+		
 
         return array(
             'status' => 1,
             'msg' => 'Step Update Successfully',
+			'borrower_id' => $query['borrower_id']
         );
 
+    }
+	
+	
+	 public function credit_line_generate_loan_no()
+    {
+
+        $this->db->select("loan_no");
+        $this->db->order_by('loan_no', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get('p2p_loan_list');
+        $row = (array)$query->row();
+        if ($this->db->affected_rows() > 0) {
+            $loan_no = $row['loan_no'];
+            $loan_no++;
+            return $loan_no = $loan_no;
+        } else {
+            return $loan_no = "LN10000000001";
+        }
     }
 
     public function get_borrower_details($borrower_id)
@@ -517,6 +596,8 @@ class P2pborrowermodel extends CI_Model
                            BANK.ifsc_code,               
                            BANK.is_verified as is_bank_verified,           
                            BANK.bank_registered_name as bank_registered_name,
+                           BANKRes.bank_registered_name as bank_registered_name_new,
+                           BANKRes.razorpay_response_fav as razorpay_response_fav_json,
                            PD.proposal_id,
                            PD.PLRN,
                            PD.loan_amount,
@@ -530,13 +611,25 @@ class P2pborrowermodel extends CI_Model
                            PD.bidding_mode,
                            PD.bidding_status,
                            PD.bidding_status,
-                           PD.date_added
+                           PD.date_added,
+						     (CASE BL.gender
+        WHEN 1 THEN "Male"
+        WHEN 2 THEN "Female"
+        ELSE "Other"
+    END) AS gender_name,
+						   
+                           occupDetail.name as occupation_name,
+                           quali.qualification as highest_qualification_name,
                            ');
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_proposal_details AS PD', 'ON PD.borrower_id = BL.id', 'left');
         $this->cldb->join('p2p_borrower_address_details AS PBA', 'ON PBA.borrower_id = BL.id', 'left');
         $this->cldb->join('p2p_borrower_occuption_details AS bod', 'ON bod.borrower_id = BL.id', 'left');
         $this->cldb->join('p2p_borrower_bank_details AS BANK', 'ON BANK.borrower_id = BL.id', 'left');
+        
+		$this->cldb->join('p2p_borrower_bank_res AS BANKRes', 'ON BANKRes.borrower_id = BL.id', 'left');
+		$this->cldb->join('p2p_qualification AS quali', 'ON BL.highest_qualification = quali.id', 'left'); // new  added 2024-april-23
+        $this->cldb->join('p2p_occupation_details_table AS occupDetail', 'ON BL.occuption_id = occupDetail.id', 'left'); // new added 2024-april-23
         $this->cldb->where('BL.borrower_id', $borrower_id);
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {

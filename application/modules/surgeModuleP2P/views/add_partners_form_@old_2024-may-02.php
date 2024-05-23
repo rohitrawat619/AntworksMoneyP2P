@@ -7,7 +7,7 @@
 <!-- Main content -->
 <section class="content" >
 	<?= getNotificationHtml(); 
-  // echo"<pre>"; print_r($lists); die(); 
+   // print_r($lists); die(); 
     ?>
 	<div class="box">
 
@@ -82,7 +82,7 @@
   
 	<div class="col-md-3 form-group">
 	 <label for="partner_logo">Logo:</label><br>
-	<input type="file" accept=".png,.jpg,.jpeg,.bmp" name="partner_logo_file" id="partner_logo_file" onchange="previewImage('partner_logo_file','partner_logo_imagePreview')" />
+	<input type="file" accept=".png,.jpg,.jpeg,.bmp" name="partner_logo_file" id="partner_logo_file" onchange="previewImage()" />
     <img src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$lists['logo_path']); ?>" alt="Preview" id="partner_logo_imagePreview" style=" max-width: 200px; max-height: 200px;" />
 		</div>
 		
@@ -252,12 +252,7 @@
         <label for="lender_product_name">Lender Product Name:</label><br>
         <input  class="form-control"type="text" required id="lender_product_name" value="<?php echo $lists['lender_product_name']; ?>" name="lender_product_name" placeholder="Lender Product Name"><br><br>
     </div>	
-			
-			<div class="col-md-3 form-group">
-	 <label for="partner_lender_product_logo_file">Lender Product Logo:</label><br>
-	<input type="file" accept=".png,.jpg,.jpeg,.bmp" name="partner_lender_product_logo_file" id="partner_lender_product_logo_file" onchange="previewImage('partner_lender_product_logo_file','partner_lender_product_logo_imagePreview')" />
-    <img src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$lists['lender_logo_path']); ?>" alt="Preview" id="partner_lender_product_logo_imagePreview" style=" max-width: 200px; max-height: 200px;" />
-		</div>
+
 					
 	</div>
 			<?php } ?>
@@ -291,14 +286,7 @@
 					<div class="col-md-4 form-group">
         <label for="borrower_product_name">Borrower Product Name:</label><br>
         <input  class="form-control"type="text" required id="borrower_product_name" value="<?php echo $lists['borrower_product_name']; ?>" name="borrower_product_name" placeholder="Borrower Product Name"><br><br>
-			</div>		
-				<div class="col-md-3 form-group">
-	 <label for="partner_logo">Borrower Product Logo:</label><br>
-	<input type="file" accept=".png,.jpg,.jpeg,.bmp" name="partner_borrower_product_logo_file" id="partner_borrower_product_logo_file" onchange="previewImage('partner_borrower_product_logo_file','partner_borrower_product_logo_imagePreview')" />
-    <img src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$lists['borrower_logo_path']); ?>" alt="Preview" id="partner_borrower_product_logo_imagePreview" style=" max-width: 200px; max-height: 200px;" />
-		</div>
-
-			<?php } ?>
+			</div>			<?php } ?>
 						<!----------------end of borrower---------------------->
 					</div>
 					
@@ -353,9 +341,9 @@
 </section>
 
 <script>
-    function previewImage(logo_file,partner_logo_imagePreview) {
-        var input = document.getElementById(logo_file);
-        var preview = document.getElementById(partner_logo_imagePreview);
+    function previewImage() {
+        var input = document.getElementById('partner_logo_file');
+        var preview = document.getElementById('partner_logo_imagePreview');
 
         if (input.files && input.files[0]) {
             var reader = new FileReader();

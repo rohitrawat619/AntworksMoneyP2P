@@ -164,7 +164,7 @@
         }
       });
 
-    }
+    //}
    /* else{
       alert("Not sufficient funds");
     } */
@@ -223,5 +223,6 @@
       alert("Not sufficient funds");
 		return false;
     }
+ }
 	 
 </script>

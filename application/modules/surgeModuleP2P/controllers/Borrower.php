@@ -36,11 +36,12 @@ class Borrower extends CI_Controller
 		/***********2024-feb-08******************/
 			public function action_update_steps()
     {
+
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin') {
             $response = $this->P2pborrowermodel->action_update_steps();
             $this->session->set_flashdata('notification',array('error'=>0,'message'=>$response['msg']));
             // redirect(base_url().'p2padmin/p2pborrower/'.$this->input->post('step'));
-            redirect(base_url().'surgeModuleP2P/borrower/viewborrower');
+            redirect(base_url().'surgeModuleP2P/borrower/viewborrower/'.$response['borrower_id']);
         // } else {
             // $msg = "Your session had expired. Please Re-Login";
             // $this->session->set_flashdata('notification', array('error' => 1, 'message' => $msg));
@@ -280,9 +281,9 @@ public function filter_report()
     {
         // if ($this->session->userdata('admin_state') == TRUE && $this->session->userdata('role') == 'admin' || $this->session->userdata('role') == 'Teamleader') {
             $data['list'] = $this->P2pborrowermodel->get_borrower_details($borrower_id);
-           
+           //print_r($data['list']);
             $data['basic_response'] = $this->P2pborrowermodel->borrower_basic_filter_response($data['list']['borrower_id']);
-           //dated:2024-jan-17 $data['experian_details'] = $this->P2pborrowermodel->getExperian_details($data['list']['borrower_mobile']);
+            $data['experian_details'] = $this->P2pborrowermodel->getExperian_details($data['list']['borrower_id']);
             $data['panresponse'] = $this->P2pborrowermodel->getPanresponse($data['list']['borrower_mobile']);
 //            pr($data['panresponse']);
             $data['bankaccountresponse'] = $this->P2pborrowermodel->bankaccountresponse_v1($data['list']['borrower_mobile']);
@@ -294,6 +295,7 @@ public function filter_report()
             $data['pageTitle'] = "Borrower Details";
 
             $data['title'] = "Admin Dashboard";
+			//echo "<pre>";print_r($data);die();
            $this->load->view('template-surgeModuleP2P/header');
 		$this->load->view('template-surgeModuleP2P/nav');
             $this->load->view('borrower/borrower-details', $data);
@@ -361,6 +363,7 @@ public function filter_report()
 			$data['base_url'] = $this->paginationUrl;
             $data["pagination"] = $this->pagination->create_links();
             $data['list'] = $this->P2pborrowermodel->getborrowers_Step_2($config["per_page"], $page);
+			//echo "<pre>";print_r($data);die();
             $data['pageTitle'] = "Borrower List";
             $data['title'] = "Admin Dashboard";
             $this->load->view('template-surgeModuleP2P/header');

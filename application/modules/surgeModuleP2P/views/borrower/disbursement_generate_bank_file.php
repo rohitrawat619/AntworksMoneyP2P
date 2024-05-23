@@ -106,6 +106,7 @@
 <script>
         function confirmAndGetSelectedValues() {
 			var currentDate = new Date();
+			var amount = <?=$list['approved_loan_amount']?>;
 				var formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
     var checkboxes = $('input[type="checkbox"]:checked');
     
@@ -126,7 +127,7 @@
 			//alert(selectedValuesAll); return false;
             const newStatus = 3;
 			//var confirmation=confirm("do you really want to generate bank file ? ");
-			getAvailableBalance();
+			getAvailableBalance(amount);
         if(confirmed){
         $.ajax({
             type: 'POST',
@@ -198,12 +199,12 @@
 </script>
 
 <script>
- function getAvailableBalance(){
+ function getAvailableBalance(amount){
 	  if(<?=$available_balance?>>=amount){
 			return true;
 	  }else{
       alert("Not sufficient funds");
 		return false;
     }
-	 
+ } 
 </script>

@@ -49,129 +49,9 @@
 			padding-left:120px;
 		}
     </style>
-	<?php $dashboardData = $lists['dashboardData']; ?>
-<div class="content">
-<div class="row">
 
-        <div class="col-md-6 col-sm-6 col-xs-12">
-
-          <div class="info-box">
-
-            <span class="info-box-icon bg-aqua"><i class="ion ion-connection-bars"></i></span>
-
- 
-
-            <div class="info-box-content">
-
-              <span class="info-box-text">Today's Investment</span>
-
-              <span class="info-box-number"><?php echo $dashboardData['TodayInvestment']; ?></span>
-
-            </div>
-
-            <!-- /.info-box-content -->
-
-          </div>
-
-          <!-- /.info-box -->
-
-        </div>
-
-        <!-- /.col -->
-
-        <div class="col-md-6 col-sm-6 col-xs-12">
-
-          <div class="info-box">
-
-            <span class="info-box-icon bg-red"><i class="ion ion-shuffle"></i></span>
-
- 
-
-            <div class="info-box-content">
-
-              <span class="info-box-text">Today's Redemption</span>
-
-              <span class="info-box-number"><?php echo $dashboardData['TodayRedemption']; ?></span>
-
-            </div>
-
-            <!-- /.info-box-content -->
-
-          </div>
-
-          <!-- /.info-box -->
-
-        </div>
-
-        <!-- /.col -->
-
- 
-
-        <!-- fix for small devices only -->
-
-        <div class="clearfix visible-sm-block"></div>
-
- 
-
-        <div class="col-md-6 col-sm-6 col-xs-12">
-
-          <div class="info-box">
-
-            <span class="info-box-icon bg-green"><i class="ion ion-person-stalker"></i></span>
-
- 
-
-            <div class="info-box-content">
-
-              <span class="info-box-text">Number of Investor</span>
-
-              <span class="info-box-number"><?php echo $dashboardData['TodayInvestmentNoOfInvestor']; ?></span>
-
-            </div>
-
-            <!-- /.info-box-content -->
-
-          </div>
-
-          <!-- /.info-box -->
-
-        </div>
-
-        <!-- /.col -->
-
-        <div class="col-md-6 col-sm-6 col-xs-12">
-
-          <div class="info-box">
-
-            <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
-
- 
-
-            <div class="info-box-content">
-
-              <span class="info-box-text">Number of Investor</span>
-
-              <span class="info-box-number"><?php echo $dashboardData['TodayRedemptionNoOfInvestor']; ?></span>
-
-            </div>
-
-            <!-- /.info-box-content -->
-
-          </div>
-
-          <!-- /.info-box -->
-
-        </div>
-
-        <!-- /.col -->
-
-      </div>
-      </div>
-
- 
-
-<div class="content">
-	<div style="display:none;">
+<?php $dashboardData = $lists['dashboardData']; ?>
+<div class="containera" style="padding:10px;">
   <h2 align="center" >Dashboard</h2>         
   <table class="table table-bordered table-responsive ">
     <thead>
@@ -215,32 +95,168 @@
     
     </tbody>
   </table>
-</div>
+
 <br>
-<div class="row">
 
-        <div class="col-md-12">
-
-          <div class="box">
-
-           
-
-            <!-- /.box-header -->
-
-            <div class="box-body">
-
-                           <div class="row">
+  <table class="table table-bordered table-responsive ">
+    <thead>
+      <tr>
+        <th colspan=3><p>Portfolio Report:</p>  </th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+     
+	 
+	 		
+		<tr align='center' >
 				
-                   <br>		<?php if($this->session->userdata('partner_id')==0){ ?>
-				<form action="<?php echo base_url(); ?>surgeModuleP2P/surge/dashboard" method="post" class="">
-					<div class="col-md-3 form-group" style="display:none">
+												<!-------------row1 starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['TotalInvestment']; ?></div>
+        <div class="label">Total Investment</div>
+    </div>
+			
+			<div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['TotalInvestmentInvestor']; ?></div>
+        <div class="label">Total Investor</div>
+    </div>	
+			
+	</td>
+		
+			<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['TotalInvestmentOutstanding']; ?></div>
+        <div class="label">Total Investment Outstanding
+		</div>
+    </div>
+			
+			 <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['OutstandingInvestmentNoInvestor']; ?></div>
+        <div class="label">No. Investor</div>
+    </div>	
+			
+	</td>
+	
+				<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['TotalInvestmentRedeemed']; ?></div>
+        <div class="label">Total investment Redeemed</div>
+    </div>	
+			
+			 <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['RedeemedInvestmentNoInvestor']; ?></div>
+        <div class="label">No. Investor</div>
+    </div>
+	
+	</td>
+		
+						</tr>		
+							<!----------row2 ending here------------------------->
+							
+															<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+   </td>
+		
+			<td>
+   	</td>
+	
+				<td>
+   		</td>
+		
+						</tr>		
+							<!----------row ending here------------------------->
+							
+							
+															<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['AverageROI']; ?></div>
+        <div class="label">Average ROI g</div>
+    </div>	</td>
+		
+			<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['InterestOutstanding']; ?></div>
+        <div class="label">Interest Outstanding </div>
+    </div>		</td>
+	
+				<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['TotalInterestPaidOnRedeemedInvestment']; ?></div>
+        <div class="label">Total Interest Paid On Redeemed Investment </div>
+    </div>		</td>
+		
+						</tr>		
+							<!----------row ending here------------------------->
+							
+							<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number"><?php echo $dashboardData['AverageInvestment']; ?></div>
+        <div class="label">Average Investment</div>
+    </div>	</td>
+		
+			<td></td>
+	
+				<td></td>
+		
+						</tr>		
+							<!----------row ending here------------------------->
+							
+							
+	 
+      </tr>
+    
+    </tbody>
+  </table>
+  
+  
+  
+  
+  <!-------------filter section starting here---------->
+  <br>
+				<form action="<?php echo base_url(); ?>surgeModule/surge/dashboard" method="post" class="">
+  <table class="table table-bordered table-responsive ">
+    <thead>
+	
+	<tr>
+	<th colspan="4">
+                <div class="row">
+				 <div class="col-md-3">
+                        Partners/Scheme Wise Portfolio
+                    </div>	</div> </th> 
+	</tr>
+        <tr>
+	
+		
+            <th colspan="4">
+
+                <div class="row">
+				
+                  
+					<div class="col-md-3 form-group">
 							<label>Date Range:</label>
 			<?php $date_range = $this->input->post('date_range'); ?>
 <input type="text" readonly name="date_range" id="daterange-btn" placeholder="Date Range" class="form-control filter-by-date" required >
 						</div>
 				<?php //  print_r($this->input->post('date_range')); ?>
                
-				<div class="col-md-4 form-group">
+				<div class="col-md-3 form-group">
         <label for="password">Partner:</label><br>
         <select  class="form-control" name="partner_id" id="partner_id" >
 		
@@ -264,7 +280,7 @@
 		
 		</select>
     </div>
-                     <div class="col-md-4 form-group">
+                     <div class="col-md-3 form-group">
         <label for="password">Scheme List:</label><br>
         <select  class="form-control" name="scheme_id" id="scheme_id" >
 		
@@ -287,118 +303,116 @@
 		
 		</select>
     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <p>&nbsp;</p>
                         <button class="btn btn-primary form-control">Filter</button>
                     </div>
-                </div>	
-					</form>
-				   <?php } ?>
-              <!-- /.row -->
-
-															<!-------------row1 starting here--------------->
-					<div class="row">
-	
-			
-		<div class="col-md-4">
-    <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['TotalInvestment']; ?></div>
-        <div class="label">Total Investment</div>
-    </div>
-			
-			<div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['TotalInvestmentInvestor']; ?></div>
-        <div class="label">Total Investor</div>
-    </div>	
-			
-	</div>
-		
-			<div class="col-md-4">
-    <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['TotalInvestmentOutstanding']; ?></div>
-        <div class="label">Total Investment Outstanding
-		</div>
-    </div>
-			
-			 <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['OutstandingInvestmentNoInvestor']; ?></div>
-        <div class="label">No. Investor</div>
-    </div>	
-			
-	</div>
-	
-				<div class="col-md-4">
-    <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['TotalInvestmentRedeemed']; ?></div>
-        <div class="label">Total investment Redeemed</div>
-    </div>	
-			
-			 <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['RedeemedInvestmentNoInvestor']; ?></div>
-        <div class="label">No. Investor</div>
-    </div>
-	
-	</div>
-		</div>
-						
-							<!----------row1 ending here------------------------->
-
-			<!-------------row starting here--------------->
+                </div>	</form>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+     
+	 
+	 		
+		<tr align='center' >
+				
+												<!-------------row1 starting here--------------->
 					
-		
-			<div class="row">
-		<div class="col-md-4">
+		<tr>
+			
+		<td>
     <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['AverageROI']; ?></div>
-        <div class="label">Average ROI</div>
-    </div>	 </div>
+        <div class="number">0</div>
+        <div class="label">Total Investment</div>
+    </div>	</td>
 		
-			<div class="col-md-4">
-    <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['InterestOutstanding']; ?></div>
-        <div class="label">Interest Outstanding </div>
-    </div>		</div>
+			<td>
+    <div class="gap">
+       
+    </div>		</td>
 	
-				<div class="col-md-4">
+				<td>
     <div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['TotalInterestPaidOnRedeemedInvestment']; ?></div>
-        <div class="label">Total Interest Paid On Redeemed Investment </div>
-    </div>		</div>		
-		</div>
-
+        <div class="number">0</div>
+        <div class="label">Total investment Redeemed</div>
+    </div>		</td>
+		
+						</tr>		
+							<!----------row2 ending here------------------------->
+							
+															<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number">0</div>
+        <div class="label">Total Investor</div>
+    </div>	</td>
+		
+			<td>
+    <div class="gap">
+       
+    </div>		</td>
+	
+				<td>
+    <div class="dashboard-item">
+        <div class="number">0</div>
+        <div class="label">No. Investor</div>
+    </div>		</td>
+		
+						</tr>		
 							<!----------row ending here------------------------->
 							
 							
-							<!-----------------start------------>
-							<div class="row">
-							<div class="col-md-4">
-							<div class="dashboard-item">
-        <div class="number"><?php echo $dashboardData['AverageInvestment']; ?></div>
-        <div class="label">Average Investment</div>
-    </div>		</div>		
-					</div>
-							<!--------ending------------------>
-
-            </div>
-
-            <!-- ./box-body -->
-
-           
-
-            <!-- /.box-footer -->
-
-          </div>
-
-          <!-- /.box -->
-
-        </div>
-
-        <!-- /.col -->
-
-      </div>
- 
-  
+															<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number">0</div>
+        <div class="label">Average ROI</div>
+    </div>	</td>
+		
+			<td>
+    <div class="gap">
+       
+    </div>		</td>
 	
+				<td>
+    <div class="dashboard-item">
+        <div class="number">0</div>
+        <div class="label">Total Interest Paid On Redeemed Investment</div>
+    </div>		</td>
+		
+						</tr>		
+							<!----------row ending here------------------------->
+							
+							<!-------------row starting here--------------->
+					
+		<tr>
+			
+		<td>
+    <div class="dashboard-item">
+        <div class="number">0</div>
+        <div class="label">Average Investment</div>
+    </div>	</td>
+		
+			<td></td>
+	
+				<td></td>
+		
+						</tr>		
+							<!----------row ending here------------------------->
+							
+							
+	 
+      </tr>
+    
+    </tbody>
   </table>
 	<!-------------------filter section ending here------------------->
 </div>

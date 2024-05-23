@@ -129,7 +129,7 @@
                                 </tr>
                                 <tr>
                                     <td>Employment</td>
-                                    <td><strong><?php echo $list['occuption_id']; ?></strong></td>
+                                    <td><strong><?php echo $list['occupation_name']; ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td>Age</td>
@@ -148,7 +148,7 @@
                                 </tr>
                                 <tr>
                                     <td>Gender</td>
-                                    <td><strong><?= $list['gender'] ?></strong></td>
+                                    <td><strong><?= $list['gender_name'] ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td>PAN Details</td>
@@ -188,7 +188,7 @@
                                 <tbody>
                                 <tr>
                                     <td>Education</td>
-                                    <td><strong><?php echo $list['highest_qualification']; ?></strong></td>
+                                    <td><strong><?php echo $list['highest_qualification_name']; ?></strong></td>
                                 </tr>
                                 <tr>
                                     <td>Experian Score</td>
@@ -245,7 +245,7 @@
             <?php if ($steps['step_1'] == 2){ ?>
             <div class="col-md-12">
                 <div class="col-md-12">
-                    <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>"
+                    <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>"
                           enctype="multipart/form-data">
                         <div class="col-md-4 form-group">
                             <input type="file" name="borrower_pan" id="borrower_pan" class="form-control" required>
@@ -266,7 +266,7 @@
                 <?php if ($steps['step_8'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_8">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -277,7 +277,7 @@
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_8">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -289,10 +289,10 @@
                     </div>
                 <?php } ?>
 
-                <?php if ($steps['step_2'] == 2) { ?>
+                <?php if ($steps['step_2'] == 2 || $steps['step_2'] == 3 || $steps['step_2'] == null) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="text" name="remarks" class="form-control" placeholder="Remarks"
                                            required>
@@ -300,14 +300,14 @@
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_2">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
-                                    <input type="submit" name="skip_step_2" class="btn btn-primary"
+                                    <input type="submit" name="skip_credit_decisioning" class="btn btn-primary"
                                            value="Skip Credit Decision">
                                 </div>
                             </form>
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_2">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -322,7 +322,7 @@
                 <?php if ($steps['step_3'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_3">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -333,7 +333,7 @@
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="text" name="remarks" class="form-control" placeholder="Remarks"
                                            required>
@@ -352,7 +352,7 @@
                 <?php if ($steps['step_4'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_4">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -367,7 +367,7 @@
                 <?php if ($steps['step_5'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_5">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -382,7 +382,7 @@
                 <?php if ($steps['step_6'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModuleP2P/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_6">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -407,16 +407,22 @@
                     <h3>Bank Details</h3>
                     <table class="table table-bordered">
                         <tr>
+												<?php 
+						$razorpay_response_fav_json = json_decode($list['razorpay_response_fav_json'],true);
+						echo"<pre>"; print_r();
+								$bank_name = $razorpay_response_fav_json['fund_account']['bank_account']['bank_name'];
+						?>
                             <td><strong>Bank Name</strong></td>
-                            <td><?php echo $list['bank_name'] ?></td>
+                            <td><?php echo $bank_name; ?></td>
                             <td><strong>A/C</strong></td>
                             <td><?php echo $list['account_number'] ?></td>
                         </tr>
                         <tr>
+
                             <td><strong>Ifsc Code</strong></td>
                             <td><?php echo $list['ifsc_code'] ?></td>
                             <td><strong>Bank Account Name</strong></td>
-                            <td><?php echo $list['bank_registered_name'] //if ($bankaccountresponse) { $bresponse = json_decode($bankaccountresponse, true); echo $bresponse['result']['accountName'];} ?></td>
+                            <td><?php echo $list['bank_registered_name_new'] //if ($bankaccountresponse) { $bresponse = json_decode($bankaccountresponse, true); echo $bresponse['result']['accountName'];} ?></td>
                         </tr>
                     </table>
                 </div>

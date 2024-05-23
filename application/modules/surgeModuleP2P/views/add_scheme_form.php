@@ -72,7 +72,7 @@
                     </div>
                                     <div class="col-md-6 form-group">
                         <label for="Cooling_Period">
-						Cooling_Period:</label><br>
+						Cooling_Period: (Months)</label><br>
                         <input class="form-control" type="text" value="<?php echo $lists['Cooling_Period']; ?>" id="Cooling_Period" name="Cooling_Period" required>
                     </div>
                                     <div class="col-md-6 form-group">
@@ -89,7 +89,12 @@
                                     <div class="col-md-6 form-group">
                         <label for="interest_type">
 						Interest_Type:</label><br>
-                        <input class="form-control" type="text" value="<?php echo $lists['Interest_Type']; ?>" id="Interest_Type" name="Interest_Type" required>
+						
+                        
+						<select class="form-control" id="Interest_Type" name="Interest_Type" required>
+							<option value="">Interest Type</option>
+							<option value="Simple"  <?php echo(($lists['Interest_Type']=="Simple") ? "selected" : ""); ?>>Simple</option>
+						</select>
                     </div>
                                     <div class="col-md-6 form-group">
                         <label for="withrawl_anytime">
@@ -105,12 +110,12 @@
                     </div>
                                     <div class="col-md-6 form-group">
                         <label for="lockin_period">
-						Lockin_Period:</label><br>
+						Lockin_Period: (Months)</label><br>
                         <input class="form-control" type="text" value="<?php echo $lists['Lockin_Period']; ?>" id="Lockin_Period" name="Lockin_Period" required>
                     </div>
                                     <div class="col-md-6 form-group">
                         <label for="Tenure">
-						Tenure:</label><br>
+						Tenure: (Months)</label><br>
                         <input class="form-control" type="text" value="<?php echo $lists['Tenure']; ?>" id="Tenure" name="Tenure" required>
                     </div>
                                     <div class="col-md-6 form-group">

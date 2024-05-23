@@ -7,14 +7,14 @@ class Surge extends CI_Controller
 		parent::__construct();
 		$this->load->model('Surgemodel');
 		$this->load->helper('url');
-		$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+		//$this->cldb = $this->load->database('new_p2p//_sandbox', TRUE);
 		//$this->load->model('Common_model');
 		$this->load->library('form_validation');
 		$this->load->helper('custom');
 		$this->load->library('pagination');
 		
 		error_reporting(0);
-					$database_name = $this->cldb->database;
+				//	$database_name = $this->cldb->database;
 			//	echo "Database Name: ".$database_name;
 			$this->check_role();
 		$this->partner_id = $this->session->userdata('partner_id');
@@ -24,28 +24,49 @@ class Surge extends CI_Controller
 
 		
 	
-	
+	public function dashboardBorrower(){
+		$partner_id=10;
+		
+		$data['noOfBorrower']=$this->Surgemodel->getNoOfBorrower($partner_id);
+		$data['borrowerAmount']=$this->Surgemodel->getBorrowerAmount($partner_id);
+		$this->load->view('template-surgeModuleP2P/header');
+		$this->load->view('template-surgeModuleP2P/nav');
+		$this->load->view('dashboardBorrower',$data);
+		$this->load->view('template-surgeModuleP2P/footer');
+	}
 	public function dashboard(){	
+			// print_r($this->input->post());
 		//	echo "Partner: ".$this->partner_id;
 		//  print_r($this->session->userdata('role'));
 			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,"");
 			$data['lists']['schemeList'] = $this->Surgemodel->getSchemeList(100, 0,"");
-			$data['lists']['dashboardData']['TodayInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TodayInvestmentNoOfInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TodayRedemption'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TodayRedemptionNoOfInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
+			$data['lists']['dashboardData']['TodayInvestment'] =  $this->Surgemodel->getInvestmentAmount('today');
+			
+			$data['lists']['dashboardData']['TodayInvestmentNoOfInvestor'] = $this->Surgemodel->getInvestmentNoOfInvestor('today');
+			
+			$data['lists']['dashboardData']['TodayRedemption'] = $this->Surgemodel->getRedemptionAmount('today');
+			
+			$data['lists']['dashboardData']['TodayRedemptionNoOfInvestor'] = $this->Surgemodel->getRedeemedInNoOfInvestor('today');
 
-			$data['lists']['dashboardData']['TotalInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0),"");
-			$data['lists']['dashboardData']['TotalInvestmentOutstanding'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TotalInvestmentRedeemed'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TotalInvestmentInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['AverageROI'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['InterestOutstanding'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['TotalInterestPaidOnRedeemedInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['AverageInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['OutstandingInvestmentNoInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
-			$data['lists']['dashboardData']['RedeemedInvestmentNoInvestor'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_investment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");	
-			//$this->load->view('templates/teamheader');
+			$data['lists']['dashboardData']['TotalInvestment'] = '&#x20B9;'.number_format(str_replace('&#x20B9;','',$this->Surgemodel->getInvestmentAmount('')));
+			
+			$data['lists']['dashboardData']['TotalInvestmentOutstanding'] = $this->Surgemodel->getlInvestmentOutstandingAmount('');
+			
+			$data['lists']['dashboardData']['TotalInvestmentRedeemed'] = $this->Surgemodel->getRedemptionAmount('');
+			
+			$data['lists']['dashboardData']['TotalInvestmentInvestor'] = $this->Surgemodel->getInvestmentNoOfInvestor('');
+			
+			$data['lists']['dashboardData']['AverageROI'] = $this->Surgemodel->getlAverageROI('');
+			
+			$data['lists']['dashboardData']['InterestOutstanding'] = $this->Surgemodel->getInterestOutstanding('');
+			
+			$data['lists']['dashboardData']['TotalInterestPaidOnRedeemedInvestment'] = $this->Surgemodel->getInterestPaidOnRedeemedInvestment('');
+			
+			$data['lists']['dashboardData']['AverageInvestment'] = '&#x20B9;'.str_replace('nan','0',number_format(str_replace('&#x20B9;','',$this->Surgemodel->getInvestmentAmount(''))/($this->Surgemodel->getInvestmentNoOfInvestor('')),2));
+			
+			$data['lists']['dashboardData']['OutstandingInvestmentNoInvestor'] = $this->Surgemodel->getOutstandingInvestmentNoInvestor('');
+			
+			$data['lists']['dashboardData']['RedeemedInvestmentNoInvestor'] = $this->Surgemodel->getRedeemedInNoOfInvestor('');
 				
 			$this->load->view('template-surgeModuleP2P/header');
 
@@ -95,13 +116,17 @@ class Surge extends CI_Controller
 		public function add_partner(){
 			 
 			$addPartnerResp = $this->Surgemodel->add_partner();
+
 			
 			if($addPartnerResp['status']==1){
 			$partners_id = $addPartnerResp['insert_id'];
 			
 			if($partners_id!=""){
-			$uploadImageResp = $this->upload_image($partners_id);
-			$addThemeResp = $this->Surgemodel->add_theme($partners_id,$uploadImageResp['full_path']);
+							$addMasterFeeStructureResp = $this->Surgemodel->add_master_fee_structure($partners_id); 
+			$uploadImageResp = $this->upload_image($partners_id,'mainLogo','partner_logo_file');
+			$uploadBorrowerImageResp = $this->upload_image($partners_id,'borrowerBulletProduct','partner_borrower_product_logo_file');
+			$uploadLenderImageResp = $this->upload_image($partners_id,'lenderProduct','partner_lender_product_logo_file');
+			$addThemeResp = $this->Surgemodel->add_theme($partners_id,$uploadImageResp['full_path'],$uploadLenderImageResp['full_path'],$uploadBorrowerImageResp['full_path']);
 					}
 					$addPartnerResp['uploadImageResp'] = $uploadImageResp;
 					$addPartnerResp['addThemeResp'] = $addThemeResp;
@@ -125,11 +150,18 @@ class Surge extends CI_Controller
 			//	print_r($updatePartnerResp); 
 				//		print_r($this->input->post()); die();
 			$updatePartnerResp = $this->Surgemodel->update_partner();
+			
+			$updateMasterFeeStructureResp = $this->Surgemodel->update_master_fee_structure();
 			$partners_id = $updatePartnerResp['partner_id'];
 			if($partners_id!=""){
-			$uploadImageResp = $this->upload_image($partners_id);
-			$updateThemeResp = $this->Surgemodel->update_theme($partners_id,$uploadImageResp['full_path']);
-					}
+		//	$uploadImageResp = $this->upload_image($partners_id);
+		 //	$updateThemeResp = $this->Surgemodel->update_theme($partners_id,$uploadImageResp['full_path']);
+		 
+		 $uploadImageResp = $this->upload_image($partners_id,'mainLogo','partner_logo_file');
+			$uploadBorrowerImageResp = $this->upload_image($partners_id,'borrowerBulletProduct','partner_borrower_product_logo_file');
+			$uploadLenderImageResp = $this->upload_image($partners_id,'lenderProduct','partner_lender_product_logo_file');
+			$updateThemeResp = $this->Surgemodel->update_theme($partners_id,$uploadImageResp['full_path'],$uploadLenderImageResp['full_path'],$uploadBorrowerImageResp['full_path']);
+					} 
 					$updatePartnerResp['uploadImageResp'] = $uploadImageResp;
 					$updatePartnerResp['updateThemeResp'] = $updateThemeResp;
 						
@@ -145,9 +177,9 @@ class Surge extends CI_Controller
 			//echo json_encode($updatePartnerResp);
 		}
 		
-		public function upload_image($vendor_id){
+		public function upload_image($vendor_id,$moduleType,$partner_logo_file_field_name){
 		
-		$directoryPath  = './document\surge\upload/vendor/'.$vendor_id;
+		$directoryPath  = './document\surge\upload/vendor/'.$moduleType."/".$vendor_id;
     
 	if (!is_dir($directoryPath)) {          if (!mkdir($directoryPath, 0777, true)) {      die('Failed to create directory');     }    } 
 	$config['upload_path'] =  $directoryPath;
@@ -159,7 +191,7 @@ class Surge extends CI_Controller
 			*/
 	$this->load->library('upload', $config);
 
-    if ($this->upload->do_upload('partner_logo_file')){
+    if ($this->upload->do_upload($partner_logo_file_field_name)){
         // Image uploaded successfully
         $data = $this->upload->data();
 		//  print_r($data);
