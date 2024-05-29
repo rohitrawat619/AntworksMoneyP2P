@@ -24,19 +24,33 @@ class Borroweractivitymodel extends CI_Model
             if ($otp == $result->otp) {
                 if ($result->MINUTE <= 10) {
 					#Loan Aggrement Signature Verified as disscussed with shantanu sir
+					// get loan number
 					
-					$this->db->insert('p2p_loan_aggrement_signature', array(
-                            'borrower_id' => $borrowerId,
-                            'loan_id' => $loan_id,
-                            'borrower_acceptance' => 1,
-                            'borrower_signature' => 1,
-                            'borrower_signature_date' => date('Y-m-d H:i:s'),
-                        ));
+					$this->db->where("id",$loan_id);
+					$this->db->select('loan_no');
+					$this->db->from('p2p_loan_list');
+					$get_loan_no = $this->db->get()->row_array();
+					$loan_no=$get_loan_no['loan_no'];
+					
+					// get bid_registration_id start
+					
+					$this->db->where("loan_no",$loan_no);
+					$this->db->select('bid_registration_id');
+					$this->db->from('p2p_bidding_proposal_details');
+					$query = $this->db->get()->row_array();
+
+					
+					$get_bid_registration_id = $query['bid_registration_id'];
+					// get bid_registration_id end
+					
+					
+					
 					
                     $this->db->select('*');
                     $this->db->from('p2p_loan_aggrement_signature');
                     $this->db->where('loan_id', $loan_id);
                     $query = $this->db->get();
+					
 			
                     if ($this->db->affected_rows() > 0) {
                         $result = $query->row();
@@ -60,9 +74,19 @@ class Borroweractivitymodel extends CI_Model
 
                         return array(
                             'status' => '1',
-                            'msg' => 'Thanks for signature this Loan Agreement'
+                            'msg' => 'Thanks for signature this Loan Agreement.'.rand()
                         );
                     } 
+					else{
+						$this->db->insert('p2p_loan_aggrement_signature', array(
+                            'borrower_id' => $borrowerId,
+							'bid_registration_id' => $get_bid_registration_id,
+                            'loan_id' => $loan_id,
+                            'borrower_acceptance' => 1,
+                            'borrower_signature' => 1,
+                            'borrower_signature_date' => date('Y-m-d H:i:s'),
+                        ));
+					}
                 } else {
                     return array(
                         'status' => '0',

@@ -532,7 +532,7 @@ class Borroweraddmodel extends CI_Model
             CURLOPT_POSTFIELDS => json_encode($borr_info),
 			CURLOPT_HTTPHEADER => array(
 					'Content-Type: application/json',
-					'Authorization: Token 693f6c8d0af0e24cec9a66ea6a668bb77aa840d9',
+					'Authorization: Token c72e3acc2510ef0590a6d56f468554af74ac7ac7',
 			),
         ));
 
@@ -647,7 +647,6 @@ class Borroweraddmodel extends CI_Model
 			b_add.r_pincode,
 			b_add.latitude,
 			b_add.longitude,
-			ip_address,
             od.company_type,od.company_name,od.net_monthly_income,od.turnover_last_year,od.turnover_last2_year
             ")
             ->join('p2p_borrower_address_details as b_add', 'b_add.borrower_id = bl.id', 'left')
@@ -666,7 +665,7 @@ class Borroweraddmodel extends CI_Model
     {
 		
         $info = $this->get_borrower_details($borrowerId);
-		
+		//print_r($info);die("run");
         $bank_details = $this->get_accountDetails($borrowerId);
         $query = $this->db->order_by('id', 'desc')->limit(1)->get_where('ant_borrower_rating', array('borrower_id' => $borrowerId));
         if ($this->db->affected_rows() > 0) {
@@ -708,30 +707,21 @@ class Borroweraddmodel extends CI_Model
 			
 			file_put_contents('ektara.txt', date('Y-m-d H:i:s').' - Request Second API- '.json_encode($request)."\n\r ---------- \n\r".PHP_EOL, FILE_APPEND);
 			
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => '216.48.189.217:80/RestAPIs/loans/p2p/cbinfo',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode($request),
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-					'Authorization: Token 693f6c8d0af0e24cec9a66ea6a668bb77aa840d9',
-                ),
-            ));
-
-            $response = curl_exec($curl);
-            curl_close($curl);
+            // ektara changes starts
 			
-			file_put_contents('ektara.txt', date('Y-m-d H:i:s').' - response Second API- '.$response."\n\r ---------- \n\r".PHP_EOL, FILE_APPEND);
+			$response_array = $this->ektara_second_api_curl($request);
 			
-            $response_array = json_decode($response, true);
+			if($response_array[1]['RespCode'] == 'User Not Present'){
+				$this->ektara_first_api($borrowerId);
+				$response_array = $this->ektara_second_api_curl($request);
+			}
+			
+			if($response_array=="" || $response_array==null){
+				return false;
+			}
+			// ektata changes ends
+			
+			
 		
            if($borrowerId == 38 ||$borrowerId == 39)
 		   {
@@ -768,8 +758,8 @@ class Borroweraddmodel extends CI_Model
 					//$this->db->where('id',$last_insert_id)->where('borrower_id',$borrowerId)->limit(1)->update('ekTara_response',array('response'=>$response));				
 			}
 		
-        }
-        if ($response_array[1]['CreditCategory'] == 'Green') {
+		/*********start********/
+		 if ($response_array[1]['CreditCategory'] == 'Green') {
             $this->db->where('borrower_id', $borrowerId);
             $this->db->set('step_2', 1);
             $this->db->update('p2p_borrower_steps_credit_line');
@@ -786,6 +776,9 @@ class Borroweraddmodel extends CI_Model
             $this->db->set('step_2', 3);
             $this->db->update('p2p_borrower_steps_credit_line');
         }
+		 /**********end********/
+        }
+       
 
         file_put_contents('log', $this->db->last_query() . PHP_EOL, FILE_APPEND);
         $this->db->where('borrower_id', $borrowerId);
@@ -793,6 +786,38 @@ class Borroweraddmodel extends CI_Model
         $this->db->update('p2p_borrowers_list');
         return true;
     }
+	
+	
+	public function ektara_second_api_curl($request){
+		
+		$curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => '216.48.189.217:80/RestAPIs/loans/p2p/cbinfo',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($request),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+					'Authorization: Token c72e3acc2510ef0590a6d56f468554af74ac7ac7',
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+			
+			file_put_contents('ektara.txt', date('Y-m-d H:i:s').' - response Second API- '.$response."\n\r ---------- \n\r".PHP_EOL, FILE_APPEND);
+			
+            $response_array = json_decode($response, true);
+			return $response_array;
+	}
+	
+	
 	public function get_accountDetails($borrowerId)
     {
 
@@ -808,7 +833,10 @@ class Borroweraddmodel extends CI_Model
     }
 	public function loan_eligibility_status()
     {
-        $this->ektara_second_api($this->input->post('borrower_id'));
+       $ektaraSecondResp = $this->ektara_second_api($this->input->post('borrower_id'));
+	   if($ektaraSecondResp==false){
+		   return $response = ['status' => 0, 'loan_id' => '', 'msg' => 'Internal Server Error, Please Try Again Later.',];
+	   }
         $where = "(CreditCategory = 'Green' or CreditCategory = 'Amber')";
         $this->db->where($where)->order_by('id', 'desc')->limit(1)->get_where('ektara_response', array('borrower_id' => $this->input->post('borrower_id')));
 	//	echo $this->db->last_query();exit;
@@ -817,7 +845,7 @@ class Borroweraddmodel extends CI_Model
 			
             if ($this->db->affected_rows() > 0) {
                 $result = $query->row_array();
-				pr($result);exit;
+			//	pr($result);exit;
                 if ($result['step_2'] == 1 || $result['step_2'] == 2) {
 					$loan_data = $this->db->get_where('p2p_loan_list', array('borrower_id' => $this->input->post('borrower_id')))->row();
 					if ($this->db->affected_rows() > 0) {
@@ -825,19 +853,45 @@ class Borroweraddmodel extends CI_Model
 						
 						return $response = ['status' => 1, 'loan_id' => $loan_data->id, 'loan_amount' => $loan_data->approved_loan_amount, 'msg' => 'Loan ID Already exist',];
 					}else{
+						
+						//$loan_no=$this->credit_line_generate_loan_no();  
 
-						$this->db->insert('p2p_loan_list', array(
+						// insert data in p2p_bidding_proposal_details start
+						
+						$proposal_submit_array = array(
+                    'borrowers_id'=> $this->input->post('borrower_id'),
+                    'bid_loan_amount'=>2500,
+                    'loan_amount'=>2500,
+                    'accepted_tenor'=>36,
+                    'interest_rate'=>36,
+                    'proposal_added_date'=>date("Y-m-d H:i:s"),
+					'source'=>'lsBrSkip' // lsBrElig->lendsocialBorrowerEligiblity or lsBrSkip->lendsocialBorrowerSkipStep
+
+                );
+
+ 
+
+                $proposal_submit = $this->cldb->insert('p2p_bidding_proposal_details',$proposal_submit_array); // created at 19/04/2024
+						
+						// insert data in p2p_bidding_proposal_details ends
+						$bid_registration_id = $this->cldb->insert_id();
+						$loan_no_plus =  10000000000 + $bid_registration_id;
+						$loan_no = 'LN' . $loan_no_plus;
+						$this->cldb->where('bid_registration_id',$bid_registration_id);
+						$this->cldb->update("p2p_bidding_proposal_details",array('loan_no'=>$loan_no));
+						
+						$this->cldb->insert('p2p_loan_list', array(
 							'borrower_id' => $this->input->post('borrower_id'),
-							'loan_no' => $this->credit_line_generate_loan_no(),
-							'lender_id' => '1',
+							'loan_no' => $loan_no,
+							'lender_id' => $this->input->post('partner_id'),
 							'approved_loan_amount' => '2500',
 							'approved_interest' => '2',
 							'approved_tenor' => '1',
 							'loan_processing_charges' => '0',
 							'disburse_amount' => '0',
 						));
-						$loan_id = $this->db->insert_id();
-
+						$loan_id = $this->cldb->insert_id();
+						
 						$loanData = $this->db->get_where('p2p_loan_list', array('id' => $loan_id))->row();
 						return $response = ['status' => 1, 'loan_id' => $loan_id, 'loan_amount' => $loanData->approved_loan_amount, 'msg' => 'This should only take few seconds.',];
 					}
@@ -1037,6 +1091,7 @@ class Borroweraddmodel extends CI_Model
         $query = $this->db->get_where('p2p_borrower_steps_credit_line', array('borrower_id' => $borrower_id));
         if ($this->db->affected_rows() > 0) {
             $steps = $query->row_array();
+			//echo "<pre>";print_r($steps);die();
             if ($steps['step_1']) {
                 if ($steps['step_1'] == 2 || $steps['step_1'] == 3) {
                     return $current_step = array(

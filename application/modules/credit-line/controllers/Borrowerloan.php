@@ -288,6 +288,7 @@ class Borrowerloan extends REST_Controller
                 $loan_id = $this->input->post('loan_id');
                 $otp = $this->input->post('otp');
                 $res = $this->Borroweractivitymodel->verify_signature($borrowerId, $loan_id, $otp);
+				
                 if ($res) {
 
                     $this->set_response($res, REST_Controller::HTTP_OK);

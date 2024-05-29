@@ -27,6 +27,8 @@ class Borrowerinfomodel extends CI_Model
 				
 				if ($this->db->affected_rows() > 0) {
 					$payment_status = (array)$query2->row();
+				}else{
+					$payment_status['payment_status'] = ""; // 2024-april-22
 				}
 				
 				$due_status = '';

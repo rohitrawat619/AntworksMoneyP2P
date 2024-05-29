@@ -185,13 +185,12 @@ class Borrowerres extends REST_Controller
             if ($this->form_validation->run() == TRUE) {
                 $partner_id=$this->input->post('partner_id');
                 if ($partner_id!="" &&  $partner_id!=null && !empty($partner_id)) {
-                    $this->db->select('disbursement_method');
+                    $this->db->select('disbursment_method');
                     $this->db->where('partner_id',$partner_id);
                     $method=$this->db->from('partners_theme')->get()->row_array();
                     
-                    
                 }
-
+				//echo "<pre>";print_r($method);die();
 
                 $this->db->where('borrower_id', $this->input->post('borrower_id'));
                 $this->db->where('id', $this->input->post('loan_id'));
@@ -199,10 +198,12 @@ class Borrowerres extends REST_Controller
                 $this->db->update('p2p_loan_list');
 
 
-                if($method['disbursement_method']=="both" || $method['disbursement_method']=="manual"){
+                if($method['disbursment_method']=="both" || $method['disbursment_method']=="manual"){
+
                     $this->db->where('borrower_id', $this->input->post('borrower_id'));
                     $this->db->set('step_9', 1);
                     $this->db->update('p2p_borrower_steps_credit_line');   
+					//die("check");
                 }
                 else{
                 $this->db->where('borrower_id', $this->input->post('borrower_id'));
