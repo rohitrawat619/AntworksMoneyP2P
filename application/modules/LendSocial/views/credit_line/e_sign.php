@@ -1,15 +1,74 @@
+<style>
+    .e-signbox-loanbox {width:100%; float:left; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:30px 30px; margin:20px 10px;}
+
+.e-signbox-loanbox-active {background: #5b3583; color: #fff;}
+</style>
 <section class="container">
-	<div class="row">
-		<div class="col-md-1 col-xs-12"></div>
-		<div class="col-md-10 col-xs-12 e-signbox-loanbox">
-			<ul class="creditloan-dtls">
-				<li>Amount Approved<span>Rs. <?=$credit_line_sanction_details['approved_loan']?></span></li>
-				<li>Loan Tenure<span><?=$credit_line_sanction_details['approved_tenor']?> Month</span></li>
-				<li>Repayment Amount<span>Rs. <?=$credit_line_sanction_details['amount_to_pay']?></span></li>
-				<li>Interest Rate<span><?=$credit_line_sanction_details['approved_interest_rate']?></span></li>
-			</ul>
-		</div>
-	</div>
+<div class="row">
+
+<div class="col-md-4 col-xs-12">
+
+<div class="e-signbox-loanbox">
+
+                <ul class="creditloan-dtls">
+
+                                <li>Amount Approved<span>Rs. 2500</span></li>
+
+                                <li>Loan Tenure<span>1 Month</span></li>
+
+                                <li>Repayment Amount<span>Rs. 2550</span></li>
+
+                                <li>Interest Rate<span>2%</span></li>
+
+                </ul>
+
+</div>
+
+</div>
+
+<div class="col-md-4 col-xs-12">
+
+<div class="e-signbox-loanbox">
+
+                <ul class="creditloan-dtls">
+
+                                <li>Amount Approved<span>Rs. 2500</span></li>
+
+                                <li>Loan Tenure<span>1 Month</span></li>
+
+                                <li>Repayment Amount<span>Rs. 2550</span></li>
+
+                                <li>Interest Rate<span>2%</span></li>
+
+                </ul>
+
+</div>
+
+</div>
+
+<div class="col-md-4 col-xs-12">
+
+<div class="e-signbox-loanbox e-signbox-loanbox-active">
+
+                <ul class="creditloan-dtls">
+
+                                <li>Amount Approved<span>Rs. 2500</span></li>
+
+                                <li>Loan Tenure<span>1 Month</span></li>
+
+                                <li>Repayment Amount<span>Rs. 2550</span></li>
+
+                                <li>Interest Rate<span>2%</span></li>
+
+                </ul>
+
+</div>
+
+</div>
+
+</div>
+
+
 </section>
 
 
