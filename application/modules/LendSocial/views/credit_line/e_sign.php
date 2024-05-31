@@ -4,6 +4,7 @@
 .e-signbox-loanbox-active {background: #5b3583; color: #fff;}
 </style>
 <section class="container">
+    <h3><center>choose your loan option</center></h3>
 <div class="row">
 
 <div class="col-md-4 col-xs-12">
@@ -48,9 +49,9 @@
 
 <div class="col-md-4 col-xs-12">
 
-<div class="e-signbox-loanbox e-signbox-loanbox-active">
+<div class="e-signbox-loanbox e-signbox-loanbox">
 
-                <ul class="creditloan-dtls">
+                <ul class="creditloan-dtls ">
 
                                 <li>Amount Approved<span>Rs. 2500</span></li>
 
@@ -91,9 +92,34 @@
 
 <script>
     $(document).ready(function() {
+
+        $('.e-signbox-loanbox').click(function() {
+            // Remove the active class from all boxes
+            $('.e-signbox-loanbox').removeClass('e-signbox-loanbox-active');
+            // Add the active class to the clicked box
+            $(this).addClass('e-signbox-loanbox-active');
+        });
+
+
         $('#eSignButton').click(function(e) {
             e.preventDefault(); // Prevent the default behavior of the anchor tag
 			console.log("button clicked");
+
+            var selectedBox = $('.e-signbox-loanbox-active');
+            if (selectedBox.length === 0) {
+                alert('Please select a loan option before proceeding.');
+                return;
+            }
+
+            var data = {
+                amountApproved: selectedBox.find('li:contains("Amount Approved") span').text(),
+                loanTenure: selectedBox.find('li:contains("Loan Tenure") span').text(),
+                repaymentAmount: selectedBox.find('li:contains("Repayment Amount") span').text(),
+                interestRate: selectedBox.find('li:contains("Interest Rate") span').text()
+            };
+
+            console.log("Selected Box Data:", data);
+            return false;
 
             // Perform AJAX call when the button is clicked
             $.ajax({
