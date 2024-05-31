@@ -14,7 +14,7 @@
 
                                 <li>Amount Approved<span>Rs. 2500</span></li>
 
-                                <li>Loan Tenure<span>1 Month</span></li>
+                                <li>Loan Tenure<span>30 Days</span></li>
 
                                 <li>Repayment Amount<span>Rs. 2550</span></li>
 
@@ -34,9 +34,9 @@
 
                                 <li>Amount Approved<span>Rs. 2500</span></li>
 
-                                <li>Loan Tenure<span>1 Month</span></li>
+                                <li>Loan Tenure<span>60 Days</span></li>
 
-                                <li>Repayment Amount<span>Rs. 2550</span></li>
+                                <li>Repayment Amount<span>Rs. 2600</span></li>
 
                                 <li>Interest Rate<span>2%</span></li>
 
@@ -54,9 +54,9 @@
 
                                 <li>Amount Approved<span>Rs. 2500</span></li>
 
-                                <li>Loan Tenure<span>1 Month</span></li>
+                                <li>Loan Tenure<span>90 Days</span></li>
 
-                                <li>Repayment Amount<span>Rs. 2550</span></li>
+                                <li>Repayment Amount<span>Rs. 2650</span></li>
 
                                 <li>Interest Rate<span>2%</span></li>
 
