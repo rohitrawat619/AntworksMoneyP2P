@@ -136,6 +136,7 @@ public function e_sign(){
 public function e_sign_send_otp_ajax(){
   
   $partner_loan_plan = $this->credit_line_model->get_loan_plans();
+  $partner_loan_plan['loan_no'] = $this->getLoanId();
   $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
   if($data==1){
    $response=$this->credit_line_model->credit_line_sendOtpsignature($this->getBorrowerId(),$this->getLoanId());

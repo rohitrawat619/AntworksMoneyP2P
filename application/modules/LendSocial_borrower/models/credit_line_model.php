@@ -500,7 +500,8 @@ public function viewLoanaggrement($borrower_id){
       
           $where = array(
               'lender_id' => 1,
-              'borrower_id' => '100767'
+              'borrower_id' => '100767',
+              'loan_no' => $loanDetail->loan_no
           );
       
           $this->db->where($where);
