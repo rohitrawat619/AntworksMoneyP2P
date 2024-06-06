@@ -315,7 +315,7 @@ class Borroweraddmodel extends CI_Model
 		curl_close($curl);
 
 		$result = (array)json_decode($response);
-		
+		//pr($result);exit;
 		if($result['status'] == 1){
 			$arr_response = array(
                 'borrower_id' => $borrower_info['id'],

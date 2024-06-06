@@ -181,7 +181,8 @@ class Borrowerres extends REST_Controller
             $_POST = json_decode(file_get_contents('php://input'), true);
             $this->form_validation->set_rules('borrower_id', 'borrower_id', 'trim|required');
             $this->form_validation->set_rules('loan_id', 'loan_id', 'trim|required');
-
+			$method['disbursment_method'] = "";
+			
             if ($this->form_validation->run() == TRUE) {
                 $partner_id=$this->input->post('partner_id');
                 if ($partner_id!="" &&  $partner_id!=null && !empty($partner_id)) {
