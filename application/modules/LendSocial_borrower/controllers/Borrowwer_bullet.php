@@ -70,11 +70,18 @@ public function info(){
 		if($get_user_details['status']==0){
 			 redirect(base_url('LendSocial/').'personalDetails');
 		}
+
+
+    foreach($get_user_details['loan_details'] as $loan_detail){
+      if($loan_detail->disburse_amount == null && $loan_detail->disbursement_request == null && $loan_detail->disbursed_flag == null && $loan_detail->disbursement_date == null){
+        $this->setLoanId($loan_detail->loan_no);
+      }
+    }
+
+    
     $this->setBorrowerId($get_user_details['borrower_id']);
     
-
     $data['get_borrower_details']=$get_user_details;
-
     $this->load->view('template-LendSocial/header',$data);
 
     $this->load->view('credit_line/credit_line',$data);
