@@ -11,14 +11,12 @@ $account_status = "";
 	<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-8">
-		
-		<!--------end of surgeDiv------->
-			<div class="surge-plans" id="surgePlansDiv">
+			<div class="surge-plans">
 				<div class="row text-center">
 					<img src="<?php echo $logo_path; ?>" class="surgelogo">
 					<h2>Account Details</h2>
 				</div>
-				<form role="form" action="verifyKYC" method="post" class="f1"  onsubmit="return verifyKycStatusDiv();">
+				<form role="form" action="verifyKYC" method="post" class="f1"  onsubmit="return userFunctionvalidate()">
 					<div class="f1-steps">
 						<div class="f1-progress">
 							<div class="f1-progress-line" data-now-value="99.33333" data-number-of-steps="3" style="width: 99.33333%;"></div>
@@ -82,52 +80,12 @@ $account_status = "";
 				</form>
 				
 			</div>
-					<!--------end of surgeDiv------->
-			<!----------start of loader---------->
-			<div class="">
-		
-		
-			<div class="surge-plans" id="loaderDiv">
-				
-				
-				
-		
-
-					<div>
-						
-						<div class="col-md-12 col-xs-12 text-center">
-							<div class="form-group">
-								<img src="<?php echo "../document/surge/img/hourglass.gif"; ?>" class="surgelogo">
-							</div>
-							
-							<div class="text-center">
-					<h2 style="margin:0;">Please Wait...</h2>
-				</div>
-						</div>
-						
-						
-						
-						
-						
-						
-					</div> 
-				</div>
-					
-			
-		</div>
-				<!---------------endo of loader----------->
 		</div>
 	</div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-function verifyKycStatusDiv(){
-		$("#surgePlansDiv").hide();
-		$("#loaderDiv").show();
-		
-	}
 $(document).ready(function() {
-		$("#loaderDiv").hide();
 	$("#submitBtn").hide();
 	validateAccountNumbers();
     $('#account_number, #account_number_confirm').on('input', function() {

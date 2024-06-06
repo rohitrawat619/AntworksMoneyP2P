@@ -7,7 +7,7 @@
                 <form action="javascript: void(0)" class="otp-form" name="otp-form">
                     <div class="title">
                         <p class="otpverify">OTP Verification</p>
-                        <p class="otpinfo">An OTP has been sent to <?=$mobile; ?></p>
+                        <p class="otpinfo">An OTP has been sent to <?=substr_replace($mobile, str_repeat('*', 6), 0, 6); ?></p>
                         <p class="otpmsg">Please enter OTP to verify</p>
                     </div>
                     <div class="otp-input-fields">
@@ -27,6 +27,10 @@
     </div>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+
 <script>
     $(document).ready(function() {
         // Function to handle OTP input
@@ -74,7 +78,9 @@
                 },
                 success: function(response) {
                     console.log(response);
+					console.log("asdfghj");
                     var resp = JSON.parse(response);
+					console.log(resp)
                     if (resp.status == 1) {
                         window.location.href = 'e_sign_success';
                     } else {

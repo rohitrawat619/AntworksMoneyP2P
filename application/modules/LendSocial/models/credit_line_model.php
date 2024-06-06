@@ -9,6 +9,13 @@ public function __construct(){
 }
 
 
+/***************start of get borrower detail 2024-may-31********************/
+			function getAntBorrowerRatinDetails($borrower_id){
+				 $query = $this->db->get_where('ant_borrower_rating', array('borrower_id' => $borrower_id));
+        return $query->row_array(); // Return user details as an associative array
+			}
+				/**********************end of get borrower detail********************/
+
 public function registration_credit_line_1($postData){
 		//  echo "<pre>";	print_r($postData); die();
     $curl = curl_init();
@@ -254,8 +261,32 @@ public function viewLoanaggrement($borrower_id){
     return $response;
     
         }
+		
+		
+		public function get_video_kyc_status($borrower_id) {
+    $this->db->where('borrower_id', $borrower_id);
+    $this->db->select('step_8');
+    $this->db->from('p2p_borrower_steps_credit_line');
+    $query = $this->db->get()->row_array();
     
-        public function loan_eligiblity_status($borrower_id){
+    return $query;
+}
+
+
+	public function skip_video_kyc_status($borrower_id) {
+    $data = array(
+        'step_8' => 1 
+    );
+    $this->db->where('borrower_id', $borrower_id);
+    $this->db->update('p2p_borrower_steps_credit_line', $data);
+    
+    return; 
+}
+
+
+
+    
+        public function loan_eligiblity_status($borrower_id,$partner_id){
     
               $curl = curl_init();
     
@@ -269,7 +300,8 @@ public function viewLoanaggrement($borrower_id){
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
-          "borrower_id":"'.$borrower_id.'"
+          "borrower_id":"'.$borrower_id.'",
+		  "partner_id":"'.$partner_id.'"
       }',
       CURLOPT_HTTPHEADER => array(
         'Authorization: '.$this->authorization.'',
@@ -281,7 +313,7 @@ public function viewLoanaggrement($borrower_id){
       $response = curl_exec($curl);
     
       curl_close($curl);
-    // echo $response;
+     //echo $response;
     
     $response=(array)json_decode($response);
     return $response;
@@ -382,7 +414,7 @@ public function viewLoanaggrement($borrower_id){
     $response = curl_exec($curl);
     
     curl_close($curl);
-    // echo $response;
+   // echo $response;
     
     
     $response=(array)json_decode($response);
@@ -421,7 +453,7 @@ public function viewLoanaggrement($borrower_id){
     return $response;
       
         }
-        public function disbursement_request($borrower_id,$loan_id){
+        public function disbursement_request($borrower_id,$loan_id,$partner_id){
             
           $curl = curl_init();
     
@@ -436,6 +468,7 @@ public function viewLoanaggrement($borrower_id){
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS =>'{
             "borrower_id":"'.$borrower_id.'",
+			"partner_id":"'.$partner_id.'",
               "loan_id":"'.$loan_id.'"
           }',
           CURLOPT_HTTPHEADER => array(
@@ -449,10 +482,10 @@ public function viewLoanaggrement($borrower_id){
           
           curl_close($curl);
           
-    // echo $response;
+     echo $response;
     
     $response=(array)json_decode($response);
-    return $response;
+    //return $response;
     
         }
     
@@ -490,6 +523,40 @@ public function viewLoanaggrement($borrower_id){
         }
     
         // Credit-line Api Ends
+		
+		 public function get_loan_plans($where){
+         
+          $query=$this->db->get_where('partner_loan_plan',$where);
+         
+          if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return false;
+        } 
+      }
+	  
+	          public function updateLoanDetails($loanDetail) {
+				  $loanDetail_arr = $loanDetail[0];
+				//  echo"<pre>"; print_r($loanDetail); die();
+				  
+          $loanDetails = array(
+              'approved_loan_amount' => $loanDetail_arr['amount'],
+              'approved_interest' => $loanDetail_arr['interest'],
+              'approved_tenor_days' => $loanDetail_arr['tenor']
+          );
+      
+          $where = array(
+              'borrower_id' => $loanDetail['borrower_id'],
+              'loan_no' => $loanDetail['loan_no'],
+          );
+      
+          $this->db->where($where);
+      
+          $this->db->update('p2p_loan_list', $loanDetails);
+
+            return 222221;
+          
+      }
 
 }
 ?>

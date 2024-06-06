@@ -12,7 +12,7 @@ echo phpinfo()."--------------"; */
 		<div class="col-md-2 col-sm-12 text-center"></div>
 		<div class="col-md-8 col-sm-12 text-center">
 			<div class="surge-success">
-				<img src="<?php echo $logo_path; ?>" class="surgeant-icon">
+				<img src="<?php echo $sub_logo_path; ?>" class="surgeant-icon">
 				<h2 class="success-">Sign In</h2>
 			<!--	<form role="form" action="" method="post"> ---->
 				<form role="form" action="otp" method="post" onsubmit="return validateMobileNumber();" id="otpForm">

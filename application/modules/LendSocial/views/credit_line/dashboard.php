@@ -2,7 +2,7 @@
 <section class="container">
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
-			<div class="creditloan-box">
+			<div class="creditloan-box" style="padding-bottom: 85px;">
 				<h2 class="creditloan-box-hd">Antpay Credit Line</h2>
 				<ul class="creditloan-dtls bordr-btm">
 					<li>Available Limit<span>Rs. <?=$loan_details['available_limit']?></span></li>
@@ -63,6 +63,7 @@
 
 
 <script>
+
 $(document).ready(function() {
     $('.maincreditline-btn').on('click', function(event) {
         event.preventDefault();
@@ -77,7 +78,7 @@ $(document).ready(function() {
 				var resp =  JSON.parse(response);
                 // Process the response data
                 alert(resp.msg); // Log the response for testing
-				location.reload();
+				//location.reload();
                 // You can update the HTML or perform actions based on the response here
             },
             error: function(xhr, status, error) {

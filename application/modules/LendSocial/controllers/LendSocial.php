@@ -1,55 +1,49 @@
 <?php
 
 class LendSocial extends CI_Controller
-{			private $vendor_id;
-	public function __construct()
-	{
-		parent::__construct();
-	//	$this->surgeInvestmentDynamiCss();
-		$this->load->model('LendSocialmodel');
-		$this->load->model('credit_line_model');
-		$this->load->model('login/Loginmodel');
-		$this->load->helper('url');
-	//	$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
-		//$this->load->library('form_validation');
-		$this->load->helper('custom');
-		$this->load->helper('cookie');
-		//$this->load->library('pagination');
-		$this->vendor_id = 1;
-		error_reporting(0);
-				//	$database_name = $this->cldb->database;
-			//	echo "Database Name: ".$database_name;
-		//	$this->check_role();
-		//echo base64_decode($this->input->get('p'));
-		 if($this->input->get('q')!=""){
-					$this->setCookieData($this->input->get('q'),"firstBlock",$this->input->get('p'));
-					 }
-		$this->sessionVariableData = $this->session->userdata();
-				if($this->sessionVariableData['partner_id']==""){
-					$userCookieValue = $this->input->cookie('partner_id');
-					$lenderSocialProductType = $this->input->cookie('lenderSocialProductType');
-					$this->setCookieData($userCookieValue,"secondBlockCookieSet",$lenderSocialProductType);
-				}
-				$this->sessionVariableData = $this->session->userdata();
-			//	print_r($this->sessionVariableData['lenderSocialProductType']); //borrowerBullet/lender/borrowerEmi 
-				
-		// print_r($this->sessionVariableData);
-	//	 $this->session->sess_destroy();
-				$this->sessionData = $this->LendSocialmodel->getUserDetail($this->sessionVariableData['mobile']);
-			
-				
-				if($this->sessionData['partners_id']==""){
-				$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);
-				}else{
-					$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);//$this->sessionData['partners_id']);
-				}
-				
-			////	print_r($partnerInfo['partner_id']);
-					$partnerInfo['logo_path'] =	str_replace('D:/public_html/antworksp2p.com','../../',$partnerInfo['logo_path'])."?q=".rand();
-						$this->partnerInfo = $partnerInfo;
-					
-					//print_r($this->sessionVariableData);
-	}
+			  {		     	private $vendor_id;
+							public function __construct()
+							{
+							parent::__construct();
+							//	$this->surgeInvestmentDynamiCss();
+							$this->load->model('LendSocialmodel');
+							$this->load->model('credit_line_model');
+							$this->load->model('login/Loginmodel');
+							$this->load->helper('url');
+							//	$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
+							//$this->load->library('form_validation');
+							$this->load->helper('custom');
+							$this->load->helper('cookie');
+							//$this->load->library('pagination');
+							$this->vendor_id = 1;
+							error_reporting(0);
+							if($this->input->get('q')!="" && $this->input->get('p')!=""){
+							$this->setCookieData($this->input->get('q'),"firstBlock",$this->input->get('p'));
+							}
+							$this->sessionVariableData = $this->session->userdata();
+							if($this->sessionVariableData['partner_id']==""){
+							$userCookieValue = $this->input->cookie('partner_id');
+							$lenderSocialProductType = $this->input->cookie('lenderSocialProductType');
+							$this->setCookieData($userCookieValue,"secondBlockCookieSet",$lenderSocialProductType);
+							}
+							$this->sessionVariableData = $this->session->userdata();
+							//	print_r($this->sessionVariableData['lenderSocialProductType']); //borrowerBullet/lender/borrowerEmi 
+
+							$this->sessionData = $this->LendSocialmodel->getUserDetail($this->sessionVariableData['mobile']);
+
+
+							if($this->sessionData['partners_id']==""){
+							$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);
+							}else{
+							$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);//$this->sessionData['partners_id']);
+							}
+							
+							$partnerInfo['logo_path'] =	"../..//document/surge/upload/vendor/1/lend-social-logo-300x77(1).png"."?q=".rand();
+							$this->partnerInfo = $partnerInfo;
+							$this->lender_logo_path = str_replace('D:/public_html/antworksp2p.com','../../',$partnerInfo['lender_logo_path'])."?q=".rand(); 
+							$this->borrower_logo_path = str_replace('D:/public_html/antworksp2p.com','../../',$partnerInfo['borrower_logo_path'])."?q=".rand();
+						
+							}
 
 		
 	
@@ -60,20 +54,26 @@ class LendSocial extends CI_Controller
 			$this->load->view('dashboard',$data);
 		}
 		
-			public function signIn(){
-					// $this->session->sess_destroy();
-					
-				 if($this->partnerInfo['partner_id']==""){ echo"<h2>Invalid Url</h2>"; exit();	 }
-				 
-			
-			
-			$data['logo_path'] = $this->partnerInfo['logo_path']; //".a./document/surge/img/surge-logo.png";
-		//	print_r($data); die();
-			$this->load->view('template-LendSocial/header',$data);
-			$this->load->view('signIn',$data);
-			$this->load->view('template-LendSocial/footer',$data);
-			
-		}
+						public function signIn(){
+						// $this->session->sess_destroy();
+
+						if($this->partnerInfo['partner_id']==""){ echo"<h2>Invalid Url</h2>"; exit();	 }
+
+
+							//print_r($this->sessionVariableData);
+							if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+							$data['sub_logo_path'] = $this->borrower_logo_path;
+							}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
+							$data['sub_logo_path'] = $this->lender_logo_path;
+							}
+
+							$data['logo_path'] = $this->partnerInfo['logo_path']; //".a./document/surge/img/surge-logo.png";
+							$this->load->view('template-LendSocial/header',$data);
+							$this->load->view('signIn',$data);
+							$this->load->view('template-LendSocial/footer',$data);
+
+						}
+						
 					public function sendLendSocialOtp(){
 						return $this->Loginmodel->sendLendSocialOtp();
 								}
@@ -81,16 +81,27 @@ class LendSocial extends CI_Controller
 					public function otp(){
 				
 			
+			if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+				$data['sub_logo_path'] = $this->borrower_logo_path;
+			}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
+				$data['sub_logo_path'] = $this->lender_logo_path;
+			}
+			
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			
 			$this->load->view('template-LendSocial/header',$data);
 			$data['mobile'] = $this->input->post('mobile');
 				$mobile = substr($this->input->post('mobile'),0,10);
 				if($mobile!=""){
 				$this->session->set_userdata(array("mobile"=>$mobile));
-				$this->sendLendSocialOtp();
-				
+				$jsondaaaa = json_decode($this->sendLendSocialOtp(),true);
+				if(isset($jsondaaaa['errors'])){
+				$otpSentStatusMsg = $jsondaaaa['errors'][0]['message'];
+				}else{
+					$otpSentStatusMsg = "An otp has been sent to ******".substr(($mobile!=''?$mobile:$this->sessionData["mobile"]),6).".";
 				}
-					$data['lists']['otpMsg'] = 	"An otp has been sent to ******".substr(($mobile!=''?$mobile:$this->sessionData["mobile"]),6).".";
+				}
+					$data['lists']['otpMsg'] = 	$otpSentStatusMsg;
 					$this->load->view('otp',$data);
 				
 			$this->load->view('template-LendSocial/footer',$data);
@@ -120,13 +131,13 @@ class LendSocial extends CI_Controller
 			 redirect(base_url('LendSocial/').'personalDetails');
 		}else{ 
 										$updateUserBorrowerIdIdStatus = $this->LendSocialmodel->updateUserBorrowerId($this->sessionData["id"],$this->sessionData["mobile"],$get_user_details['borrower_id'],$this->sessionVariableData['partner_id'],"-",$get_user_details);
+				redirect(base_url('LendSocial/').'get_registration_fee_status');						
 				redirect(base_url('LendSocial/').'Borrowwer_bullet/info');
 		}
 										
 									}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
 									/******************start of lender logic**************/
-			//	$kycStatus =  json_decode($this->LendSocialmodel->getKycStatus($this->sessionData["mobile"]),true);
-			//	echo $this->sessionData["mobile"].$this->sessionVariableData['partner_id']; //die(); //$this->sessionVariableData['partner_id']; die();
+
 				$kycStatus =  json_decode($this->LendSocialmodel->getKycStatus($this->sessionData["mobile"],$this->sessionVariableData['partner_id']),true);
 					//print_r($kycStatus); die();
 					//print_r($kycStatus); die();
@@ -152,6 +163,7 @@ class LendSocial extends CI_Controller
 							redirect(base_url('LendSocial/').'surgeInvestmentPlans');
 							
 								}else if($kycStatus['kyc_status']['step']==3){ // atleast one payment done
+								redirect(base_url('LendSocial/').'get_registration_fee_status');
 										redirect(base_url('LendSocial/').'lenderDashboard');
 									}
 							/***************end of lender logic***************/
@@ -173,9 +185,11 @@ class LendSocial extends CI_Controller
 
 				
 		//$this->load->view('template-LendSocial/nav');
+		$data['lender_logo_path'] = $this->lender_logo_path;
 		$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
-		$data['lists']['scheme_id'] = $scheme_id;
+		//$data['lists']['scheme_id'] = $scheme_id;
+		$data['lists'] = $this->input->post();
 		$this->load->view('investmentAmount',$data);
 			$this->load->view('template-LendSocial/footer',$data);
 		}
@@ -228,7 +242,7 @@ class LendSocial extends CI_Controller
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 			$data['lists']['investmentList'] = json_decode($this->LendSocialmodel->getInvestmentList($this->sessionData["mobile"],$this->sessionData["lender_id"]),true); // getInvestmentList($mobile,$lender_id)
-			
+			//  echo "<pre>"; print_r($data['lists']['investmentList']); die();
 			$data['lists']['sessionData'] = $this->sessionData;
 			$this->load->view('lenderDashboard',$data);
 			$this->load->view('template-LendSocial/footer',$data);
@@ -283,6 +297,7 @@ class LendSocial extends CI_Controller
 		//$this->load->view('template-LendSocial/footer');
 		$this->load->view('template-LendSocial/footer',$data);
 				}
+				
 				
 						public function otpAadhaar(){
 						$this->checkSessionMobileNo();
@@ -426,6 +441,7 @@ class LendSocial extends CI_Controller
 						//	print_r($kycStatus); die();
 							
 										/************starting of Bank KYC***********/
+										
 								if($kycStatus['status'] == 2){
 							if($allInOneKycStatus['bank_kyc']['status']==1){
 								$kycStatus['status'] = 2;
@@ -479,9 +495,9 @@ class LendSocial extends CI_Controller
 												$updateBorrowerDetailResp =	$this->credit_line_model->update_borrower_details($postData);
 											//	echo"<pre>"; print_r($updateBorrowerDetailResp);	 die();
 												
-												if($updateBorrowerDetailResp['borrower_status']==0){
+												if($updateBorrowerDetailResp['borrower_status']=='3434343'){
 												$kycStatus['status'] = 0;
-												$kycStatus['msg'] = $updateBorrowerDetailResp['error_msg'];
+												$kycStatus['msg'] = "Borrower: `".$updateBorrowerDetailResp['error_msg'];
 												}
 												
 											$getUserDetailResp['aadhaar_status'] = $kycStatus['aadhar_kyc'];
@@ -616,9 +632,11 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 		
 
 			public function surgeInvestmentPlans(){
-				
+				//echo $this->lender_logo_path;
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['lender_logo_path'] = $this->lender_logo_path;
+			$data['borrower_logo_path'] = $this->borrower_logo_path;
 		$this->load->view('template-LendSocial/header',$data);
 		
 				$data['lists']['allSchemeList'] = json_decode($this->LendSocialmodel->getAllSchemes($this->sessionData["mobile"],$this->partnerInfo['partner_id']),true); // getAllSchemes($mobile,$partner_id)
@@ -627,9 +645,114 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 		//print_r($data);
 				}
 		
+		public function get_registration_fee_status(){
+			
+			$userType = $this->sessionVariableData['lenderSocialProductType'];
+			
+			if($userType=="borrowerBullet"){ // 
+				$transactionType = "borrowerRegistrationFee";
+				$user_id = $this->sessionData['borrower_id'];
+				$feeStatusFieldName  = "borrower_fee_paid_status";
+				
+						/*************starting of borrower rating**********/
+						$postData['borrower_id'] = $user_id;
+						$postData['mobile'] = $this->sessionData['mobile'];
+						$postData['partner_id'] = $this->sessionData['partners_id'];
+						$antBorrowerRatingResp = $this->credit_line_model->getAntBorrowerRatinDetails($user_id);
+						//print_r($antBorrowerRatingResp['id']);  die();
+						if($antBorrowerRatingResp['id']==""){
+							
+							$updateBorrowerDetailResp =	$this->credit_line_model->update_borrower_details($postData);
+						////print_r($updateBorrowerDetailResp);  die();
+						}
+
+							/****************end of borrower rating****************/
+														
+			}else if($userType=="lender"){
+				$transactionType = "lenderRegistrationFee";
+				$user_id = $this->sessionData['lender_id'];
+				$feeStatusFieldName  = "lender_fee_paid_status";
+			}
+			
+			//  echo"Hello";	
+		$resp = $this->LendSocialmodel->get_registration_fee_status($userType,$user_id,$transactionType);
+		$feeStructureMasterData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],$userType);
+		  //print_r($resp); die();
+	//	print_r($resp); die();
+		
+		if(!empty($resp[0]) && isset($resp[0])){
+			
+			//echo "inside"; die();
+			if($userType=="lender"){
+			//redirect(base_url('LendSocial/').'surgeInvestmentPlans');
+			redirect(base_url('LendSocial/').'lenderDashboard');
+			}else if($userType=="borrowerBullet"){
+				redirect(base_url('LendSocial/').'Borrowwer_bullet/info');
+			}
+			
+		}else{
+			
+			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($feeStructureMasterData[0]['partner_registration_fee_charges'],$this->sessionVariableData['mobile']),true);
+		
+		
+		$transFeeStructureData['user_type'] = $userType; // field name
+		$transFeeStructureData['transactionType'] = $transactionType; // field name
+		$transFeeStructureData['user_id'] = $user_id; // field name
+		$data['lists']['transFeeStructureData'] = $transFeeStructureData;
+		//print_r($data['lists']['transFeeStructureData']); die();
+		
+			$data['lists']['generateOrderResp'] = $generateOrderResp;
+			$data['lists']['sessionData'] = $this->sessionData;
+			$data['logo_path'] = $this->partnerInfo['logo_path'];
+		$this->load->view("template-LendSocial/header",$data);
+		$this->load->view("getRegistrationFeeStatus",$data);
+		$this->load->view("template-LendSocial/footer");
+		}
+		
+		
+		
+		
+		
+		
+		}
+		
+		public function getRegistrationFeeStatusProcessing(){
+					$resp =	$this->LendSocialmodel->saveRegistrationFee();
+					
+					redirect(base_url('LendSocial/').'get_registration_fee_status');
+					
+		}
+		
+		public function investmentAmountPreview(){ //2024-april-26 Not yet implemented
+				
+						$this->checkSessionMobileNo();
+			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			//echo "<pre>"; print_r($this->sessionData);
+			$userType = $this->sessionVariableData['lenderSocialProductType'];
+			
+			if($userType=="borrower"){
+				$transactionType = "borrowerRegistrationFee";
+				$user_id = $this->sessionData['borrower_id'];
+			}else if($userType=="lender"){
+				$transactionType = "lenderRegistrationFee";
+				$user_id = $this->sessionData['lender_id'];
+			}
+				$partner_id = "1";
+			$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($partner_id,$userType); // userType: borrower/lender
+		//	echo"<pre>"; print_r($feeStructureData);
+		$this->load->view('template-LendSocial/header',$data);
+		
+		$this->load->view('investmentAmountPreview',$data);
+		$this->load->view('template-LendSocial/footer',$data);
+		//print_r($data);
+				}
+		
 		public function sign_out(){
-						$this->session->sess_destroy();
-				redirect(base_url('LendSocial/') . 'signIn?q='.base64_encode(base64_encode($this->sessionData['partners_id'])).'&p='.base64_encode($this->sessionVariableData['lenderSocialProductType']));
+		
+		$this->session->sess_destroy();
+			redirect(base_url('LendSocial/') . 'signIn?q='.base64_encode(base64_encode($this->sessionVariableData['partner_id'])).'&p='.base64_encode($this->sessionVariableData['lenderSocialProductType']));
+					//	$this->session->sess_destroy();
+				//  redirect(base_url('LendSocial/') . 'signIn?q='.base64_encode(base64_encode($this->sessionData['partners_id'])).'&p='.base64_encode($this->sessionData['lenderSocialProductType']));
 		}
 		
 		public function checkSessionMobileNo(){
@@ -648,7 +771,7 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 				    // Set a cookie expires in 1 hour (3600 seconds)
 					$cookie = array('name'=>'partner_id','value'=>"",'expire'=> time() - 3600,'path'   => '/',);
 					$this->input->set_cookie($cookie);
-					$cookie = array('name'=>'partner_id','value'=>$p,'expire'=> time() + 3600,'path'   => '/',);
+					$cookie = array('name'=>'partner_id','value'=>$q,'expire'=> time() + 3600,'path'   => '/',);
 					$this->input->set_cookie($cookie);
 						}
 						/******************lenderSocialProductType*****************/
@@ -670,21 +793,26 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 			
         // You can generate dynamic CSS content here
         // For example, change background color dynamically
-        $backgroundColor = "#c5e6eb";
+        $backgroundColor = "#5b3583"; //"#c5e6eb";
 		$buttonBackgroundColor = $this->partnerInfo['background_color']; //"#b61e37";
-		$headerColor = $this->partnerInfo['color']; 
+		$headerColor = "white"; //$this->partnerInfo['color']; 
 		$redeembtncolor = $buttonBackgroundColor; //"#3a9cd9";
 		$font_family = $this->partnerInfo['font_family'];
+		$hoverColor = "#402062";
+		$buttonDisabledColor = "#b4b2b6";
 		//  $css = "body{font-family:'$font_family'}
         // Your dynamic CSS rules
         $css = "body{font-family: Helvetica Neue,Helvetica,Arial,sans-serif;}
 		.surge-redeem-btn-color{background-color:$redeembtncolor; padding:12px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius: 30px !important;
   border: none;}
+  .signout-btn {color: #c8062b; margin-top: 15px; font-weight: bold;}
+  .surge-redeem-btn-disabled-color{background-color:$buttonDisabledColor; padding:12px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius: 30px !important;
+  border: none;}
 		.surgebg {background:$backgroundColor; padding:80px 30px;}
 .surgelogo {max-width:220px; margin-bottom:50px;}
 .main-headr {font-size: 30px; font-weight:600; margin-bottom:0;}
 .main-subheadr {font-size: 18px; font-weight:400;}
-.sub-subheadr {font-size: 18px; font-weight:400;}
+.sub-subheadr {font-size: 18px; font-weight:400; color:#fff;}
 .mainsurge-plans {padding:60px 0;}
 .surge-plans {width:100%; float:left; min-height: 345px; position:relative; padding:30px; margin-bottom:30px; border-radius:8px; border:1px solid #e1e1e1; box-shadow:1px 1px 10px 5px #e8e8e8;}
 .surge-badge {position:absolute; right:15px; top:15px;}
@@ -694,7 +822,7 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 .surge-plans li {font-size:14px; font-weight:400; margin:0 0 10px 0; display:block;}
 .surge-plans-btn {background:$buttonBackgroundColor; padding:12px 60px; margin-top:5px; color:#fff; display: inline-block; border-radius: 30px !important;
   border: none;}
-.surge-plans-btn:hover {background:#7eb3bb; color:#fff;}
+.surge-plans-btn:hover {background:$hoverColor; color:#fff;}
 .remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
 .surge-plans .f1 fieldset {margin-top:15px;}
 .surgeant-icon {max-width:190px; margin-bottom:15px;}
@@ -716,6 +844,7 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 .invest-details {margin:0; padding:0;}
 .invest-details li {width:50%; float:left; list-style:none; font-size:16px; padding:5px 15px 5px 0;}
 .invest-details li span {display:block;}
+.registrationfee-txt {font-size: 18px; color:#000; font-weight:400; margin-bottom:15px;}
 
 @media(max-width:767px){
 .surgelogo {max-width:220px; margin-bottom:30px;}
@@ -864,25 +993,25 @@ ul {margin:0; padding:0;}
 .maincreditline ul {padding:0 0 0 15px;}
 .maincreditline h2 {font-size:24px; font-weight:bold; margin:0 0 20px 0;}
 .maincreditline li {font-size:18px; font-weight:400; margin:0 0 10px 0; display:block;}
-.maincreditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
-.maincreditline-btn:hover {background:#7eb3bb; color:#fff;}
+.maincreditline-btn {background:$buttonBackgroundColor; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.maincreditline-btn:hover {background:$hoverColor; color:#fff;}
 .remarks-txt {font-size:11px; margin-top:10px; display: inline-block;}
 .maincreditline .f1 fieldset {margin-top:15px;}
-.creditline-icon {max-width:360px; margin-bottom:30px;}
+.creditline-icon {max-width:360px; width:100%; margin-bottom:30px;}
 .creditline-sucs {max-width:160px; margin-bottom:30px;}
 .creditline-waittxt {font-size: 24px; color:#0d8c03; font-weight:600;}
 .creditline-p {font-size: 18px; color:#333; font-weight:600;}
 .creditline-success {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:50px 0;}
-.creditline-btn {background:#26499a; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
-.creditline-btn:hover {background:#7eb3bb; color:#fff;}
+.creditline-btn {background:$buttonBackgroundColor; padding:15px 60px; margin-top:15px; color:#fff; display: inline-block; border-radius:30px;}
+.creditline-btn:hover {background:$hoverColor; color:#fff;}
 .creditloan-dtls {width:100%; float:left;}
 .creditloan-dtls li {display:inline-block; width:50%; float:left; padding:15px 0; font-size:16px;}
 .creditloan-dtls li span {display:block; font-weight:bold; font-size:20px;}
 .e-signbox-loanbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:30px 30px; margin:50px 0;}
 .e-signbox {border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:10px 0 10px 0;}
 .e-signbox-txt {max-height:500px; overflow-y: scroll;}
-.e-signbox-btn {background:#26499a; padding:15px 60px; margin-top:10px; margin-bottom:50px; color:#fff; display: inline-block; border-radius:30px;}
-.e-signbox-btn:hover {background:#7eb3bb; color:#fff;}
+.e-signbox-btn {background:$buttonBackgroundColor; padding:15px 60px; margin-top:10px; margin-bottom:50px; color:#fff; display: inline-block; border-radius:30px;}
+.e-signbox-btn:hover {background:$hoverColor; color:#fff;}
 .signbox-p {font-size: 18px; color:#333; font-weight:600; margin:0;}
 .creditloan-box {background:#a0cfd7; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:50px 30px; margin:30px 0 0 0;}
 .creditloan-box-hd {font-size: 24px; color:#333; font-weight:600; margin:0;}

@@ -3,69 +3,47 @@
 
 .e-signbox-loanbox-active {background: #5b3583; color: #fff;}
 </style>
+
+
+<?php
+function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) {
+    
+    $timeInYears = $timeInDays / 365;
+
+    $interest = ($principal * $annualInterestRate * $timeInYears) / 100;
+    $repaymentAmount= $principal + $interest;
+    return ceil($repaymentAmount);
+    
+}
+
+//print_r($partner_loan_plans); die();
+?>
 <section class="container">
-    <h3><center>choose your loan option</center></h3>
 <div class="row">
+    <h3><center>choose your plan</center></h3>
+
+<?php foreach($partner_loan_plans as $partner_loan_plan) {?>
 
 <div class="col-md-4 col-xs-12">
 
 <div class="e-signbox-loanbox">
 
-                <ul class="creditloan-dtls">
+                <ul class="creditloan-dtls" data-id="<?=$partner_loan_plan['id']?>">
 
-                                <li>Amount Approved<span>Rs. 2500</span></li>
+                                <li>Amount Approved<span>Rs. <?=$partner_loan_plan['amount']?></span></li>
 
-                                <li>Loan Tenure<span>30 Days</span></li>
+                                <li>Loan Tenure<span><?=$partner_loan_plan['tenor']?> Days</span></li>
 
-                                <li>Repayment Amount<span>Rs. 2550</span></li>
+                                <li>Repayment Amount<span>Rs. <?php echo calculateRepaymentAmount($partner_loan_plan['amount'],$partner_loan_plan['interest'],$partner_loan_plan['tenor']); ?></span></li>
 
-                                <li>Interest Rate<span>2%</span></li>
-
-                </ul>
-
-</div>
-
-</div>
-
-<div class="col-md-4 col-xs-12">
-
-<div class="e-signbox-loanbox">
-
-                <ul class="creditloan-dtls">
-
-                                <li>Amount Approved<span>Rs. 2500</span></li>
-
-                                <li>Loan Tenure<span>60 Days</span></li>
-
-                                <li>Repayment Amount<span>Rs. 2600</span></li>
-
-                                <li>Interest Rate<span>2%</span></li>
+                                <li>Interest Rate<span><?=$partner_loan_plan['interest']?>%</span></li>
 
                 </ul>
 
 </div>
 
 </div>
-
-<div class="col-md-4 col-xs-12">
-
-<div class="e-signbox-loanbox e-signbox-loanbox">
-
-                <ul class="creditloan-dtls ">
-
-                                <li>Amount Approved<span>Rs. 2500</span></li>
-
-                                <li>Loan Tenure<span>90 Days</span></li>
-
-                                <li>Repayment Amount<span>Rs. 2650</span></li>
-
-                                <li>Interest Rate<span>2%</span></li>
-
-                </ul>
-
-</div>
-
-</div>
+<?php } ?>
 
 </div>
 
@@ -94,43 +72,40 @@
     $(document).ready(function() {
 
         $('.e-signbox-loanbox').click(function() {
-            // Remove the active class from all boxes
             $('.e-signbox-loanbox').removeClass('e-signbox-loanbox-active');
-            // Add the active class to the clicked box
             $(this).addClass('e-signbox-loanbox-active');
         });
 
 
         $('#eSignButton').click(function(e) {
-            e.preventDefault(); // Prevent the default behavior of the anchor tag
+            e.preventDefault(); 
 			console.log("button clicked");
 
+
             var selectedBox = $('.e-signbox-loanbox-active');
+            
             if (selectedBox.length === 0) {
                 alert('Please select a loan option before proceeding.');
                 return;
             }
 
-            var data = {
-                amountApproved: selectedBox.find('li:contains("Amount Approved") span').text(),
-                loanTenure: selectedBox.find('li:contains("Loan Tenure") span').text(),
-                repaymentAmount: selectedBox.find('li:contains("Repayment Amount") span').text(),
-                interestRate: selectedBox.find('li:contains("Interest Rate") span').text()
-            };
+            var selectedId=selectedBox.find('.creditloan-dtls').data('id');
 
-            console.log("Selected Box Data:", data);
-            return false;
-
-            // Perform AJAX call when the button is clicked
+            // console.log("Selected Box Data:", data);
+            // return;
+           
             $.ajax({
-                url: 'e_sign_send_otp_ajax', // Replace with the actual PHP file handling the OTP sending logic
+                url: 'e_sign_send_otp_ajax',
                 type: 'POST',
+                data: {
+                    selectedId: selectedId
+                }, 
                 success: function(response) {
 					console.log(response);
-					var resp =  JSON.parse(response);
-					if(resp.status==1){
-						window.location.href = 'otp';
-					}
+					// var resp =  JSON.parse(response);
+					// if(resp.status==1){
+					// 	window.location.href = 'otp';
+					// }
 					// window.location.href = 'otp';
                     // if (response.status === 'success') {
                     //     // Handle success response, for example, display a success message

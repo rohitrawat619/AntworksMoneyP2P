@@ -8,7 +8,7 @@ $mobile = $this->session->userdata("mobile");
 		<div class="col-md-2 col-sm-12 text-center"></div>
 		<div class="col-md-8 col-sm-12 text-center">
 			<div class="surge-success">
-				<img src="<?php echo $logo_path; ?>" class="surgeant-icon">
+				<img src="<?php echo $sub_logo_path; ?>" class="surgeant-icon">
 				<form action="verifyOtp" class="otp-form" method="post" name="otp-form">
 				  <div class="title">
 					<p class="otpverify">OTP Verification</p>

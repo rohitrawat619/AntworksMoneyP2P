@@ -17,7 +17,7 @@ $investmentData = $lists['investmentList'];
 				</div>
 			</div>
 		</div>
-		<div class="col-md-12 col-xs-12"><a href="sign_out">Sign Out</a>
+		<div class="col-md-12 col-xs-12">
 		<h2 class="dash-hd">Investment More</h2>
 			<div class="surge-list text-center">
 				<p class="moreinvest">You are eligible for more investment options</p>
@@ -44,8 +44,40 @@ $investmentData = $lists['investmentList'];
 						<li>Interest Value <span><?php echo $current_investment['final_interest']; ?></span></li>
 						<li>Investment Date <span><?php echo $current_investment['investment_date']; ?></span></li>
 						<li>Investment Rate <span><?php echo $current_investment['hike_rate']; ?></span></li>
+						<?php
+						
+							//$current_investment['lockin_period'] = 2;
+							$redemptionDate = date('Y-m-d', strtotime($current_investment['investment_date'] . ' +'.$current_investment['lockin_period'].' days')); // Adding 40 days
+							$investment_date = date('Y-m-d',strtotime($current_investment['investment_date']));
+							$redemptionRequest = "";
+						//	echo "<br>Redemption Date".$redemptionDate;
+
+							
+							
+							
+							
+							$difference_seconds = strtotime($redemptionDate)-strtotime(date('Y-m-d'));
+
+											// Convert seconds to days
+											$difference_days = floor($difference_seconds / (60 * 60 * 24));
+
+											//echo "Difference: " . $difference_days . " days";
+											
+									
+						?>
 					</ul>
-				<div class=""><input type="submit" value="Redeem" class=" surge-redeem-btn-color"></div>
+					<?php if($difference_days>=0){
+												$redemptionRequest = "<span style='color:red;font-size:11px;'><b>Note:</b> Redemption can be done after: " . date('d-M-Y',strtotime($redemptionDate))."</span>";
+
+											?>
+											
+
+				<div class=""><input type="Button" style="cursor:not-allowed;" value="Redeem" class="surge-redeem-btn-disabled-color"> <?php echo"<b>".$redemptionRequest."</b>"; ?></div>
+				<?php }else{
+					?>
+					<div class=""><input type="submit" value="Redeem" class=" surge-redeem-btn-color"><?php echo"<b>".$redemptionRequest."</b>"; ?></div>
+					<?php
+				} ?>
 				</div>
 						<input type="hidden" name="investment_no" value="<?php echo $current_investment['investment_No']; ?>" id="investment_no"  >
 						

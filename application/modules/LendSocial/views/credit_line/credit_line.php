@@ -1,8 +1,13 @@
 <?php
 error_reporting(0);
-if($get_borrower_details['current_step_details']->step=="ALL STEPS DONE"){
+if($get_borrower_details['current_step_details']->step=="ALL STEPS DONE" || $get_borrower_details['current_step_details']->step=="DISBURSMENT PENDING"){
 	$link='dashboard';
 }
+
+else if($get_borrower_details['current_step_details']->step=="LOAN AGREEMENT" || $get_borrower_details['current_step_details']->step=="E SIGN") {
+	$link="e_sign";
+}
+
 else{
 	$link='waiting';
 }
@@ -20,7 +25,7 @@ else{
 		</div>
 		<div class="col-md-4 col-xs-4 text-center">
 			<img src="<?php echo $imageBaseUrl; ?>/withdraw.png" class="topfeature">
-			<p class="creditline-subheadr">Instant Credit Decesining</p>
+			<p class="creditline-subheadr">Instant Credit Decisioning</p>
 		</div>
 		<div class="col-md-4 col-xs-4 text-center">
 			<img src="<?php echo $imageBaseUrl; ?>/deposit.png" class="topfeature">
