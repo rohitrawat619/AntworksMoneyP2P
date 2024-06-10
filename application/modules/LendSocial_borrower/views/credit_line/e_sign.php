@@ -100,10 +100,10 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
                 }, 
                 success: function(response) {
 					console.log(response);
-					// var resp =  JSON.parse(response);
-					// if(resp.status==1){
-					// 	window.location.href = 'otp';
-					// }
+					var resp =  JSON.parse(response);
+					if(resp.status==1){
+						window.location.href = 'otp';
+					}
 					// window.location.href = 'otp';
                     // if (response.status === 'success') {
                     //     // Handle success response, for example, display a success message
