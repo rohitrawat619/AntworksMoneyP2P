@@ -47,11 +47,15 @@ class Borrowerinfomodel extends CI_Model
 				}if($result['disbursement_date'] && date('d-m-Y') > date('d-m-Y', strtotime($result['disbursement_date']. ' + 1 months'))){
 				 $due_status = 'Over due';	
 				}
-				if($result['approved_tenor']!=0){
+				if($result['approved_tenor_days']==""){
+					$tenureType = "Month";
+					$tenure = $result['approved_tenor'];
 					$repaymentAmount = $result['approved_loan_amount'] + ($result['approved_loan_amount'] * $result['approved_interest'])/100;
 				}
 				else{
-					$repaymentAmount = calculateRepaymentAmountInDays($result['approved_loan_amount'],$result['approved_interest'],$result['approved_tenor_days']);
+					$tenureType = "Days ";
+					$tenure = $result['approved_tenor_days'];
+					$repaymentAmount = $this->calculateRepaymentAmountInDays($result['approved_loan_amount'],$result['approved_interest'],$result['approved_tenor_days']);
 				}
 				
 				$loan[] = array(
@@ -60,7 +64,7 @@ class Borrowerinfomodel extends CI_Model
 					'borrower_disbursement_request' => $result['disbursement_request'],
 					'disburse_amount' => $result['approved_loan_amount'],
 					'approved_interest' => $result['approved_interest'] . '%',
-					'approved_tenor' => $result['approved_tenor'] . ' Month',
+					'approved_tenor' => $tenure . $tenureType,//' Month',
 					'disbursement_date' => $result['disbursement_date'] ?date("Y-m-d",strtotime($result['disbursement_date'])):null,
 					'repayment_amount' => $repaymentAmount,
 					'repayment_date' => $result['disbursement_date'] ? date('d-m-Y', strtotime($result['disbursement_date']. ' + 1 months')) : $result['disbursement_date'],
