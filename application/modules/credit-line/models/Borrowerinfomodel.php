@@ -7,6 +7,16 @@ class Borrowerinfomodel extends CI_Model
 		parent::__construct();
 	}
 
+	public function calculateRepaymentAmountInDays($principal, $annualInterestRate, $timeInDays) {
+    
+		$timeInYears = $timeInDays / 365;
+	
+		$interest = ($principal * $annualInterestRate * $timeInYears) / 100;
+		$repaymentAmount= $principal + $interest;
+		return ceil($repaymentAmount);
+		
+	}
+
 	public function loan_details()
 	{
 		$query = $this->db->order_by('id', 'desc')->get_where('p2p_loan_list', array('borrower_id' => $this->input->post('borrower_id')));
@@ -37,6 +47,12 @@ class Borrowerinfomodel extends CI_Model
 				}if($result['disbursement_date'] && date('d-m-Y') > date('d-m-Y', strtotime($result['disbursement_date']. ' + 1 months'))){
 				 $due_status = 'Over due';	
 				}
+				if($result['approved_tenor']==0){
+					$repaymentAmount = $result['approved_loan_amount'] + ($result['approved_loan_amount'] * $result['approved_interest'])/100;
+				}
+				else{
+					$repaymentAmount = calculateRepaymentAmountInDays($result['approved_loan_amount'],$result['approved_interest'],$result['approved_tenor_days']);
+				}
 				
 				$loan[] = array(
 					'id' => $result['id'],
@@ -46,7 +62,7 @@ class Borrowerinfomodel extends CI_Model
 					'approved_interest' => $result['approved_interest'] . '%',
 					'approved_tenor' => $result['approved_tenor'] . ' Month',
 					'disbursement_date' => $result['disbursement_date'] ?date("Y-m-d",strtotime($result['disbursement_date'])):null,
-					'repayment_amount' => $result['approved_loan_amount'] + ($result['approved_loan_amount'] * $result['approved_interest'])/100,
+					'repayment_amount' => $repaymentAmount,
 					'repayment_date' => $result['disbursement_date'] ? date('d-m-Y', strtotime($result['disbursement_date']. ' + 1 months')) : $result['disbursement_date'],
 					'disbursed_flag' => $result['disbursed_flag'],
 					'loan_status' => $result['loan_status']?$result['loan_status']:null,
