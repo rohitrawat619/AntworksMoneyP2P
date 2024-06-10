@@ -739,7 +739,8 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 			}
 				$partner_id = "1";
 			$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($partner_id,$userType); // userType: borrower/lender
-		//	echo"<pre>"; print_r($feeStructureData);
+			 // echo"<pre>"; print_r($feeStructureData[0]); die();
+			$data['lists'] = $feeStructureData[0];
 		$this->load->view('template-LendSocial/header',$data);
 		
 		$this->load->view('investmentAmountPreview',$data);

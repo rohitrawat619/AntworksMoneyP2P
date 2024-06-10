@@ -554,7 +554,7 @@ public function viewLoanaggrement($borrower_id){
       
           $this->db->update('p2p_loan_list', $loanDetails);
 
-            return 222221;
+            return 1;
           
       }
 
