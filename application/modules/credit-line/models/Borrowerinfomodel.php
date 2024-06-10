@@ -47,7 +47,7 @@ class Borrowerinfomodel extends CI_Model
 				}if($result['disbursement_date'] && date('d-m-Y') > date('d-m-Y', strtotime($result['disbursement_date']. ' + 1 months'))){
 				 $due_status = 'Over due';	
 				}
-				if($result['approved_tenor']==0){
+				if($result['approved_tenor']!=0){
 					$repaymentAmount = $result['approved_loan_amount'] + ($result['approved_loan_amount'] * $result['approved_interest'])/100;
 				}
 				else{
