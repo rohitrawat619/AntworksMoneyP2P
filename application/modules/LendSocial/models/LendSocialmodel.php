@@ -69,6 +69,36 @@ class LendSocialmodel extends CI_Model
 						}
 	}
 	
+	public function saveInvestmentOtherFee($investment_no){ // 2024-june-06 will call this function everytime lender invest the payment
+		
+				$arr["transactionType"] = "lenderCharges";
+				$arr["user_type"] = "lender";
+				$arr["user_id"] = $this->input->post('lender_id');
+				$arr["mobile"] = $this->input->post('mobile');
+				$arr["amount"] = $this->input->post('amount');
+				$arr["razorpay_order_id"] = $this->input->post('razorpay_order_id');
+				$arr["razorpay_payment_id"] = $this->input->post('razorpay_payment_id');
+				$arr["razorpay_signature"] = $this->input->post('razorpay_signature');
+				$arr["ant_txn_id"] = $this->input->post('ant_txn_id');
+				$arr["partner_id"] = $this->input->post('partner_id');
+				$arr["lender_processing_fee"] = $this->input->post('lender_processing_fee');
+				$arr["lender_platform_fee"] = $this->input->post('lender_platform_fee');
+				$arr["master_fee_structure_json"] = $this->input->post('master_fee_structure_json');
+
+				$arr["data_entry_id"] = $this->session->userdata('user_id');
+				$arr["data_entry_time"] = date("Y-m-d H:i:s");
+				$arr["status"] = 1;
+				$arr["investment_no"] = $investment_no;
+					
+                    $query = $this->db->insert('trans_fee_structure', $arr);
+						//return $arr;
+	
+						if ($query) {
+							return "Insertion successful.";
+						} else {
+							return "Insertion failed.";
+						}
+	}
 	
 				public function get_registration_fee_status($userType,$userId,$transactionType) //'borrowerRegistrationFee','lenderRegistrationFee'
 	{

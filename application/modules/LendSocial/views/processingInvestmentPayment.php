@@ -1,20 +1,41 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <?php
-//echo"<pre>"; 
-//print_r($lists);
 $generateOrderResp = $lists['generateOrderResp'];
 $sessionData = $lists['sessionData'];
+
+
+//echo"<pre>"; 
+//print_r($lists);// die();
+
 ?>
 
 <div class="col-md-2 col-xs-12"></div>
-<div class="col-md-8 col-xs-12 text-center">
-	<div class="surge-success">
-	<!----	<img class="success-txt" src="repeat.png">   ---->
-		<img src="../document/surge/img/repeat.png" class="surgeant-icon">
-		<h2 class="success-txt">
+<div class="col-md-8 col-xs-12 text-center ">
+
+<div class="surge-plans">
+				<div class=""><img  class="surgeant-icon" src="<?php echo $logo_path; ?>"></div>
+				<h2>-</h2>
+				<div class="" style="text-align:left;">
+				<ul>
+				<li><i class="fa fa-check-circle"></i> Invest Amount: <i class="fa fa-rupee"></i><?php echo $lists['amount']; ?></li>
+
+				<li><i class="fa fa-check-circle"></i> Lender Processing Fee: <i class="fa fa-rupee"></i><?php echo $lists['lender_processing_fee']; ?></li>
+				<li><i class="fa fa-check-circle"></i> Lender Platform Fee: <i class="fa fa-rupee"></i><?php echo $lists['lender_platform_fee']; ?></li>
+				<li><i class="fa fa-check-circle"></i> Total Amount: <i class="fa fa-rupee"></i><?php echo $lists['total_amount']; ?></li>
+				</ul>
+							</div>
+				<div class="col-md-12 col-xs-12"><input id="paynow" onclick="paynow()" type="button" value="Pay Now" class="surge-plans-btn"></div>
+					<h2 class="success-txt">
 			<div id="waitTextId" ></div>
 		</h2>
+				<p class="remarks-txt"></p>
+				</div>
+
+	<div class="surge-success" style="display:none">
+	<!----	<img class="success-txt" src="repeat.png">   ---->
+		<img src="../document/surge/img/repeat.png" class="surgeant-icon">
+		
 	</div>
 </div>
 
@@ -25,9 +46,9 @@ $sessionData = $lists['sessionData'];
 <script>
       var options = {
          key: '<?php echo $generateOrderResp['api_key']; ?>',
-         amount: <?php echo $generateOrderResp['amount']; ?>, // Amount in paisa (e.g., 100 INR)
+         amount: <?php echo $lists['total_amount']; ?>, //<?php echo $generateOrderResp['amount']; ?>, // Amount in paisa (e.g., 100 INR)
          currency: 'INR',
-         name: 'Antworks money (Surge)',
+         name: 'Antworks money (lend-social)',
          description: 'Payment for Order #<?php echo $generateOrderResp['order_id']; ?> Partner Name: <?php echo $sessionData['sessionData']; ?>',
          order_id: '<?php echo $generateOrderResp['order_id']; ?>',
 		  prefill: {
@@ -59,7 +80,7 @@ $sessionData = $lists['sessionData'];
                type: 'POST',
                data: {
 				  mobile: '<?php echo $sessionData['mobile']; ?>',
-                  amount: '<?php echo $generateOrderResp['amount']; ?>',
+                  amount: '<?php echo $lists['total_amount']; ?>',
                   razorpay_order_id: parsedData.razorpay_order_id,
                   razorpay_payment_id: parsedData.razorpay_payment_id,
                   razorpay_signature: parsedData.razorpay_signature,
@@ -98,13 +119,17 @@ var createHiddenField = function (name, value) {
 };
 
 form.appendChild(createHiddenField('mobile', '<?php echo $sessionData['mobile']; ?>'));
-form.appendChild(createHiddenField('amount', '<?php echo $generateOrderResp['amount']; ?>'));
+form.appendChild(createHiddenField('amount', '<?php echo $lists['total_amount']; ?>'));
 form.appendChild(createHiddenField('razorpay_order_id', parsedData.razorpay_order_id));
 form.appendChild(createHiddenField('razorpay_payment_id', parsedData.razorpay_payment_id));
 form.appendChild(createHiddenField('razorpay_signature', parsedData.razorpay_signature));
 form.appendChild(createHiddenField('lender_id', '<?php echo $sessionData['lender_id']; ?>'));
+form.appendChild(createHiddenField('partner_id', '<?php echo $sessionData['partners_id']; ?>'));
 form.appendChild(createHiddenField('scheme_id', '<?php echo $lists['scheme_id']; ?>'));
 form.appendChild(createHiddenField('ant_txn_id', '<?php echo $generateOrderResp['ant_txn_id']; ?>'));
+form.appendChild(createHiddenField('lender_processing_fee', '<?php echo $lists['lender_processing_fee']; ?>'));
+form.appendChild(createHiddenField('lender_platform_fee', '<?php echo $lists['lender_platform_fee']; ?>'));
+form.appendChild(createHiddenField('master_fee_structure_json', '<?php echo json_encode($lists); ?>'));
 
 // Append the form to the document body
 document.body.appendChild(form);
@@ -122,7 +147,12 @@ document.body.removeChild(form);
          },
       };
 
-      var rzp = new Razorpay(options);
-      rzp.open();
+     
+    
    
+   function paynow(){
+	    var rzp = new Razorpay(options);
+	    rzp.open();
+		//$("#paynow").hide();
+   }
 </script>

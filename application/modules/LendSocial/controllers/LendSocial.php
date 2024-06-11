@@ -198,26 +198,94 @@ class LendSocial extends CI_Controller
 			print_r($this->input->post());
 		}
 		
-		public function processingInvestmentPayment(){
-			
+			public function processingInvestmentPayment(){
+
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
-		$this->load->view('template-LendSocial/header',$data);
+			$this->load->view('template-LendSocial/header',$data);
 			$this->checkSessionMobileNo();
 			$scheme_id = $this->input->post('scheme_id');
 			$amount = $this->input->post('amount');
 			$mobile = $this->sessionData["mobile"];
-			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($amount,$mobile),true);
+
+			$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],"lender"); // userType: borrower/lender
+			$calculationLenderFeeResp = $this->calculateLenderInvestmentChargeFee($feeStructureData[0],$amount);
+			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($calculationLenderFeeResp['total_amount'],$mobile),true);
+			
+			$data['lists'] = $calculationLenderFeeResp;
 			$data['lists']['generateOrderResp'] = $generateOrderResp;
 			$data['lists']['sessionData'] = $this->sessionData;
 			$data['lists']['scheme_id'] = $scheme_id;
 			//echo "<pre>"; print_r($data);
 			$this->load->view('processingInvestmentPayment',$data);
 			$this->load->view('template-LendSocial/footer',$data);
-			//  echo"<pre>";	print_r($data); die();
+			//  echo"<pre>";	print_r($generateOrderResp['amount']); die();
+					if($generateOrderResp['amount']==""){
+					redirect(base_url('LendSocial/surgeInvestmentPlans'));
+					}
 					if($generateOrderResp=="Unauthorised"){
 					$this->session->set_flashdata('notification',array('error'=>1,'message'=>"Unauthorised Token"));
-				redirect(base_url('LendSocial/surgeInvestmentPlans'));
+					redirect(base_url('LendSocial/surgeInvestmentPlans'));
 					}
+			}
+		
+		function calculateLenderInvestmentChargeFee($inputData,$amount){
+			if($amount==""){
+				$resp =  array(
+						'amount'=>"",
+						'lender_processing_fee'=> "",
+						'lender_platform_fee'=>"",
+						'total_amount'=> "",
+						
+						);
+						return $resp;
+			}
+		/***************************starting of fee calculation*******************************/
+	$lender_processing_fee_rupee = $inputData['lender_processing_fee_rupee'];
+	$lender_processing_fee_percentage = $inputData['lender_processing_fee_percent'];
+	$type_of_Lender_platform_fee = $inputData['type_of_Lender_platform_fee'];
+	
+	$lender_platform_fee_rupee = $inputData['lender_platform_fee_rupee'];
+	$lender_platform_fee_percentage = $inputData['lender_platform_fee_percentage'];
+	
+		
+			
+			$lenderProcessingFee = 	$this->getLenderProcessingFee($amount,$lender_processing_fee_percentage,$lender_processing_fee_rupee);
+			$lenderPlatformFee = $this->getLenderPlatformFee($amount, $lender_platform_fee_percentage, $lender_platform_fee_rupee, $type_of_Lender_platform_fee);
+			
+	$resp =  array(
+						'amount'=> $amount,
+						'lender_processing_fee'=> $lenderProcessingFee,
+						'lender_platform_fee'=>$lenderPlatformFee,
+						'total_amount'=> ($amount+$lenderProcessingFee+$lenderPlatformFee),
+						
+						);
+					return $resp;
+/************************************ending of fee calculation*******************************/
+		}
+		
+			function getLenderProcessingFee($amount,$inPercentage,$inRupee) {
+
+			if($inPercentage!="" && $inPercentage!=0){
+			$percent = (($inPercentage) / 100); // 
+			$result = ($amount * $percent);
+			return $result+$inRupee;
+			}else{
+			return $inRupee;
+			}
+
+			}
+
+		function getLenderPlatformFee($amount, $inPercentageValue, $inRupeeValue, $type_of_Lender_platform_fee){
+			
+		if($type_of_Lender_platform_fee=="InPercentage"){
+
+		$result = ($amount * (($inPercentageValue) / 100));
+		return $result;
+		}else if($type_of_Lender_platform_fee=="InRupee"){
+		$result = $inRupeeValue;
+		return $result;
+		}
+
 		}
 		
 				public function redeemRequestPreview(){
@@ -615,7 +683,7 @@ class LendSocial extends CI_Controller
 $data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 				if($lenderInvestmentRequest['status']==1){
-					
+						$this->LendSocialmodel->saveInvestmentOtherFee($lenderInvestmentRequest['investment_no']); // for saving the payment info into "trans_fee_structure"
 					$data['lists']['title'] = "Investment Successfully";
 					$data['lists']['text'] = "click on below link for home page";
 					$data['lists']['link'] = "lenderDashboard";
@@ -741,6 +809,7 @@ $data['logo_path'] = $this->partnerInfo['logo_path'];
 			$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($partner_id,$userType); // userType: borrower/lender
 			 // echo"<pre>"; print_r($feeStructureData[0]); die();
 			$data['lists'] = $feeStructureData[0];
+			$data['lists']['postData'] = $this->input->post();
 		$this->load->view('template-LendSocial/header',$data);
 		
 		$this->load->view('investmentAmountPreview',$data);
