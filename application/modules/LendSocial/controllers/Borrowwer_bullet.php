@@ -164,7 +164,7 @@ public function e_sign_send_otp_ajax(){
   $partner_loan_plan['borrower_id'] = $this->getBorrowerId();
   $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
   if($data==1){
-   $response=$this->credit_line_model->credit_line_sendOtpsignature($this->getBorrowerId(),$this->getLoanNo());
+   $response=$this->credit_line_model->credit_line_sendOtpsignature($this->getBorrowerId(),$this->getLoanId());
 }else{
   $response['msg']='data not updated';
 }
