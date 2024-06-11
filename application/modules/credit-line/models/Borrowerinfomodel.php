@@ -13,7 +13,7 @@ class Borrowerinfomodel extends CI_Model
 	
 		$interest = ($principal * $annualInterestRate * $timeInYears) / 100;
 		$repaymentAmount= $principal + $interest;
-		return ceil($repaymentAmount);
+		return round($repaymentAmount);
 		
 	}
 
