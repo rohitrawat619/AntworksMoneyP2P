@@ -119,7 +119,8 @@ var createHiddenField = function (name, value) {
 };
 
 form.appendChild(createHiddenField('mobile', '<?php echo $sessionData['mobile']; ?>'));
-form.appendChild(createHiddenField('amount', '<?php echo $lists['total_amount']; ?>'));
+form.appendChild(createHiddenField('investment_amount', '<?php echo $lists['amount']; ?>')); // Investment Amount
+form.appendChild(createHiddenField('total_amount', '<?php echo $lists['total_amount']; ?>')); // total amount inclusive of all taxes
 form.appendChild(createHiddenField('razorpay_order_id', parsedData.razorpay_order_id));
 form.appendChild(createHiddenField('razorpay_payment_id', parsedData.razorpay_payment_id));
 form.appendChild(createHiddenField('razorpay_signature', parsedData.razorpay_signature));

@@ -664,18 +664,19 @@ class LendSocial extends CI_Controller
 							
 							$ant_txn_id = $this->input->post('ant_txn_id');
 							$mobile = $this->input->post('mobile');
-							$amount = $this->input->post('amount');
+							$investment_amount = $this->input->post('investment_amount');
 							$razorpay_order_id = $this->input->post('razorpay_order_id');
 							$razorpay_payment_id = $this->input->post('razorpay_payment_id');
 							$razorpay_signature = $this->input->post('razorpay_signature');
 							$lender_id = $this->input->post('lender_id');
-							$amount = $this->input->post('amount');
+							$total_amount = $this->input->post('total_amount');
 							$scheme_id = $this->input->post('scheme_id');
 				//	echo"<pre>";
-			$socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
+			$socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$total_amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
+			//  $socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
 			//echo "<pre>";
 			//print_r($socialAfterPaymentRequest);
-			$lenderInvestmentRequest = json_decode($this->LendSocialmodel->lenderInvestment($mobile,$lender_id,$amount,$scheme_id,$ant_txn_id),true);
+			$lenderInvestmentRequest = json_decode($this->LendSocialmodel->lenderInvestment($mobile,$lender_id,$investment_amount,$scheme_id,$ant_txn_id),true);
 			//	print_r($lenderInvestmentRequest);
 			//	 print_r($this->input->post());
 				// die();

@@ -75,7 +75,7 @@ class LendSocialmodel extends CI_Model
 				$arr["user_type"] = "lender";
 				$arr["user_id"] = $this->input->post('lender_id');
 				$arr["mobile"] = $this->input->post('mobile');
-				$arr["amount"] = $this->input->post('amount');
+				$arr["amount"] = $this->input->post('total_amount'); // total amount paid by payment gateway inclusive of all charges
 				$arr["razorpay_order_id"] = $this->input->post('razorpay_order_id');
 				$arr["razorpay_payment_id"] = $this->input->post('razorpay_payment_id');
 				$arr["razorpay_signature"] = $this->input->post('razorpay_signature');
@@ -84,6 +84,7 @@ class LendSocialmodel extends CI_Model
 				$arr["lender_processing_fee"] = $this->input->post('lender_processing_fee');
 				$arr["lender_platform_fee"] = $this->input->post('lender_platform_fee');
 				$arr["master_fee_structure_json"] = $this->input->post('master_fee_structure_json');
+				$arr["investment_amount"] = $this->input->post('investment_amount'); 
 
 				$arr["data_entry_id"] = $this->session->userdata('user_id');
 				$arr["data_entry_time"] = date("Y-m-d H:i:s");

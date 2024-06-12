@@ -543,7 +543,7 @@ public function viewLoanaggrement($borrower_id){
               'approved_loan_amount' => $loanDetail_arr['amount'],
               'approved_interest' => $loanDetail_arr['interest'],
               'approved_tenor_days' => $loanDetail_arr['tenor'],
-              'approved_tenor'=>0
+			  'approved_tenor'=>0
           );
       
           $where = array(
