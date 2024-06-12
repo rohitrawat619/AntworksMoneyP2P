@@ -12,6 +12,7 @@ class Borrower extends CI_Controller
 		//$this->cldb = $this->load->database('credit-line', TRUE);
 		$this->cldb = $this->load->database('', TRUE); // antworks_p2pdevelopment
 		//$this->load->model('Common_model');
+		$this->load->model('Surgemodel');
 		$this->load->library('form_validation');
 		$this->load->helper('custom');
 		$this->load->library('pagination');
@@ -20,7 +21,7 @@ class Borrower extends CI_Controller
 		error_reporting(0);
 					// $database_name = $this->cldb->database;
 			//	echo "Database Name: ".$database_name;
-			// $this->check_role();
+			 $this->check_role();
 		$this->partner_id = $this->session->userdata('partner_id');
 		//	print_r($this->session->userdata());
 		$this->paginationUrl = base_url() . "surgeModuleP2P/borrower/";
@@ -31,6 +32,95 @@ class Borrower extends CI_Controller
        $this->getDisbursedAmount = $this->disbursementModel->getDisbursedAmount();
 	   $this->available_balance = (($this->getInvestmentAmount)-($this->getFees)-($this->getDisbursedAmount));
 	}
+	
+	public function add_loan_plan_form(){
+		
+		
+			$data['pageTitle'] = "Loan Plan";
+			$data['title'] = "Borrower Loan Plan";
+			$this->load->view('template-surgeModuleP2P/header');
+			$this->load->view('template-surgeModuleP2P/nav');
+			$data['lists'] = ($this->P2pborrowermodel->get_partner_loan_plan_list(array('id' => $this->input->get('id'))))[0];
+			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,$where);
+			//echo"<pre>"; print_r($data);
+			$this->load->view('borrower/add_loan_plan_form', $data);
+			$this->load->view('template-surgeModuleP2P/footer');
+	}
+	
+				public function loan_plan_list(){
+
+				$data['lists'] = $this->P2pborrowermodel->get_partner_loan_plan_list(array('partner_id' => $this->partner_id));
+			    
+				$data['pageTitle'] = "Loan Plan";
+				$data['title'] = "Borrower Loan Plan";
+				$this->load->view('template-surgeModuleP2P/header');
+				$this->load->view('template-surgeModuleP2P/nav');
+
+				$this->load->view('borrower/loan_plan_list', $data);
+				$this->load->view('template-surgeModuleP2P/footer');
+
+				}
+	
+				public function add_loan_plan(){
+
+				$amount = $this->input->post('amount');
+				$interest = $this->input->post('interest');
+				$tenor = $this->input->post('tenor');
+				$partner_id = $this->input->post('partner_id');
+				//$id = $this->input->post('id');
+
+				$arr_data = array(
+				'amount' => $amount,
+				'interest' => $interest,
+				'tenor' => $tenor,
+				'partner_id' => $partner_id,
+				'created_id' => $this->session->userdata('user_id'),			
+				);
+
+
+				$resp = $this->P2pborrowermodel->add_loan_plan($arr_data);
+				
+				if($resp['status']==1){
+				$this->session->set_flashdata('notification', array('error' => 0, 'message' => $resp['msg']));
+				redirect(base_url() . 'surgeModuleP2P/borrower/add_loan_plan_form?id='.$id);
+				}else{
+				$this->session->set_flashdata('notification', array('error' => 1, 'message' => $resp['msg']));
+
+				redirect(base_url() . 'surgeModuleP2P/borrower/add_loan_plan_form?id='.$id);
+				}				
+					
+					}
+				
+	
+				public function update_loan_plan(){
+				$amount = $this->input->post('amount');
+				$interest = $this->input->post('interest');
+				$tenor = $this->input->post('tenor');
+				$partner_id = $this->input->post('partner_id');
+				$id = $this->input->post('id');
+
+				$arr_data = array(
+				'amount' => $amount,
+				'interest' => $interest,
+				'tenor' => $tenor,
+				//'partner_id' => $partner_id,
+				'id' => $id,
+				'updated_id' => $this->session->userdata('user_id'),
+				);
+
+
+				$resp =	$this->P2pborrowermodel->update_loan_plan($arr_data);
+				
+				if($resp['status']==1){
+				$this->session->set_flashdata('notification', array('error' => 0, 'message' => $resp['msg']));
+							redirect(base_url() . 'surgeModuleP2P/borrower/add_loan_plan_form?id='.$resp['id']);
+				}else{
+					$this->session->set_flashdata('notification', array('error' => 1, 'message' => $resp['msg']));
+					
+							redirect(base_url() . 'surgeModuleP2P/borrower/add_loan_plan_form?id='.$resp['id']);
+				}
+				
+				}
 	
 
 		/***********2024-feb-08******************/
@@ -918,6 +1008,30 @@ $this->load->view('borrower/disburse_list_under_process',$data);
 		$this->load->view('template-surgeModuleP2P/footer');
     }
 	
+			function check_role(){
+						/*
+					$controller_name = $this->uri->segment(3);
+					$user_permissions = explode(',',str_replace(["\n", "\r"],'',$this->session->userdata('admin_access')));
+					$havePermission = TRUE;
+					$msg = "Please Login First";
+					if(in_array($controller_name, $user_permissions)){
+						$havePermission = TRUE;
+						$msg = "You have permission";
+					//	echo "You have permission: ".$controller_name;
+					}else{
+						$havePermission = FALSE;
+						$msg = "You don't have permission of this page ";
+					//	echo "You don't have permission of this page ".$controller_name;
+					}			*/
+			
+				if ($this->session->userdata('admin_state') === TRUE ) { // && $havePermission === TRUE
+		
+			}else {
+			
+			$this->session->set_flashdata('notification', array('error' => 1, 'message' => $msg));
+					redirect(base_url() . 'login/Logoutadmin');
+				   }
+		}
 
 
 }

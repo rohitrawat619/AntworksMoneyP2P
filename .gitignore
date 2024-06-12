@@ -31,3 +31,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/results/
 *.bak
 *.zip
+application/modules/LendSocial/views/credit_line/e_sign_@@.php
+application/modules/LendSocial/views/credit_line/e_sign_@old-2024-june-11.php
+application/modules/LendSocial/views/investmentAmountPreview - Copy.php
+application/modules/LendSocial/views/investmentAmountPreview.php
+application/modules/LendSocial/views/investmentAmountPreview.php
+application/modules/LendSocial/views/investmentAmount_@old2024-june-12.php
+application/modules/LendSocial/views/investmentAmountPreview_@old2024-rr.php
