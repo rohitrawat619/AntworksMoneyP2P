@@ -5,7 +5,9 @@
 	<div class="box">
 
 		
-		
+		<div class="row">
+	     	<div class="col-md-12">
+			
 		<form class="form form-material" id="app_user_data_form"
 			  action="../surge/insert_raise_ticket" method="POST">
 			<div class="col-md-12" >
@@ -62,10 +64,9 @@
 			</div>
 		</form>
 	</div>
+		</div>
+		</div>
 
-
-	<div class="box-footer clearfix"></div>
-	<div class="clearfix"></div>
 	
 </section>
 

@@ -93,7 +93,9 @@
         <div class="row">
             <?php if ($list) { ?>
             <div class="col-md-12">
+            <div class="col-md-12">
                 <h3 class=""><i class="ti-user"></i> Profile Summary</h3>
+			</div>
                 <div class="col-md-6 profile-devider">
                     <div class="borrower-record">
                         <div class="table-responsive">
@@ -393,8 +395,9 @@
                         </div>
                     </div>
                 <?php } ?>
-
+					
                 <div class="col-md-12">
+				 <div class="col-md-12">
                     <h3>Credit Decision Response</h3>
                     <table class="table table-bordered">
                          <tr>
@@ -409,7 +412,8 @@
                         <tr>
 												<?php 
 						$razorpay_response_fav_json = json_decode($list['razorpay_response_fav_json'],true);
-						echo"<pre>"; print_r();
+						//echo"<pre>"; print_r();
+								
 								$bank_name = $razorpay_response_fav_json['fund_account']['bank_account']['bank_name'];
 						?>
                             <td><strong>Bank Name</strong></td>
@@ -549,7 +553,8 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div>	
+					</div>
                 <?php } ?>
             </div>
         </div>

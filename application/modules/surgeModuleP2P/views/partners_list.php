@@ -1,23 +1,15 @@
 <!-- Main content -->
 <style type="text/css">
-	strong	{
-		background: #fafafa;
-		color: #666;
-		margin-left: 0;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-		position: relative;
-		float: left;
-		padding: 6px 12px;
-		margin-left: -1px;
-		line-height: 1.42857143;
-		text-decoration: none;
-		border: 1px solid #ddd;
-	}
+	
 	.myform-inline {margin-top: 3px;}
 	.myform-inline .form-group input {
 		max-width: 136px;
 	}
+	.list-img{
+		width:90px;
+		
+	}
+	
 </style>
 
 <section class="content">
@@ -70,9 +62,9 @@ if (@lists) {
 			<td><?php echo $list['Phone'];  ?> </td>
 		
             <td><?php echo $list['date_created']; ?></td>
-			<td> <img src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$list['logo_path']); ?>" alt="Logo NA" id="partner_logo_imagePreview" style=" max-width: 200px; max-height: 200px;" /></td>
+			<td> <img class="list-img" src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$list['logo_path']); ?>" alt="Logo NA" id="partner_logo_imagePreview" /></td>
 			<td><?php echo ($list['status']=="1"? "Active" : "Inactive" );  ?> </td>
-           <td><a href="../surge/add_partners_form?id=<?php echo $list['VID']; ?>">Edit</a></td>
+           <td><a class="btn btn-primary" href="../surge/add_partners_form?id=<?php echo $list['VID']; ?>">Edit</a></td>
         </tr> 
         <?php
     }

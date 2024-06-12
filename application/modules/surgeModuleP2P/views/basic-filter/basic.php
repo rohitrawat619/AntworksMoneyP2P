@@ -1,4 +1,4 @@
-<div class="row">
+<div class="">
 <section class="content-header">
     <h1>
         <?php echo $pageTitle; ?>
@@ -49,20 +49,18 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                    <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list " data-page-size="100">
-                        <thead>
+                    <table id="demo-foo-addrow" class="table table-bordered table m-t-30 table-hover contact-list " data-page-size="100">
+                       
                         <tr>
                             <th>Basic filtration criteria</th>
                             <th>Total Visitor</th>
                             <th>Count of Pass(After particular filtration criteria)</th>
                             <th>Count of Stop/Decline(After particular filtration criteria)</th>
                         </tr>
-                        </thead>
+                       
 
-                        <tbody id="">
-
-                        </tbody>
-                        <tbody id="">
+                       
+                      
                         <tr>
                             <td>1. DOB </td>
                             <td><?=$age_success_fail['success'] + $age_success_fail['fail']?></td>
@@ -111,7 +109,7 @@
                             <td><?=$get_credit_score_success_fail['success']?></td>
                             <td><?=$get_credit_score_success_fail['fail']?></td>
                         </tr>
-                        </tbody>
+                        
                     </table>
                 </div>
                 </div>

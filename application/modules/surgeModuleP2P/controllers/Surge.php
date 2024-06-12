@@ -6,6 +6,7 @@ class Surge extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Surgemodel');
+		$this->load->model('LendSocialCommunicationModel');
 		$this->load->helper('url');
 		//$this->cldb = $this->load->database('new_p2p//_sandbox', TRUE);
 		//$this->load->model('Common_model');
@@ -34,7 +35,16 @@ class Surge extends CI_Controller
 		$this->load->view('dashboardBorrower',$data);
 		$this->load->view('template-surgeModuleP2P/footer');
 	}
+	
+	public function email(){
+		
+		$product_type_id = "LendSocialDashboard"; $instance_id = "Scheme Edit"; //"Welcome Mail";
+		$resp = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id);
+		echo"<pre>"; print_r($resp);
+	}
+	
 	public function dashboard(){	
+	
 			// print_r($this->input->post());
 		//	echo "Partner: ".$this->partner_id;
 		//  print_r($this->session->userdata('role'));
@@ -114,7 +124,8 @@ class Surge extends CI_Controller
 		}
 		
 		public function add_partner(){
-			 
+			 unset($_POST['lender_partner_registration_feeCheckbox']);
+			unset($_POST['borrower_platform_registration_feeCheckbox']);
 			$addPartnerResp = $this->Surgemodel->add_partner();
 
 			
@@ -146,7 +157,11 @@ class Surge extends CI_Controller
 		}
 		
 		public function update_partner(){
-				//	print_r($this->input->post()); die();echo"<pre>";
+			//unset($this->input->post('lender_partner_registration_feeCheckbox'));
+			unset($_POST['lender_partner_registration_feeCheckbox']);
+			unset($_POST['borrower_platform_registration_feeCheckbox']);
+
+				// echo"<pre>";	print_r($this->input->post()); // die();echo"<pre>";
 			//	print_r($updatePartnerResp); 
 				//		print_r($this->input->post()); die();
 			$updatePartnerResp = $this->Surgemodel->update_partner();

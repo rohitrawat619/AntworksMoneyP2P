@@ -1,4 +1,4 @@
-<div class="row">
+<div class="">
     <section class="content-header">
         <h1 style="padding-left:40px;">
               <?php echo $pageTitle; ?>

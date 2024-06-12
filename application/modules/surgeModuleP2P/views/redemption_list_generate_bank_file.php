@@ -1,19 +1,6 @@
 <!-- Main content -->
 <style type="text/css">
-	strong	{
-		background: #fafafa;
-		color: #666;
-		margin-left: 0;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-		position: relative;
-		float: left;
-		padding: 6px 12px;
-		margin-left: -1px;
-		line-height: 1.42857143;
-		text-decoration: none;
-		border: 1px solid #ddd;
-	}
+	
 	.myform-inline {margin-top: 3px;}
 	.myform-inline .form-group input {
 		max-width: 136px;
@@ -30,6 +17,7 @@
 
 		<!-- /.box-header -->
 		<div class="box-body">
+		<div class="table-responsive">
 			<table id="example" class="table table-bordered table-hover box" >
 				<thead>
 				<tr>
@@ -107,6 +95,7 @@ if (@lists) {
 <button class="btn btn-primary" onclick="confirmAndGetSelectedValues()">Generate Bank File</button>
 
 			</table>
+		</div>
 		</div>
 		<!-- /.box-body -->
 		<div class="box-footer clearfix">

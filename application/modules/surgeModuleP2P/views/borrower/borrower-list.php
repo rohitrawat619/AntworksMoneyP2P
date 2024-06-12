@@ -1,4 +1,4 @@
-<div class="row">
+<div class="">
 <section class="content-header">
      <h1 style="padding-left:40px;">
               <?php echo $pageTitle; ?>
@@ -14,6 +14,8 @@
 
     <!-- Default box -->
     <div class="box">
+		<div class="row">
+			<div class="col-md-12">
         <div class="box-header with-border">
             <?php echo getNotificationHtml();?>
         </div>
@@ -168,7 +170,10 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
         <!-- /.box-body -->
+		
         <div class="box-footer">
 
         </div>

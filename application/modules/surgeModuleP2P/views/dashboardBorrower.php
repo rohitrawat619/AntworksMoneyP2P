@@ -76,33 +76,39 @@
     <div class="dashboard-item">
         <div class="number">Total Borrower</div>
         <div class="label">Number of User -<span> <?php echo $noOfBorrower;?></span></div>
-		<div class="label">Total Amount - <span><?php echo ($borrowerAmount) ? $borrowerAmount : 0;?></span></div>
+		<div class="label">Total Amount - <span><?php echo $borrowerAmount;?></span></div>
     </div>	
 	</td>
 	 
-	
+	 <td>
+    <div class="dashboard-item">
+        <div class="number">Total Registered Borrower</div>
+        <div class="label">Number of User -<span><?php echo $noOfBorrower;?></span></div>
+		<div class="label">Total Amount - <span><?php echo $borrowerAmount;?></span></div>
+    </div>	
+	</td>
 	
 	<td>
     <div class="dashboard-item">
         <div class="number">Total Disbursement</div>
-        <div class="label">Number of User -<span> <?php echo $noOfBorrower;?></span></div>
-		<div class="label">Total Amount - <span><?php echo ($borrowerAmount) ? $borrowerAmount : 0; ?></span></div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
     </div>	
 	</td>
 	
 	<td>
     <div class="dashboard-item">
         <div class="number">Total Outstanding</div>
-        <div class="label">Number of User -<span> <?php echo $noOfBorrower;?></span></div>
-		<div class="label">Total Amount - <span><?php echo ($borrowerAmount) ? $borrowerAmount : 0; ?></span></div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
     </div>	
 	</td>
 	
 	<td>
     <div class="dashboard-item">
         <div class="number">Total Closed Loan </div>
-        <div class="label">Number of User -<span> <?php echo $noOfBorrower;?></span></div>
-		<div class="label">Total Amount - <span><?php echo ($borrowerAmount) ? $borrowerAmount : 0; ?></span></div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
     </div>	
 	</td>
 	
@@ -168,26 +174,33 @@
 	 	<td>
     <div class="dashboard-item">
         <div class="number">Total Borrower</div>
-        <div class="label">Number of User -<span> 0</span></div>
-		<div class="label">Total Amount - <span>0</span></div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
     </div>	
 	</td>
 	 
+	 <td>
+    <div class="dashboard-item">
+        <div class="number">Total Registered Borrower</div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
+    </div>	
+	</td>
 	
 	<td>
     <div class="dashboard-item">
         <div class="number">Total Disbursement</div>
-        <div class="label">Number of User -<span> 0</span></div>
-		<div class="label">Total Amount - <span>0</span></div>
+        <div class="label">Number of User -<span> 47</span></div>
+		<div class="label">Total Amount - <span>40000</span></div>
     </div>	
 	</td>
 	
 	<td>
     <div class="dashboard-item">
         <div class="number">Outstanding Status</div>
-        <div class="label">Due Date Pending -<span> 0</span></div>
-		<div class="label">Overdue 0-90 days - <span>0</span></div>
-		<div class="label">Overdue 90+ days - <span>0</span></div>
+        <div class="label">Due Date Pending -<span> 47</span></div>
+		<div class="label">Overdue 0-90 days - <span>40000</span></div>
+		<div class="label">Overdue 90+ days - <span>40000</span></div>
     </div>	
 	</td>
 
@@ -198,8 +211,39 @@
 				
 				
 				<!-------------filter section starting here---------->
-  <br>		
+  <br>		<?php if($this->session->userdata('partner_id')==0){ ?>
+				<form action="<?php echo base_url(); ?>surgeModuleP2P/surge/dashboardBorrower" method="post" class="">
   <table class="table table-bordered table-responsive ">
+    <thead>
+	
+	
+        <tr>
+	
+		
+            <th colspan="4">
+
+                <div class="row">
+				
+                  
+					<div class="col-md-3 form-group">
+							<label>Duration:</label>
+			<?php $date_range = $this->input->post('duration'); ?>
+<input type="text" readonly name="date_range" id="daterange-btn" placeholder="Date Range" class="form-control filter-by-date" required >
+						</div>
+				<?php //  print_r($this->input->post('date_range')); ?>
+               
+				
+                 
+                    <div class="col-md-4">
+                        <p>&nbsp;</p>
+                        <button class="btn btn-primary form-control">Filter</button>
+                    </div>
+                </div>	</form>
+				
+		<?php } ?>
+            </th>
+        </tr>
+    </thead>
 	 <!-------------filter section starting here---------->
 
 
@@ -261,37 +305,37 @@
 	
 			<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">1</div>
     </div>
 
 		<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">2</div>
     </div>
 	
 	<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">3</div>
     </div>
 	
 	<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">4</div>
     </div>
 	
 	<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">5</div>
     </div>
 	
 	<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">6</div>
     </div>
 	
 	<div class="borrower-status">
         
-        <div class="label">0</div>
+        <div class="label">7</div>
     </div>
 	
 				

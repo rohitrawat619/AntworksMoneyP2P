@@ -12,6 +12,57 @@ class P2pborrowermodel extends CI_Model
 		//  echo $this->partner_id;
     }
 
+					public function get_partner_loan_plan_list($where_condition) { // 2024-june-06
+					// return $where_condition;
+					$where_condition['a.status'] = 1;
+					if($where_condition['partner_id']==0){
+					unset($where_condition['partner_id']);
+					}
+					//  $query = $this->cldb->get_where('partner_loan_plan', $where_condition);
+					$this->cldb->select('a.*,b.Company_Name as partner_name');
+					$this->cldb->from('partner_loan_plan a');
+					$this->cldb->join('invest_vendors b', 'a.partner_id = b.VID');
+					$this->cldb->where($where_condition);
+					$query = $this->cldb->get();
+
+					// return $this->cldb->last_query();
+					if ($query->num_rows() > 0) {
+					return $query->result_array();
+					}else {
+					return false;
+					}
+					}
+	
+					public function add_loan_plan($arr_data){ // 2024-june-06
+
+					$this->cldb->insert('partner_loan_plan', $arr_data);
+					if($this->cldb->affected_rows() > 0){
+					$resp['status'] =1;
+					$resp['msg'] = "Loan Plan Added Succesfully";
+					}else{
+					$resp['status'] = 0;
+					$resp['msg'] = "Loan Plan Creation Failed";
+					}
+
+					return $resp;
+
+					}
+
+				public function update_loan_plan($arr_data){ // 2024-june-06
+				$resp['id'] = base64_decode(base64_decode($arr_data['id']));
+				$this->cldb->where('id', $resp['id']);
+					unset($arr_data['id']);
+				$this->cldb->update('partner_loan_plan',$arr_data);
+				if($this->cldb->affected_rows() > 0){
+				$resp['status'] =1;
+				$resp['msg'] = "Loan Plan Updated Succesfully";
+				}else{
+				$resp['status'] = 0;
+				$resp['msg'] = "Loan Plan Updation Failed";
+				}
+				return $resp;
+				}
+
     public function getBorrowersteps($borrower_id)
     {
         $this->cldb->select('*');

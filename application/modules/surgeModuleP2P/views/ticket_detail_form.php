@@ -6,7 +6,8 @@
 	?>
 	<div class="box">
 
-		
+		<div class="row">
+	     	<div class="col-md-12">
 		
 		<form class="form form-material" id="app_user_data_form"
 			  action="../surge/comment_ticket" method="POST">
@@ -107,11 +108,10 @@
 			</div>
 		</form>
 	</div>
+			</div>
+			</div>
 
 
-	<div class="box-footer clearfix"></div>
-	<div class="clearfix"></div>
-	
 </section>
 
 

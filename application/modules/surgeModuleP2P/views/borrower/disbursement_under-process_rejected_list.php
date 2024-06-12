@@ -1,19 +1,6 @@
 <!-- Main content -->
 <style type="text/css">
-    strong {
-        background: #fafafa;
-        color: #666;
-        margin-left: 0;
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        position: relative;
-        float: left;
-        padding: 6px 12px;
-        margin-left: -1px;
-        line-height: 1.42857143;
-        text-decoration: none;
-        border: 1px solid #ddd;
-    }
+    
 
     .myform-inline {
         margin-top: 3px;

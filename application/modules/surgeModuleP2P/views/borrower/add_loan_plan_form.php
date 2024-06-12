@@ -5,22 +5,23 @@
 	<div class="box">
 				<div class="row">
 	     	<div class="col-md-12">
-		<?php // echo"<pre>"; print_r($lists); echo"</pre>"; 
-			if($lists['admin_id']!=""){
+		<?php // echo"<pre>"; print_r(count($lists['partnersData'])); echo"</pre>"; 
+			if($lists['id']!=""){
 					$edit= true;
-					$path= "update_user";
+					$path= "update_loan_plan";
+					$partner_list_status = "disabled";
 			}else{
 				$edit=false;
-					$path= "add_user";
+					$path= "add_loan_plan";
 			}
 		//	echo "<pre>";
 		 //	print_r($lists['partnersData'][0]['Company_Name']);
 		?>
 		
 		<form class="form form-material" 
-			  action="../surge/<?php echo $path; ?>/" onsubmit="return validateMobileNumber() && validateEmail()" method="POST"  > 
+			  action="../borrower/<?php echo $path; ?>/" onsubmit="return validateMobileNumber() && validateEmail()" method="POST"  > 
 			<div class="col-md-12" >
-			<h2><?php echo ($edit == true) ? 'Update User' : 'Add User'; ?></h2>
+			<h2><?php echo ($edit == true) ? 'Update Loan Plan' : 'Add Loan Plan'; ?></h2>
 
 				
 			
@@ -31,35 +32,37 @@
 					  
 
     <div class="col-md-6 form-group">
-        <label for="fname">First Name:</label><br>
-        <input  class="form-control" class="form-control"type="text" onkeypress="allowAlphabeticInput(event);" required value="<?php echo $lists['fname']; ?>"  id="fname" name="fname" placeholder="Enter First Name">
+        <label for="amount"> Amount:</label><br>
+        <input  class="form-control" class="form-control"type="text" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['amount']; ?>"  id="amount" name="amount" placeholder="Enter Amount">
 		
     </div>
 
     
     <div class="col-md-6 form-group">
-        <label for="lname">Last Name:</label><br>
-        <input  class="form-control"type="text" id="lname" onkeypress="allowAlphabeticInput(event);" required value="<?php echo $lists['lname']; ?>" name="lname" placeholder="Enter Last Name">
+        <label for="interest">Interest Rate (% p.a):</label><br>
+        <input  class="form-control"type="text" id="interest" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['interest']; ?>" name="interest" placeholder="Enter Interest Rate">
     </div>
 
-    <div class="col-md-6 form-group">
-        <label for="email">Email:</label><br>
-        <input  class="form-control"type="text" id="email" required value="<?php echo $lists['email']; ?>" name="email" placeholder="Enter Email">
-    </div>
-
- <div class="col-md-6 form-group">
-        <label for="mobile">Mobile:</label><br>
-        <input  class="form-control"type="text" id="mobile" onkeypress="allowNumericInput(event);"  required value="<?php echo $lists['mobile']; ?>" name="mobile" placeholder="Enter Mobile">
-    </div>
 	
 	<div class="col-md-6 form-group">
-        <label for="password">Password:</label><br>
-        <input  class="form-control"type="text" id="password"  name="password" placeholder="Enter Password">
+        <label for="tenor">Tenure (days):</label><br>
+        <select  class="form-control" name="tenor" id="tenor" >
+		<option value="">Choose Plan Tenure</option>
+            <option value="30" <?php echo($lists['tenor']=='30'? "selected" : ""); ?>>30 Days</option>
+            <option value="60" <?php echo($lists['tenor']=='60'? "selected" : ""); ?> >60 Days</option>
+            <option value="90" <?php echo($lists['tenor']=='90'? "selected" : ""); ?> >90 Days</option>
+		</select>
     </div>
+	<?php	if($edit==false){  
+	
+		if($this->session->userdata('role_id')==10){ // 10: super admin role;
+			
+		
+	?>
 	
 	<div class="col-md-6 form-group">
         <label for="password">Partner:</label><br>
-        <select  class="form-control" name="partner_id" id="partner_id" >
+        <select  class="form-control" name="partner_id" id="partner_id" <?php echo $partner_list_status;?> >
 		<option value="">Select Partner</option>
 		<?php for($i=0; $i<count($lists['partnersData']); $i++){
 				if($lists['partner_id']==$lists['partnersData'][$i]['VID']){
@@ -75,38 +78,19 @@
 		</select>
     </div>
 	
-	<div class="col-md-6 form-group">
-        <label for="password">Role:</label><br>
-        <select  class="form-control" name="role_id" id="role_id" >
-		<option value="">Select Role</option>
-			<?php for($i=0; $i<count($lists['AdminRoleData']); $i++){
-			if($lists['role_id']==$lists['AdminRoleData'][$i]['id']){
-					$selected = "selected";
-				}else{
-					$selected = "";
-					}	
+	
+	<?php
+			}else{ ?>
 			
-			echo '<option '.$selected.' value="'.$lists['AdminRoleData'][$i]['id'].'">'.$lists['AdminRoleData'][$i]['role_name'].'</option>';
-		}
-			?>
-		</select>
-    </div>
+			<input type="hidden" name="partner_id" id="partner_id" value="<?php echo $this->session->userdata('partner_id'); ?>" >
+			<?php 
+			}
+	}else{  ?>
+			<input type="hidden" name="partner_id" id="partner_id" value="<?php echo $lists['partner_id']; ?>" >
+	 <?php	}  ?>
 	
 	  
-	  <div class="col-md-6 form-group">
-                        <label for="status">
-						User Status:</label> <br>
-
-						<input class="form-input" type="radio" name="status" value="1" required <?php echo ($lists['status'] == 1) ? 'checked' : ''; ?>> Active    
-						<input  class="form-input" type="radio" name="status" value="0" required <?php echo ($lists['status'] == 0) ? 'checked' : ''; ?>> InActive
-                    </div>
-
 	
-	
-		
-
-
-
 					</div>
 				</div>
 				<div class="row">
@@ -118,10 +102,10 @@
 					
 					
 								<?php if($edit==true){ ?>
-								<input class="form-control" class="form-control" type="hidden" value="<?php echo $lists['admin_id']; ?>" id="admin_id" name="admin_id">
-						<input   type="submit" name="submit" id="" value="Update User" class="btn btn-success"/>
+								<input class="form-control" class="form-control" type="hidden" value="<?php echo base64_encode(base64_encode($lists['id'])); ?>" id="id" name="id">
+						<input   type="submit" name="submit" id="" value="Update Loan Plan" class="btn btn-success"/>
 								<?php }else{?>
-						<input   type="submit" name="submit" id="" value="Add User" class="btn btn-success"/>
+						<input   type="submit" name="submit" id="" value="Add Loan Plan" class="btn btn-success"/>
 								<?php } ?>
 					</div>
 				</div>

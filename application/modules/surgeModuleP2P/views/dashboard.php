@@ -229,9 +229,10 @@
 
             <div class="box-body">
 
-                           <div class="row">
+                          
 				
                    <br>		<?php if($this->session->userdata('partner_id')==0){ ?>
+				    <div class="row">
 				<form action="<?php echo base_url(); ?>surgeModuleP2P/surge/dashboard" method="post" class="">
 					<div class="col-md-3 form-group" style="display:none">
 							<label>Date Range:</label>

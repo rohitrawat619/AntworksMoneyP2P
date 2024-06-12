@@ -12,6 +12,7 @@ class Surgemodel extends CI_Model
 	//  $this->cldb = $this->load->database('credit-line', TRUE);
 	$this->cldb = $this->load->database('', TRUE); // antworks_p2pdevelopment
 	//	$this->load->model('Common_model');
+		$this->load->model('LendSocialCommunicationModel');
 			// Get the database name
 		$this->partner_id = $this->session->userdata('partner_id');
 	}
@@ -608,6 +609,19 @@ foreach ($postParameters as $param) {
 								
 			  if($insertResult){
 				    
+					
+					/***********start of mail send*************/
+							$product_type_id = "LendSocialDashboard"; $instance_id = "UserCreation"; //"Welcome Mail";
+							$input_data['scheme_id'] = $scheme_id;
+							$input_data['user_id'] = $this->session->userdata('user_id');
+							$input_data['mobileLender'] =  "9213855703";
+							$input_data['mobileBorrower'] =  "9213855703";
+							$input_data['partner_id'] = "1";  
+							
+							$input_data['user_email'] = $arr_user['email'];
+							$input_data['password'] = $this->input->post('password');
+							$resp = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							/****************end of mail send*******************/
 				  $resp['status'] = 1;
 				  $resp['msg'] = "User Updated Successfully: Update ID:".$user_id;
 				  $resp['user_id'] = $user_id;
@@ -804,6 +818,21 @@ $this->cldb->limit($limit, $start);
 			  if($insertResult){
 				  $arr_scheme['scheme_details_id'] = $scheme_id;
 							 $insertResult = $this->cldb->insert('invest_scheme_detail_logs', $arr_scheme);
+							 
+							 
+							 
+							 
+							/***********start of mail send*************/
+							$product_type_id = "LendSocialDashboard"; $instance_id = "Scheme Edit"; //"Welcome Mail";
+							$input_data['scheme_id'] = $scheme_id;
+							$input_data['user_id'] = $this->session->userdata('user_id');
+							$input_data['mobileLender'] =  "9213855703";
+							$input_data['mobileBorrower'] =  "9213855703";
+							$input_data['partner_id'] = "1";  
+							$resp = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							/****************end of mail send*******************/
+							
+							
 				  $resp['status'] = 1;
 				  $resp['msg'] = "Scheme Updated Successfully: Update ID:";
 				  $resp['scheme_id'] = $scheme_id;

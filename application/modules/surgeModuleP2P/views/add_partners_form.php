@@ -10,6 +10,9 @@
   // echo"<pre>"; print_r($lists); die(); 
     ?>
 	<div class="box">
+		<div class="row">
+			<div class="col-md-12">
+
 
 		<?php // print_r($lists); 
 			if($lists['VID']!=""){
@@ -40,7 +43,7 @@
 
     <div class="col-md-6 form-group">
         <label for="Address">Address:</label><br>
-        <textarea <?php echo$adminReadonlyStatus; ?> class="form-control" class="form-control"type="text" required id="Address" name="Address" placeholder="Enter Address"><?php echo $lists['Address']; ?></textarea><br><br>
+        <textarea <?php echo$adminReadonlyStatus; ?> class="form-control" style="height:34px;" class="form-control"type="text" required id="Address" name="Address" placeholder="Enter Address"><?php echo $lists['Address']; ?></textarea><br><br>
     </div>
 
     <div class="col-md-3 form-group">
@@ -98,7 +101,7 @@
 	
 	<div class="col-md-3 form-group">
         <label for="font_family" id="previewFontFamily" >Font Family:</label><br>
-		<select id="fontFamilyDropdown"  name="font_family" >
+		<select id="fontFamilyDropdown" class="form-control"  name="font_family" >
 		</select>
     </div>
 	
@@ -120,23 +123,39 @@
 						
 		<div class="col-md-3 form-group" id="BorrowerPartnerRegistrationFeeDiv1">
         <label >Borrower Registration Fee :</label><br>
-        <input  class="form-control"type="text" readonly value="<?php echo $lists['borrower_partner_registration_fee']; ?>" placeholder="Fee In Rupee"><br><br>
+        <label  class="form-control"  ><?php echo $lists['borrower_partner_registration_fee']; ?></label><br><br>
     </div>
                </div>
-			   		
+			   		</div>
+					
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
 			   <hr>
 <!-----------------start of admin block---------------->	
 			<?php if($this->session->userdata('role_id')!=11 AND  $this->session->userdata('role_id') !=12){ ?>
 			
 
+	
+	<!----start of section---------->
+<div class="box">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="box-body">
+				<div class="">
 		<div class="row" id="BorrowePlatformDiv" >
 <div class="col-md-3 form-group">
-    <label for="Borrower Registration Fees" id="borrower_platform_registration_fee"> Borrower Plaftform Registration Fee</label><br>
-    <input class="form-input" type="radio" name="borrower_platform_registration_fee"  onclick="showHideBorrowerFeesAmount(this.value)" value="1" required <?php echo ($lists['borrower_platform_registration_fee'] >= 1) ? 'checked' : ''; ?>> Yes
-    <input class="form-input" type="radio" name="borrower_platform_registration_fee" onclick="showHideBorrowerFeesAmount(this.value)" value="0" required <?php echo ($lists['borrower_platform_registration_fee'] < 1) ? 'checked' : ''; ?>> No
+    <label for="Borrower Registration Fees" id="borrower_platform_registration_feeCheckbox"> Borrower Platform Registration Fee</label><br>
+    <input class="form-input" type="radio" name="borrower_platform_registration_feeCheckbox"  onclick="showHideBorrowerFeesAmount(this.value)" value="1" required <?php echo ($lists['borrower_platform_registration_fee'] >= 1) ? 'checked' : ''; ?>> Yes
+    <input class="form-input" type="radio" name="borrower_platform_registration_feeCheckbox" onclick="showHideBorrowerFeesAmount(this.value)" value="0" required <?php echo ($lists['borrower_platform_registration_fee'] < 1) ? 'checked' : ''; ?>> No
 
     <?php echo (($lists['borrower_platform_registration_fee'] >= 1) ? '<b> &#8377;'. $lists['borrower_platform_registration_fee']."</b>": ''); ?>
-    <div id="borrowerFees"></div>
+    <div id="borrowerFees">
+		<label for="borrower_platform_registration_fee">Amount:</label><input type="number" name="borrower_platform_registration_fee" value="<?php echo $lists['borrower_platform_registration_fee']; ?>" class="form-input">
+	</div>
 </div>
 
  <div class="col-md-2 form-group ">
@@ -165,15 +184,36 @@
 		----->
     </div>
 					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-------------end of section----------------->	
+					
+					
+					
+					
 							<hr>
-	<div class="row" id="LenderPlatformDiv" >
+	
+	<!----start of section---------->
+<div class="box">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="box-body">
+				<div class="">
+				<div class="row" id="LenderPlatformDiv" >
 	<div class="col-md-2 form-group">
     <label for="Lender Registration Fees" id="lender_partner_registration_fee"> Lender Registration Fee</label><br>
-    <input class="form-input" type="radio" name="lender_partner_registration_fee" onclick="showHideLenderFeesAmount(this.value)" value="1" required <?php echo ($lists['lender_partner_registration_fee'] >= 1) ? 'checked' : '';  ?>> Yes
-    <input class="form-input" type="radio" name="lender_partner_registration_fee" onclick="showHideLenderFeesAmount(this.value)" value="0" required <?php echo ($lists['lender_partner_registration_fee'] == 0) ? 'checked' : ''; ?>> No
+    <input class="form-input" type="radio" name="lender_partner_registration_feeCheckbox" onclick="showHideLenderFeesAmount(this.value)" value="1" required <?php echo ($lists['lender_partner_registration_fee'] >= 1) ? 'checked' : '';  ?>> Yes
+    <input class="form-input" type="radio" name="lender_partner_registration_feeCheckbox" onclick="showHideLenderFeesAmount(this.value)" value="0" required <?php echo ($lists['lender_partner_registration_fee'] == 0) ? 'checked' : ''; ?>> No
 
     <?php echo (($lists['lender_partner_registration_fee'] >= 1) ? '<b> &#8377;'. $lists['lender_partner_registration_fee']."</b>": ''); ?>
-    <div id="lenderFees"></div>
+    <div id="lenderFees">
+	'<label for="lender_partner_registration_fee">Amount:</label><input style="width:120px;" type="number" name="lender_partner_registration_fee"  value="<?php echo $lists['lender_partner_registration_fee']; ?>" class="form-input">
+	</div>
 </div>
 
 	 <div class="col-md-2 form-group ">
@@ -188,7 +228,7 @@
 	
 	
 	<div class="col-md-3 form-group">
-    <label for="Lender Registration Fees" id="lender_partner_registration_fee"> Lender Plaftform Fee:
+    <label for="Lender Registration Fees" id="lender_partner_registration_fee"> Lender Platform Fee:
 	<?php 
 		if($lists['type_of_Lender_platform_fee']=="InPercentage"){
 			echo "<b> ". $lists['lender_platform_fee_percentage']."%</b>";
@@ -216,13 +256,25 @@
 		</select>
 				</div>
 			</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-------------end of section----------------->	
 	<?php }else{ ?>
-	<div class="col-md-2 form-group">-</div>
-		<div class="col-md-2 form-group" id="BorrowerPartnerRegistrationFeeDiv">
+<div class="box">
+	<div class="row">
+	<div class="box-body">
+		<div class="col-md-4 form-group" id="BorrowerPartnerRegistrationFeeDiv">
         <label for="borrower_partner_registration_fee">Borrower Registration Fee :</label><br>
         <input  class="form-control"type="text" value="<?php echo $lists['borrower_partner_registration_fee']; ?>" name="borrower_partner_registration_fee" id="borrower_partner_registration_fee"  placeholder="Fee In Rupee"><br><br>
     </div>
-			<div class="col-md-2 form-group">-</div>
+			
+					</div>
+					</div>
+					</div>
 	<?php } ?>
 <!------------------------end of admin block------------------->
 
@@ -234,8 +286,9 @@
 			<!-----------------start of lender ------------------->
 					
 			<?php if (in_array($lists['partner_type'], ['lender', 'both'])){ ?>
-
-				<div class="row">
+<div class="box">
+	<div class="row">
+	<div class="box-body">
 			<div class="col-md-8 form-group"><b>Lender Link: 
 			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageLender','linkInputIdLender','Lender')">Copy</button>
 					<small id="copyMessageLender" class="form-text text-muted"></small>
@@ -260,6 +313,8 @@
 		</div>
 					
 	</div>
+	</div>
+	</div>
 			<?php } ?>
 				<!----------------end of lender------------------>
 					
@@ -267,8 +322,11 @@
 					<!-----------------start of borrower ------------------->
 			
 			<?php if (in_array($lists['partner_type'], ['borrower', 'both'])){ ?>
+			<div class="box">
+			<div class="row">
+			<div class="box-body">
 			<div class="col-md-12 form-group">Borrower Links:</div>
-					<div class="col-md-8 form-group"><b>Bullet Link: 
+					<div class="col-md-6 form-group"><b>Bullet Link: 
 			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageBulletBorrower','linkInputIdBulletBorrower',' Bullet')">Copy</button>
 					<small id="copyMessageBulletBorrower" class="form-text text-muted"></small>
 			</b>
@@ -277,7 +335,7 @@
 					
 					</div>
 					
-			<div class="col-md-8 form-group"><b>EMI Link: 
+			<div class="col-md-6 form-group"><b>EMI Link: 
 			<button class="btn btn-outline-secondary " type="button" onclick="copyLink('copyMessageEmiBorrower','linkInputIdEmiBorrower',' EMI')">Copy</button>
 					<small id="copyMessageEmiBorrower" class="form-text text-muted"></small>
 			</b>
@@ -288,22 +346,24 @@
 							
 							
 							
-					<div class="col-md-4 form-group">
+					<div class="col-md-6 form-group">
         <label for="borrower_product_name">Borrower Product Name:</label><br>
         <input  class="form-control"type="text" required id="borrower_product_name" value="<?php echo $lists['borrower_product_name']; ?>" name="borrower_product_name" placeholder="Borrower Product Name"><br><br>
 			</div>		
-				<div class="col-md-3 form-group">
+	<div class="col-md-6 form-group">
 	 <label for="partner_logo">Borrower Product Logo:</label><br>
 	<input type="file" accept=".png,.jpg,.jpeg,.bmp" name="partner_borrower_product_logo_file" id="partner_borrower_product_logo_file" onchange="previewImage('partner_borrower_product_logo_file','partner_borrower_product_logo_imagePreview')" />
     <img src="<?php echo str_replace("D:/public_html/antworksp2p.com","",$lists['borrower_logo_path']); ?>" alt="Preview" id="partner_borrower_product_logo_imagePreview" style=" max-width: 200px; max-height: 200px;" />
 		</div>
+		
+		</div>
+		</div>
 
 			<?php } ?>
 						<!----------------end of borrower---------------------->
-					</div>
 					
-				</div>
 				<div class="row">
+				<div class="col-md-12">
 					<div class="box-footer text-right">
 						<input  class="form-control"type="hidden" class="csrf-security"
 							   name="<?php echo $this->security->get_csrf_token_name(); ?>"
@@ -319,10 +379,12 @@
 								<?php } ?>
 					</div>
 				</div>
+				
 
-			</div>
 		</form>
 	</div>
+	
+				
 
 <script>
     function copyLink(copyMessageVar,linkInputId,label) {
@@ -347,8 +409,7 @@
     }
 </script>
 
-	<div class="box-footer clearfix"></div>
-	<div class="clearfix"></div>
+	
 	
 </section>
 
@@ -515,17 +576,25 @@ function showHideLenderTypeOfPlatformFee(lenderPlatformFeeType) { // type_of_Len
 
     function showHideLenderFeesAmount(value) {
 		if(value>=1){
-        document.getElementById("lenderFees").innerHTML = '<label for="lender_partner_registration_fee">Amount:</label><input style="width:120px;" type="number" name="lender_partner_registration_fee"  value="<?php echo $lists['lender_partner_registration_fee']; ?>" class="form-input">';
+       // document.getElementById("lenderFees").innerHTML = '';
+	   $("#lenderFees").show();
 		}else{
-			 document.getElementById("lenderFees").innerHTML = '';
+			// document.getElementById("lenderFees").innerHTML = '';
+			// $("#lender_partner_registration_fee").val("");
+			  $("input[name='lender_partner_registration_fee']").val("");
+			 $("#lenderFees").hide();
 		}
     }
 
     function showHideBorrowerFeesAmount(value) {
 		if(value>=1){
-        document.getElementById("borrowerFees").innerHTML = '<label for="borrower_platform_registration_fee">Amount:</label><input type="number" name="borrower_platform_registration_fee" value="<?php echo $lists['borrower_platform_registration_fee']; ?>" class="form-input">';
-		}else{
-			 document.getElementById("borrowerFees").innerHTML = '';
+				$("#borrowerFees").show();
+   //     document.getElementById("borrowerFees").innerHTML = '<label for="borrower_platform_registration_fee">Amount:</label><input type="number" name="borrower_platform_registration_fee" value="<?php echo $lists['borrower_platform_registration_fee']; ?>" class="form-input">';
+		}else{	
+				 $("input[name='borrower_platform_registration_fee']").val("");
+				
+				$("#borrowerFees").hide();
+			// document.getElementById("borrowerFees").innerHTML = '';
 		}
     }
 
