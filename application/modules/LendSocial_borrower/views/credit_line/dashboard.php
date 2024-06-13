@@ -3,6 +3,8 @@
 
 .model-loanbox {width:100%; float:left; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:20px 20px; margin:30px 0;}
 
+.model-loanbox:hover {width:100%; float:left; border: 1px solid #e1e1e1; border-radius:10px; box-shadow: 1px 1px 10px 5px #e8e8e8; padding:20px 20px; margin:30px 0;background-color:#5b358357;cursor: pointer;}
+
 .model-creditloan-dtls {width:100%; float:left;}
 
 .model-creditloan-dtls li {display:inline-block; width:50%; float:left; padding:15px 0; font-size:12px;}
