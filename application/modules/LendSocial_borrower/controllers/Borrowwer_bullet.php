@@ -142,14 +142,7 @@ public function e_sign(){
 }
 public function e_sign_send_otp_ajax(){
   
-  $partner_loan_plan = $this->credit_line_model->get_loan_plans();
-  $partner_loan_plan['loan_no'] = $this->getLoanId();
-  $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
-  if($data==1){
    $response=$this->credit_line_model->credit_line_sendOtpsignature($this->getBorrowerId(),$this->getLoanId());
-}else{
-  $response['msg']='data not updated';
-}
   echo json_encode($response);die();
 }
 
@@ -189,15 +182,17 @@ public function e_sign_success(){
 
 public function dashboard(){
 
+  $this->setBorrowerId('100767');
+  $this->setLoanId('LN10000004521');
+
   $data=array();
   
-  $loan_details=$this->credit_line_model->loan_details($this->getBorrowerId());
-  // echo "<pre>";print_r($loan_details);die();
+  $data['loan_details']=$this->credit_line_model->loan_details($this->getBorrowerId());
+  $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans();
+  // echo "<pre>";print_r($data);die();
 
-  
-  $data['loan_details']=$loan_details;
-  $data['imageBaseUrl'] = $this->imageBaseUrl;
-  $data['logo_path'] = $this->partnerInfo['logo_path'];
+  // $data['imageBaseUrl'] = $this->imageBaseUrl;
+  // $data['logo_path'] = $this->partnerInfo['logo_path'];
    $this->load->view('template-LendSocial/header',$data);
  // $this->load->view('credit_line_templates/nav');
   $this->load->view('credit_line/dashboard',$data);
@@ -205,12 +200,18 @@ public function dashboard(){
 }
 
 public function disburse(){
-  // $_SESSION['borrower_id'];
-  // $_SESSION['loan_id']=192;
+    $partner_loan_plan = $this->credit_line_model->get_loan_plans();
+  $partner_loan_plan['loan_no'] = $this->getLoanId();
+  $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
 
-  $disburse=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId());
-  // $response=array('borrower_id'=>$_SESSION['borrower_id'],'loan_id'=>$_SESSION['loan_id']);
-  echo json_encode($disburse);die();
+    if($data==1){
+      $response=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId());
+      $response['msg']='data updated';
+}else{
+  $response['msg']='data not updated';
+}
+
+  echo json_encode($response);die();
 
 
   
