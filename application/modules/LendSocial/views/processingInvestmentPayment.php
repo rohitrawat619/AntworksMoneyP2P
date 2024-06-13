@@ -146,6 +146,16 @@ document.body.removeChild(form);
 		//	alert(signature);
             console.log(response);
          },
+		     // Add a new handler for the cancel event
+    modal: {
+        ondismiss: function() {
+            // Handle the cancellation of the payment
+            console.log('Payment has been cancelled');
+			window.location.href = '/LendSocial/surgeInvestmentPlans';
+			//alert("Payment has been cancelled");
+            // Add any additional actions you want to take when the payment is cancelled
+        }
+	},
       };
 
      

@@ -40,7 +40,7 @@ $investmentData = $lists['investmentList'];
 					<p class="investmentno">Investment No.: <?php echo $current_investment['investment_No']; ?></p>
 					<p class="investmentname"><?php echo $current_investment['scheme_name']; ?></p>
 					<ul class="invest-details">
-						<li>Investment Amount <span>Rs. <?php echo $current_investment['amount']; ?></span></li>
+						<li>Investment Amount <span><i class="fa fa-rupee"></i> <?php echo $current_investment['amount']; ?></span></li>
 						<li>Interest Value <span><?php echo $current_investment['final_interest']; ?></span></li>
 						<li>Investment Date <span><?php echo $current_investment['investment_date']; ?></span></li>
 						<li>Investment Rate <span><?php echo $current_investment['hike_rate']; ?></span></li>
@@ -97,7 +97,7 @@ $investmentData = $lists['investmentList'];
 					<p class="investmentno">Investment No.: <?php echo $past_investment['investment_No']; ?></p>
 					<p class="investmentname"><?php echo $past_investment['scheme_name']; ?></p>
 					<ul class="invest-details">
-						<li>Investment Amount <span>Rs. <?php echo $past_investment['amount']; ?></span></li>
+						<li>Investment Amount <span><i class="fa fa-rupee"></i> <?php echo $past_investment['amount']; ?></span></li>
 						
 						<li>Investment Date <span><?php echo $past_investment['investment_date']; ?></span></li>
 						<li>Redemption Date <span><?php echo $past_investment['redemption_date']; ?></span></li>
