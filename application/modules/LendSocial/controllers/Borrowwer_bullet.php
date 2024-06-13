@@ -210,7 +210,7 @@ public function dashboard(){
   $data=array();
   //echo "<pre>";print_r($_SESSION);die();
   $loan_details=$this->credit_line_model->loan_details($this->getBorrowerId());
-  
+    $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();
   $data['loan_details']=$loan_details;
   $data['imageBaseUrl'] = $this->imageBaseUrl;
   $data['logo_path'] = $this->partnerInfo['logo_path'];
@@ -220,6 +220,7 @@ public function dashboard(){
   $this->load->view('template-LendSocial/footer',$data);
 }
 
+/*
 public function disburse(){
 
   $disburse=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId(),$this->getPartnerId());
@@ -227,8 +228,26 @@ public function disburse(){
   echo json_encode($disburse);die();
 
   
+} */
+
+
+public function disburse(){
+    $partner_loan_plan = $this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();
+  $partner_loan_plan['loan_no'] = $this->getLoanId();
+  $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
+
+    if($data==1){
+      $response=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId());
+      $response['msg']='data updated';
+}else{
+  $response['msg']='data not updated';
 }
 
+  echo json_encode($response);die();
+
+
+  
+}
 
 }
 
