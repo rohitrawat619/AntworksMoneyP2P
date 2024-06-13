@@ -39,3 +39,5 @@ application/modules/LendSocial/views/investmentAmountPreview.php
 application/modules/LendSocial/views/investmentAmount_@old2024-june-12.php
 application/modules/LendSocial/views/investmentAmountPreview_@old2024-rr.php
 application/modules/surgeModuleP2P/views_@old_2024-may-21/*
+application/modules/LendSocial/controllers/Borrowwer_bullet - Copy.php
+application/modules/LendSocial/views/credit_line/dashboard_@old_2024-june-13.php
