@@ -96,7 +96,7 @@ class LendSocial extends CI_Controller
 				$this->session->set_userdata(array("mobile"=>$mobile));
 				$jsondaaaa = json_decode($this->sendLendSocialOtp(),true);
 				if(isset($jsondaaaa['errors'])){
-				$otpSentStatusMsg = $jsondaaaa['errors'][0]['message'];
+				$otpSentStatusMsg = str_replace('Insufficient credits','Internal Server Error!',$jsondaaaa['errors'][0]['message']);
 				}else{
 					$otpSentStatusMsg = "An otp has been sent to ******".substr(($mobile!=''?$mobile:$this->sessionData["mobile"]),6).".";
 				}
@@ -659,45 +659,44 @@ class LendSocial extends CI_Controller
 			//	redirect(base_url() . 'loginLogoutadmin');
 			}
 
-			public function lenderInvestmentProcessing(){ 
-							$this->checkSessionMobileNo();
-							
-							$ant_txn_id = $this->input->post('ant_txn_id');
-							$mobile = $this->input->post('mobile');
-							$investment_amount = $this->input->post('investment_amount');
-							$razorpay_order_id = $this->input->post('razorpay_order_id');
-							$razorpay_payment_id = $this->input->post('razorpay_payment_id');
-							$razorpay_signature = $this->input->post('razorpay_signature');
-							$lender_id = $this->input->post('lender_id');
-							$total_amount = $this->input->post('total_amount');
-							$scheme_id = $this->input->post('scheme_id');
+				public function lenderInvestmentProcessing(){ 
+				$this->checkSessionMobileNo();
+
+				$ant_txn_id = $this->input->post('ant_txn_id');
+				$mobile = $this->input->post('mobile');
+				$investment_amount = $this->input->post('investment_amount');
+				$razorpay_order_id = $this->input->post('razorpay_order_id');
+				$razorpay_payment_id = $this->input->post('razorpay_payment_id');
+				$razorpay_signature = $this->input->post('razorpay_signature');
+				$lender_id = $this->input->post('lender_id');
+				$total_amount = $this->input->post('total_amount');
+				$scheme_id = $this->input->post('scheme_id');
 				//	echo"<pre>";
-			$socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$total_amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
-			//  $socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
-			//echo "<pre>";
-			//print_r($socialAfterPaymentRequest);
-			$lenderInvestmentRequest = json_decode($this->LendSocialmodel->lenderInvestment($mobile,$lender_id,$investment_amount,$scheme_id,$ant_txn_id),true);
-			//	print_r($lenderInvestmentRequest);
-			//	 print_r($this->input->post());
+				$socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$total_amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
+				//  $socialAfterPaymentRequest = json_decode($this->LendSocialmodel->socialAfterPayment($ant_txn_id,$mobile,$amount,$razorpay_order_id,$razorpay_payment_id,$razorpay_signature),true);
+				//echo "<pre>";
+				//print_r($socialAfterPaymentRequest);
+				$lenderInvestmentRequest = json_decode($this->LendSocialmodel->lenderInvestment($mobile,$lender_id,$investment_amount,$scheme_id,$ant_txn_id),true);
+				//	print_r($lenderInvestmentRequest);
+				//	 print_r($this->input->post());
 				// die();
-			//	 print_r($reponseRedeemptionRequest);
-$data['logo_path'] = $this->partnerInfo['logo_path'];
-		$this->load->view('template-LendSocial/header',$data);
-				if($lenderInvestmentRequest['status']==1){
+				//	 print_r($reponseRedeemptionRequest);
+				$data['logo_path'] = $this->partnerInfo['logo_path'];
+				$this->load->view('template-LendSocial/header',$data);
+					if($lenderInvestmentRequest['status']==1){
 						$this->LendSocialmodel->saveInvestmentOtherFee($lenderInvestmentRequest['investment_no']); // for saving the payment info into "trans_fee_structure"
-					$data['lists']['title'] = "Investment Successfully";
-					$data['lists']['text'] = "click on below link for home page";
-					$data['lists']['link'] = "lenderDashboard";
-					$this->load->view('success',$data);
-				}else{
-					
-					$data['lists']['title'] = "Investment Request Failed";
-					$data['lists']['text'] = "click on below link for home page";
-					$data['lists']['link'] = "lenderDashboard";
-					$this->load->view('failed',$data);
-				}
-				$this->load->view('template-LendSocial/footer',$data);
+						$data['lists']['title'] = "Investment Successfully";
+						$data['lists']['text'] = "click on below link for home page";
+						$data['lists']['link'] = "lenderDashboard";
+						$this->load->view('success',$data);
+					}else{
+						$data['lists']['title'] = "Investment Request Failed";
+						$data['lists']['text'] = "click on below link for home page";
+						$data['lists']['link'] = "lenderDashboard";
+						$this->load->view('failed',$data);
 					}
+				$this->load->view('template-LendSocial/footer',$data);
+				}
 		
 
 			public function surgeInvestmentPlans(){
