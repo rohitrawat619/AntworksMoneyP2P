@@ -537,7 +537,7 @@ public function viewLoanaggrement($borrower_id){
 	  
 	          public function updateLoanDetails($loanDetail) {
 				  $loanDetail_arr = $loanDetail[0];
-				//  echo"<pre>"; print_r($loanDetail); die();
+				 // echo"<pre>"; print_r($loanDetail); 
 				  
           $loanDetails = array(
               'approved_loan_amount' => $loanDetail_arr['amount'],
@@ -549,12 +549,14 @@ public function viewLoanaggrement($borrower_id){
           $where = array(
               'borrower_id' => $loanDetail['borrower_id'],
               'loan_no' => $loanDetail['loan_no'],
+              'id' => $loanDetail['id'],
+              //'disbursement_request!=' => 1,
           );
       
           $this->db->where($where);
       
           $this->db->update('p2p_loan_list', $loanDetails);
-
+			//echo $this->db->last_query(); die();
             return 1;
           
       }

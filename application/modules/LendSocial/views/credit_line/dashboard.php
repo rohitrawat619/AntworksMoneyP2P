@@ -144,18 +144,20 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
                 return false;
             }
 			var selectedId=$('.e-signbox-loanbox-active').find('.model-creditloan-dtls').data('id');
-			 console.log(selectedId);return;
+			// console.log(selectedId);return;
 
         $.ajax({
             url: 'disburse',
             type: 'POST',
-
+			data: {
+			selectedId:selectedId
+			},
             success: function(response) {
 				console.log(response);
 				var resp =  JSON.parse(response);
                 // Process the response data
-                alert(resp.msg); // Log the response for testing
-				//location.reload();
+               // alert(resp.msg); // Log the response for testing
+				location.reload();
                 // You can update the HTML or perform actions based on the response here
             },
             error: function(xhr, status, error) {

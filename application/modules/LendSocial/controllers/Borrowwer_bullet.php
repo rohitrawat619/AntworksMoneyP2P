@@ -232,17 +232,24 @@ public function disburse(){
 
 
 public function disburse(){
-    $partner_loan_plan = $this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();
-  $partner_loan_plan['loan_no'] = $this->getLoanId();
+	$selectedId = $this->input->post('selectedId');
+	if($selectedId!=""){
+		
+    $partner_loan_plan = $this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1,'id'=>$selectedId));//get_loan_plans();
+  $partner_loan_plan['id'] = $this->getLoanId();
+   $partner_loan_plan['loan_no'] = $this->getLoanNo();
+  $partner_loan_plan['borrower_id'] = $this->getBorrowerId();
   $data=$this->credit_line_model->updateLoanDetails($partner_loan_plan);
 
     if($data==1){
-      $response=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId());
+      $response=$this->credit_line_model->disbursement_request($this->getBorrowerId(),$this->getLoanId(),$this->getPartnerId());
       $response['msg']='data updated';
 }else{
   $response['msg']='data not updated';
 }
-
+	}else{
+$response['msg']='Loan Plan ID Required';
+	}
   echo json_encode($response);die();
 
 
