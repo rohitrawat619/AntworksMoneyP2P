@@ -151,7 +151,9 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
         $.ajax({
             url: 'disburse',
             type: 'POST',
-
+			data: {
+				selectedId:selectedId
+			},
             success: function(response) {
 				console.log(response);
 				var resp =  JSON.parse(response);
