@@ -6,6 +6,40 @@ class Invest_model_p2p extends CI_Model{
 		$this->load->helper('dc_helper');
 		//$this->cldb = $this->load->database('credit-line', TRUE);
     }
+	
+				public function getLastLenderStatementbalance($lender_id, $partner_id)
+			{
+				$this->db->select('balance');
+				$this->db->from('lendsocial_lender_statement');
+				$this->db->where('lender_id', $lender_id);
+				$this->db->where('partner_id', $partner_id);
+				$this->db->order_by('id', 'DESC');
+				$this->db->limit(1);
+				
+				$query = $this->db->get();
+				
+				if ($query->num_rows() > 0) {
+					$result = $query->row_array();
+					return isset($result['balance']) ? (float)$result['balance'] : 0; // Convert to float
+				} else {
+					return 0; // Return 0 if no record found
+				}
+			}
+
+	
+				public function getPartnerIdBySchemeID()
+			{
+				$query = $this->db->select('vendor_id')->get_where('invest_scheme_details', array('id' => $this->input->post('scheme_id')));
+				
+				if ($this->db->affected_rows() > 0) {
+					$result = $query->row(); // Fetch single row
+					return $result->vendor_id; // Return only the vendor_id
+				} else {
+					return false;
+				}
+			}
+
+	
 	public function check_user_exist_in_p2p(){
 		
 		$query = $this ->db
@@ -97,6 +131,7 @@ class Invest_model_p2p extends CI_Model{
 			if ($steps['ant_txn_id'] != '' && $steps['investment_No'] != '') {
 				return $current_step = array(
 					'lender_id' => $steps['lender_id'],
+					'vendor_id' => $steps['vendor_id'],
 					'step' => 3,
 					'msg' => 'Payment Done'
 				);
@@ -194,6 +229,7 @@ class Invest_model_p2p extends CI_Model{
 				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['investment_date']));
 				   $investment_arr[$i]['redemption_date'] = $redemption_date;
 				   $investment_arr[$i]['redemption_status'] = $row['redemption_status'];
+				   $investment_arr[$i]['lockin_period'] = $row['Lockin_Period'];
 				   $total_investment_amount += $row['amount'];
 				   $total_current_value += $calculate_amount['current_value'];
 				 #Update Final Interest and current Value
@@ -272,6 +308,7 @@ class Invest_model_p2p extends CI_Model{
 				   $investment_arr[$i]['investment_date'] = date('d-m-Y', strtotime($row['investment_date']));
 				   $investment_arr[$i]['redemption_date'] = $redemption_date;
 				   $investment_arr[$i]['redemption_status'] = $row['redemption_status'];
+				   $investment_arr[$i]['lockin_period'] = $row['Lockin_Period'];
 				   $i++;
 				  }
 			
