@@ -43,3 +43,5 @@ application/modules/LendSocial/controllers/Borrowwer_bullet - Copy.php
 application/modules/LendSocial/views/credit_line/dashboard_@old_2024-june-13.php
 application/modules/surgeapi/controllers/Investapip2p_@old_2024-june-06.php
 application/modules/surgeapi/controllers/Investapip2p_@old_2024-may-05.php
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024_june_14.php
+application/modules/LendSocial/views/credit_line/e_sign_@old_2024-june-14.php
