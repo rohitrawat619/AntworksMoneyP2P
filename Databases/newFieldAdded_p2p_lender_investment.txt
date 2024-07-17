@@ -1,0 +1,1 @@
+ALTER TABLE `p2p_lender_investment` ADD `system_generated_redemption_date` DATETIME NULL AFTER `tenure`;
