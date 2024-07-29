@@ -97,3 +97,5 @@ defined('SMS_GATEWAY_USERNAME')      OR define('SMS_GATEWAY_USERNAME', 'shantanu
 defined('SMS_GATEWAY_HASH_API')      OR define('SMS_GATEWAY_HASH_API', 'b3a4f30ed009f72aa58fcad1e58ddd49b8b7fd44f5a82bc2b93da9325174d68f');//
 defined('SMS_GATEWAY_SENDER')      OR define('SMS_GATEWAY_SENDER', 'ANTFIN');//
 defined('ANTWORKS_BANK_AC')      OR define('ANTWORKS_BANK_AC', '0004102000040071');// dated: 15-nov-2023 using this for generate bank file in surge module
+defined('NACH_EXPIRE_AT')      OR define('NACH_EXPIRE_AT', strtotime('+1 year'));
+defined('NACH_AMOUNT')      OR define('NACH_AMOUNT', '100000');
