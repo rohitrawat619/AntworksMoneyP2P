@@ -45,9 +45,153 @@ class LendSocial extends CI_Controller
 						
 							}
 
+		public function testing(){
+			$scheme_id = $this->input->get('scheme_id');
+			$scheme_data = $this->LendSocialmodel->getSchemeDataById($scheme_id);
+			if($scheme_data!=""){
+				$rate = $scheme_data['Interest_Rate'];
+			}else{
+				$error_msg = "By Scheme ID data not found for Interest rate";
+			}
+			echo"<pre>"; print_r($scheme_data['Interest_Rate']);
+			
 		
-	
+		}
+		
+		public function calculate_lender_payout_schedule_data_processing($amount,$scheme_id,$mobile,$investment_no){ //testController lenderInvestmentProcessing
+						/*$days = (int) $this->input->get('days');
+						$amount = (float) $this->input->get('amount');
+						$rate = $this->input->get('rate'); // Annual interest rate in percentage
+						$payout_type = $this->input->get('payout_type'); // monthly/maturity 
+						$scheme_id =  $this->input->get('scheme_id');
+						$mobile = $this->input->get('mobile');
+						$investment_no = $this->input->get('investment_no'); */
+						//$rate = $this->LendSocialmodel->getSchemeDataById($scheme_id);
+						
+						$scheme_data = $this->LendSocialmodel->getSchemeDataById($scheme_id);
+						if($scheme_data!=""){
+						$rate = $scheme_data['Interest_Rate'];
+						$tenure = $scheme_data['Tenure'];
+						$payout_type = $scheme_data['payout_type'];
+						}else{
+						$error_msg = "By Scheme ID data not found for Interest rate";
+						}
+						$batchProcessingId = uniqid(true);
+						
+						$response = $this->calculate_lender_payout_schedule($tenure,$amount,$rate,$payout_type);
+						
+						//print_r($response['payout_data'][1]);
+						if($response['status']==1){
+					for($ii=1; $ii<=count($response['payout_data']); $ii++){
+						
+						$dataTld = $response['payout_data'][$ii];
+						$dataTld['payout_type']   = $response['payout_type'];
+						$dataTld['tenure']   = $response['tenure'];
+						$dataTld['batchProcessingId']   = $batchProcessingId;
+						$dataTld['amount']   = $amount;
+						$dataTld['created_date'] = date("Y-m-d H:i:s");
+						$dataTld['created_id'] = $this->session->userdata('user_id');
+						$dataTld['scheme_id	'] = $scheme_id	;
+						$dataTld['payout_status'] = 0; // 1: payout completed: 0: payout pending	
+						$dataTld['mobile'] = $mobile;
+						$dataTld['investment_No'] = $investment_no;
+						
+						
+						
+				       // echo"<pre>";   print_r($dataTld); die();
+						$pa = $this->LendSocialmodel->add_lender_payout_schedule_model($dataTld);
+									print_r($pa);
+					}  }
+					
+					
+						 }
+				
 
+				 /*********************Starting of calculate_lender_payout_schedule Function ********************/		
+				public function calculate_lender_payout_schedule($tenure,$amount,$rate,$payout_type){ // Dated: 2024-july-25 Dheeraj Dutta
+				
+				//Rate: Annual interest rate in percentage
+				
+
+				// Validate inputs
+				if ($tenure <= 0 || $amount <= 0 || $rate<=0 || $payout_type=="") {
+					
+					$resp['status'] = 0;
+					$resp['msg'] = "Invalid Day,Amount Or Payout Type";
+					$resp['payout_data'] = ""; 
+					return $resp;
+				}
+
+				
+				$resp['status'] = 1;
+				$resp['msg'] = "Success";	
+				$resp['payout_type']   = $payout_type;
+				$resp['tenure']   = $tenure;
+				$resp['payout_data'] = [];
+				
+				/***************************Start Of Monthly Payout Type**********************************/
+				if($payout_type=="monthly"){
+				$interest_days = 30;
+				// Calculate number of complete periods and remaining days
+				$noOfTimes = floor($tenure / $interest_days);
+				$remainingDays = $tenure % $interest_days;
+
+				
+				
+				for ($i = 1; $i <= $noOfTimes; $i++) {
+					$interval_days = $i * $interest_days;
+					$payment_type = "Interest";
+					$resp['payout_data'][$i] = $this->calculate_lender_payout_interest($rate, $amount, $interest_days, $interval_days,$payment_type);
+				}
+
+				if ($remainingDays > 0) {
+					$payment_type = "InterestAndPrinciple";
+					$resp['payout_data'][$i-1] = $this->calculate_lender_payout_interest($rate, $amount, $interest_days+$remainingDays, ($interval_days+$remainingDays),$payment_type);
+				}
+				}else if($payout_type=="maturity"){
+				/**********************End Of Monthly Payout Type***********************/	
+				
+				
+				
+				/**********************Start Of Yearly Payout***********************/
+				$interest_days = $tenure;
+				$interval_days = $tenure;
+				$payment_type = "InterestAndPrinciple";
+				$resp['payout_data'][1] = $this->calculate_lender_payout_interest($rate, $amount, $interest_days, $interval_days,$payment_type);
+				
+				}else{
+					$resp['msg'] = "Invalid Payout Type";	
+				}
+				/**********************End Of Yearly Payout***********************/
+					
+					
+					
+					
+				return ($resp);
+
+			}	 /*********************Starting of calculate_lender_payout_schedule Function ********************/	
+					
+			
+
+	public function calculate_lender_payout_interest($rate, $amount, $interest_days, $interval_days,$payment_type){ // Dated: 2024-july-25 Dheeraj Dutta
+    $interest_per_day = $amount * ($rate / 100) / 365;
+    $final_interest = $interest_days * $interest_per_day;
+    $currentDate = date("Y-m-d");
+    $payoutDate = date("Y-m-d", strtotime("$currentDate +$interval_days days"));
+
+    return [
+	'basic_rate' => $rate,
+        'payment_type' => $payment_type,
+        'interval_days' => $interval_days,
+        'payout_date' => $payoutDate,
+        'interest_days' => $interest_days,
+        'interest_per_day' => round($interest_per_day, 2),
+        'final_interest' => round($final_interest, 2),
+        'payout_amount' => round($final_interest + $amount, 2)
+    ];
+}
+
+	
 	public function dashboard(){
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
@@ -193,11 +337,13 @@ class LendSocial extends CI_Controller
 		$this->load->view('investmentAmount',$data);
 			$this->load->view('template-LendSocial/footer',$data);
 		}
+	
 		public function hello(){
 			
 			print_r($this->input->post());
 		}
 		
+			
 			public function processingInvestmentPayment(){
 
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
@@ -300,7 +446,8 @@ class LendSocial extends CI_Controller
 		$this->load->view('template-LendSocial/footer',$data);
 			
 		}
-				public function sendRedemptionReqest(){
+			
+			public function sendRedemptionReqest(){
 					$this->checkSessionMobileNo();
 				}
 				
@@ -685,6 +832,7 @@ class LendSocial extends CI_Controller
 				$this->load->view('template-LendSocial/header',$data);
 					if($lenderInvestmentRequest['status']==1){
 						$this->LendSocialmodel->saveInvestmentOtherFee($lenderInvestmentRequest['investment_no']); // for saving the payment info into "trans_fee_structure"
+					$this->calculate_lender_payout_schedule_data_processing($investment_amount,$scheme_id,$mobile,$lenderInvestmentRequest['investment_no']); // { //testControllerlenderInvestmentProcessing
 						$data['lists']['title'] = "Investment Successfully";
 						$data['lists']['text'] = "click on below link for home page";
 						$data['lists']['link'] = "lenderDashboard";
@@ -743,24 +891,29 @@ class LendSocial extends CI_Controller
 			}
 			
 			//  echo"Hello";	
-		$resp = $this->LendSocialmodel->get_registration_fee_status($userType,$user_id,$transactionType);
-		$feeStructureMasterData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],$userType);
-		  //print_r($resp); die();
-	//	print_r($resp); die();
-		
-		if(!empty($resp[0]) && isset($resp[0])){
-			
-			//echo "inside"; die();
-			if($userType=="lender"){
-			//redirect(base_url('LendSocial/').'surgeInvestmentPlans');
-			redirect(base_url('LendSocial/').'lenderDashboard');
-			}else if($userType=="borrowerBullet"){
+				$resp = $this->LendSocialmodel->get_registration_fee_status($userType,$user_id,$transactionType);
+				$feeStructureMasterData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],$userType);
+				//	echo"<pre>";  print_r($feeStructureMasterData[0]); //die();
+				//	print_r($resp); die();
+				$isRegisFeePaid = (boolean)(!empty($resp[0]) && isset($resp[0])); // 
+				$isMasterRegisFeeEmpty = (boolean)(empty($feeStructureMasterData[0]['partner_registration_fee_charges']) || $feeStructureMasterData[0]['partner_registration_fee_charges'] == 0);
+
+				//echo "<br>isMasterRegisFeeEmpty:".var_dump($isMasterRegisFeeEmpty)."<br>";
+				//	echo "<br>isRegisFeePaid:".var_dump($isRegisFeePaid)."<br>";
+				if($isRegisFeePaid==true || $isMasterRegisFeeEmpty==true){
+				//regisFeeStatus: paid;
+				// isMasterRegisFeeEmpty
+				//	echo "inside"; die();
+				if($userType=="lender"){
+				//redirect(base_url('LendSocial/').'surgeInvestmentPlans');
+				redirect(base_url('LendSocial/').'lenderDashboard');
+				}else if($userType=="borrowerBullet"){
 				redirect(base_url('LendSocial/').'Borrowwer_bullet/info');
-			}
-			
-		}else{
-			
-			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($feeStructureMasterData[0]['partner_registration_fee_charges'],$this->sessionVariableData['mobile']),true);
+				}
+
+				}else{
+				//	echo "payment order"; die();
+				$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($feeStructureMasterData[0]['partner_registration_fee_charges'],$this->sessionVariableData['mobile']),true);
 		
 		
 		$transFeeStructureData['user_type'] = $userType; // field name
