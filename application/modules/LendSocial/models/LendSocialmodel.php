@@ -264,11 +264,18 @@ class LendSocialmodel extends CI_Model
 
 							$arr_user_detail['company_name'] = $this->input->post('company_name');
 							// $arr_user_detail['company_code'] = $this->input->post('company_code');
-							$arr_user_detail['company_code'] = ($this->input->post('company_code')==""? 0: $this->input->post('company_code'));
+							
+								$company_code = $this->input->post('company_code');
+
+								// Assign to arr_user_detail with proper handling for empty values
+								$arr_user_detail['company_code'] = ($company_code !== "" ? $company_code : 0);
+								
+							//  $arr_user_detail['company_code'] = ($this->input->post('company_code')==""? 0: $this->input->post('company_code'));
+							
 							$arr_user_detail['salary_process'] = $this->input->post('salary_process');
 							$arr_user_detail['net_monthly_income'] = $this->input->post('net_monthly_income');
 
-
+								
 							}else if($formName=="accountDetail"){
 							$arr_user_detail = array(
 							'id' => $this->input->post('id'),
@@ -281,7 +288,8 @@ class LendSocialmodel extends CI_Model
 
 
 									foreach ($arr_user_detail as $key => $value) {
-									if (empty($value)) {
+									//if (empty($value)) {
+										if ($value === null || $value === "") {
 									$resp['status'] = 2;
 									$resp['msg'] = "Field '$key' is empty";
 									$resp['mobile'] = "";
@@ -694,6 +702,23 @@ curl_setopt_array($curl, array(
 				}
 	/**************ending of socialAfterPayment here**************/
 
+
+				/*********************starting of getSchemeDataById here****************/
+						public function getSchemeDataById($scheme_id){
+
+						$this->db->select('*');
+						$this->db->from('invest_scheme_details');
+						$this->db->where('id', $scheme_id);
+						
+						$query = $this->db->get();
+						if ($this->db->affected_rows() > 0) {
+						return $result = $query->row_array();
+						} else {
+						return false;
+						}
+						}
+				/***********************ending of getSchemeDataById here****************/
+
 /******************starting of lenderInvestment here*************/
 		public function lenderInvestment($mobile,$lender_id,$amount,$scheme_id,$ant_txn_id){  
 						
@@ -738,6 +763,18 @@ curl_setopt_array($curl, array(
 				}
 	/**************ending of lenderInvestment here**************/
 
+
+				/****************starting of add_lender_payout_schedule************************/
+				public function add_lender_payout_schedule_model($data){ // Dated: 2024-july-25
+
+				$this->db->insert('lendsocial_lender_payout_schedule',$data);
+				if($this->db->affected_rows()>0){
+						return true;
+				}else{
+					return false;
+				}
+				}
+				/****************ending of add_lender_payout_schedule***********************/			
 
 
 /******************starting of sendRedemptionRequest here************Done*/
