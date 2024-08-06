@@ -2,10 +2,12 @@
 class nach_model extends CI_Model{
 
 public function __construct(){
+
     $this->apiBaseUrl= "https://antworksp2p.com/credit-line/"; //"https://antworksmoney.com/credit-line/p2papiborrower/";
     $this->content_type="application/json";
     $this->authorization="Basic cnpwX2xpdmVfUGVaVElwMXNDcGhvWmQ6dkN5TWVuajhTZlFoNXdlUFJqNThiWG5v";
     $this->load->database();
+
 }
 
 public function create_customer($data) {
@@ -95,6 +97,7 @@ public function create_customer($data) {
 
 
 public function create_customer_api($data) {
+
   $curl = curl_init();
 
   $postFields = json_encode([
@@ -143,6 +146,7 @@ public function create_customer_api($data) {
 
 
 public function getCustomerId($borrower_id) {
+
   // Sanitize input data
   $sanitized_data = ['borrower_id' => htmlspecialchars($borrower_id, ENT_QUOTES, 'UTF-8')];
   // $customer_id = htmlspecialchars($data['customer_id'], ENT_QUOTES, 'UTF-8');
@@ -203,19 +207,22 @@ public function create_order($data) {
       'token_notes_key_2' => htmlspecialchars($data['token_notes_key_2'], ENT_QUOTES, 'UTF-8'), 
       'beneficiary_name' => htmlspecialchars($data['beneficiary_name'], ENT_QUOTES, 'UTF-8'),
       'account_number' => htmlspecialchars($data['account_number'], ENT_QUOTES, 'UTF-8'),
-      'account_type' => htmlspecialchars($data['account_type'], ENT_QUOTES, 'UTF-8'),
-      'ifsc_code' => htmlspecialchars($data['ifsc_code'], ENT_QUOTES, 'UTF-8')
+      'ifsc_code' => htmlspecialchars($data['ifsc_code'], ENT_QUOTES, 'UTF-8'),
+      'account_type' => htmlspecialchars($data['account_type'], ENT_QUOTES, 'UTF-8')
   ];
 
-  // Insert order data into the database
-  $this->db->insert('master_nach_customer_order', $sanitized_data);
-  $insert_id = $this->db->insert_id();
+  
 
   // Call the API to create the order and get the response
   $response_api = $this->create_order_api($sanitized_data);
 
   // Check if the response contains an ID
   if (isset($response_api['id'])) {
+
+        // Insert order data into the database
+      $this->db->insert('master_nach_customer_order', $sanitized_data);
+      $insert_id = $this->db->insert_id();
+      
       // Update the database with the order ID returned by the API
       $this->db->where('id', $insert_id);
       $query = $this->db->update('master_nach_customer_order', ['order_id' => $response_api['id']]);
@@ -241,6 +248,7 @@ public function create_order($data) {
 
 
 public function create_order_api($data) {
+
   $maxAmount = $data['max_amount'] * 100; // Convert amount to paisa
 
   $curl = curl_init();
@@ -267,7 +275,7 @@ public function create_order_api($data) {
           "bank_account" => [
               "beneficiary_name" => $data['beneficiary_name'],
               "account_number" => $data['account_number'],
-              "account_type" => $data['account_type'], // Account type
+              "account_type"=> $data['account_type'],
               "ifsc_code" => $data['ifsc_code']
           ]
       ]
@@ -306,19 +314,44 @@ public function create_order_api($data) {
 }
 
 
+public function payment_details_via_borrower_id($borrower_id){
+
+   $this->db->where('mnc.borrower_id', $borrower_id);
+   $this->db->join('master_nach_customer_order as mnca', 'mnca.customer_id = mnc.cust_id');
+   $this->db->order_by('mnca.created_date', 'DESC');
+   $query = $this->db->get('master_nach_customer as mnc');
+
+   // Check if any rows are returned
+   if ($query->num_rows() > 0) {
+       // Fetch the result as an associative array
+       $result = $query->row_array();
+   } else {
+       $result = [];
+   }
+
+   return $result;
+
+}
+
+
 public function fetch_token_by_payment_id($data) {
+
   // Sanitize input data
-  $payment_id = htmlspecialchars($data['payment_id'], ENT_QUOTES, 'UTF-8');
+  $payment_id = htmlspecialchars($data['razorpay_payment_id'], ENT_QUOTES, 'UTF-8');
 
   // Call the API to fetch the token by payment ID
   $response = $this->fetch_token_by_payment_id_api($payment_id);
 
+  // echo "<pre>"; print_r($response);die();
+
   // Check if the response contains the required data
   if (isset($response['id']) && isset($response['token_id']) && isset($response['order_id'])) {
+
       // Prepare the data for the database update
       $update_data = [
           'resp_payment_id' => htmlspecialchars($response['id'], ENT_QUOTES, 'UTF-8'),
-          'resp_token_id' => htmlspecialchars($response['token_id'], ENT_QUOTES, 'UTF-8')
+          'resp_token_id' => htmlspecialchars($response['token_id'], ENT_QUOTES, 'UTF-8'),
+          'nach_balance' => NACH_AMOUNT
       ];
 
       // Perform the database update
@@ -331,6 +364,7 @@ public function fetch_token_by_payment_id($data) {
       } else {
           return ['status' => 0, 'message' => 'Failed to update data or no changes made'];
       }
+
   } else {
       // Handle API response errors
       return ['status' => 0, 'message' => 'Invalid response from API', 'response' => $response];
@@ -338,6 +372,7 @@ public function fetch_token_by_payment_id($data) {
 }
 
 public function fetch_token_by_payment_id_api($payment_id) {
+
   $curl = curl_init();
 
   curl_setopt_array($curl, [
@@ -374,6 +409,7 @@ public function fetch_token_by_payment_id_api($payment_id) {
 
 
 public function create_order_to_charge_customer($data) {
+
   // Sanitize and convert amount
   $amount = filter_var($data['amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
   $sanitized_amount = intval($amount * 100); // Convert amount to paisa
@@ -394,6 +430,7 @@ public function create_order_to_charge_customer($data) {
 
   // Check if the API call was successful and contains an order ID
   if (isset($response['id'])) {
+
       // Update the database with the order ID returned by the API
       $this->db->where('id', $insert_id);
       $this->db->update('trans_nach_subsequent_payment_order', ['resp_order_id' => htmlspecialchars($response['id'], ENT_QUOTES, 'UTF-8')]);
@@ -404,6 +441,7 @@ public function create_order_to_charge_customer($data) {
       } else {
           $response['msg'] = "Data inserted but failed to update order ID";
       }
+
   } else {
       $response['msg'] = "Data inserted but API call failed";
   }
@@ -412,6 +450,7 @@ public function create_order_to_charge_customer($data) {
 }
 
 public function create_order_to_charge_customer_api($data) {
+
   $amount = intval($data['amount']); // Use sanitized amount in paisa
 
   $curl = curl_init();
@@ -460,6 +499,7 @@ public function create_order_to_charge_customer_api($data) {
 }
 
 public function create_recurring_payment($data) {
+
   // Sanitize and convert amount
   $amount = filter_var($data['amount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
   $sanitized_amount = intval($amount * 100); // Convert amount to paisa
@@ -498,6 +538,7 @@ public function create_recurring_payment($data) {
 }
 
 public function create_recurring_payment_api($data) {
+
   $amount = intval($data['amount']) * 100; // Convert amount to paisa
 
   $curl = curl_init();

@@ -320,6 +320,150 @@ public function viewLoanaggrement($borrower_id){
     return $response;
       
         }
+
+
+        public function payment_details_via_borrower_id($borrower_id){
+
+          $this->db->where('mnc.borrower_id', $borrower_id);
+          $this->db->join('master_nach_customer_order as mnca', 'mnca.customer_id = mnc.cust_id');
+          $this->db->order_by('mnca.created_date', 'DESC');
+          $query = $this->db->get('master_nach_customer as mnc');
+       
+          // Check if any rows are returned
+          if ($query->num_rows() > 0) {
+              // Fetch the result as an associative array
+              $result = $query->row_array();
+          } else {
+              $result = [];
+          }
+       
+          return $result;
+       
+       }
+
+
+       public function create_customer($borrower_id) {
+        $this->db->where('id', $borrower_id);
+        $query = $this->db->get('p2p_borrowers_list');
+    
+        if ($query->num_rows() > 0) {
+            $result = $query->row_array();
+            return $this->create_customer_api($result);
+        } else {
+            return ['status' => 0, 'msg' => 'Cannot find user data'];
+        }
+    }
+    
+    public function create_customer_api($result) {
+        $curl = curl_init();
+    
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => base_url('/e_nach/nach_controller/create_customer'),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query([
+                'name' => $result['name'],
+                'email' => $result['email'],
+                'contact' => $result['mobile'],
+                'notes_key_1' => $result['name'].'_customer_created' ,
+                'notes_key_2' => $result['email'].'_customer_created',
+                'borrower_id' => $result['id']
+            ]),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'Cookie: p2p_2018_2019_session=j3gi4bk3e8jm52ckplhk0b2r7ic5okp0'
+            ),
+        ));
+    
+        $response = curl_exec($curl);
+    
+        if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+        }
+    
+        curl_close($curl);
+    
+        if (isset($error_msg)) {
+            return ['status' => 0, 'msg' => $error_msg];
+        }
+    
+        $response = json_decode($response, true);
+        return $response;
+    }
+
+
+    public function create_order($borrower_id) {
+      // Fetch borrower details from the database
+      $this->db->where('pbl.id', $borrower_id);
+      $this->db->join('p2p_borrower_bank_details as pbd', 'pbd.borrower_id = pbl.id');
+      $query = $this->db->get('p2p_borrowers_list as pbl');
+      
+      if ($query->num_rows() > 0) {
+          // If the borrower exists, get the details
+          $result = $query->row_array();
+          
+          // Pass the borrower details to the API call function
+          return $this->create_order_api($result);
+      } else {
+          // Return an error response if the borrower does not exist
+          return ['status' => 0, 'msg' => 'Cannot find user data'];
+      }
+  }
+  
+  public function create_order_api($result) {
+      // Initialize cURL
+      $curl = curl_init();
+  
+      // Prepare the POST data
+      $postData = http_build_query([
+          'borrower_id' => $result['id'],
+          'notes_key_1' => $result['name'].'_order_created',
+          'notes_key_2' => $result['id'].'_order_created',
+          'auth_type' => $this->input->post('payment_type'),
+          'token_notes_key_1' => $result['account_number'].'_order_created',
+          'token_notes_key_2' => $result['ifsc_code'].'_order_created',
+          'beneficiary_name' => $result['name'],
+          'account_number' => $result['account_number'],
+          'ifsc_code' => $result['ifsc_code'],
+          'account_type' => $result['account_type']
+      ]);
+      // return $postData;
+  
+      // Set cURL options
+      curl_setopt_array($curl, array(
+          CURLOPT_URL => base_url('e_nach/nach_controller/create_order'), // Corrected URL concatenation
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => $postData,
+          CURLOPT_HTTPHEADER => array(
+              'Content-Type: application/x-www-form-urlencoded'
+          ),
+      ));
+  
+      // Execute cURL request and get the response
+      $response = curl_exec($curl);
+  
+      // Close cURL session
+      curl_close($curl);
+  
+      // Decode JSON response
+      $response = (array)json_decode($response, true);
+  
+      // Return the response
+      return $response;
+  }
+  
+  
     
         public function credit_line_sendOtpsignature($borrower_id,$loan_id){
     

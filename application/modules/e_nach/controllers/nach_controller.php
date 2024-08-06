@@ -80,14 +80,14 @@ class Nach_controller extends CI_Controller{
 
 
   public function create_order() {
-
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Define constants for validation
         $VALID_AUTH_TYPES = ['netbanking', 'debitcard', 'aadhaar'];
+        $VALID_ACCOUNT_TYPES = ['savings', 'current'];
         $MAX_BENEFICIARY_NAME_LENGTH = 255;
         $MAX_ACCOUNT_NUMBER_LENGTH = 20;
-        $VALID_ACCOUNT_TYPES = ['savings', 'current'];
         $MAX_IFSC_CODE_LENGTH = 11;
 
         // Sanitize input
@@ -99,8 +99,8 @@ class Nach_controller extends CI_Controller{
         $token_notes_key_2 = filter_input(INPUT_POST, 'token_notes_key_2', FILTER_SANITIZE_STRING);
         $beneficiary_name = filter_input(INPUT_POST, 'beneficiary_name', FILTER_SANITIZE_STRING);
         $account_number = filter_input(INPUT_POST, 'account_number', FILTER_SANITIZE_STRING);
-        $account_type = filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING);
         $ifsc_code = filter_input(INPUT_POST, 'ifsc_code', FILTER_SANITIZE_STRING);
+        $account_type = filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING);
 
         // Initialize validation errors array
         $errors = [];
@@ -115,6 +115,10 @@ class Nach_controller extends CI_Controller{
             $errors[] = "Invalid authorization type.";
         }
 
+        if (!in_array($account_type, $VALID_ACCOUNT_TYPES)) {
+          $errors[] = "Invalid account type.";
+      }
+
         // Validate beneficiary_name
         if (empty($beneficiary_name) || strlen($beneficiary_name) > $MAX_BENEFICIARY_NAME_LENGTH) {
             $errors[] = "Beneficiary name is required and must not exceed $MAX_BENEFICIARY_NAME_LENGTH characters.";
@@ -125,10 +129,7 @@ class Nach_controller extends CI_Controller{
             $errors[] = "Account number is required and must not exceed $MAX_ACCOUNT_NUMBER_LENGTH characters.";
         }
 
-        // Validate account_type
-        if (!in_array($account_type, $VALID_ACCOUNT_TYPES)) {
-            $errors[] = "Invalid account type.";
-        }
+
 
         // Validate ifsc_code
         if (empty($ifsc_code) || strlen($ifsc_code) > $MAX_IFSC_CODE_LENGTH) {
@@ -162,10 +163,10 @@ class Nach_controller extends CI_Controller{
           'expire_at' => NACH_EXPIRE_AT, 
           'beneficiary_name' => $beneficiary_name,
           'account_number' => $account_number,
-          'account_type' => $account_type,
-          'ifsc_code' => $ifsc_code
+          'ifsc_code' => $ifsc_code,
+          'account_type'=>$account_type
       ];
-
+      // print_r($data);die();
 
         $order_details = $this->nach_model->create_order($data);
         $order_details['customer_id'] = $customerId;
@@ -180,12 +181,33 @@ class Nach_controller extends CI_Controller{
     }
 }
 
+// public function payment_page(){
+//   $borrower_id = 1;
+//   $data['payment_details'] = $this->nach_model->payment_details_via_borrower_id($borrower_id);
+
+//   $this->load->view('index',$data);
+
+// }
+
+public function paymentIdCallback(){
+
+  $data = file_get_contents('php://input');
+  parse_str($data, $parsedData);
+  // echo "<pre>";print_r($parsedData);die();
+  $response = $this->nach_model->fetch_token_by_payment_id($parsedData);
+  $response = json_encode($response,true);
+  
+  return $response;
+
+}
+
 
 public function fetch_token_by_payment_id() {
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       // Sanitize and validate input
-      $payment_id = filter_input(INPUT_POST, 'payment_id', FILTER_SANITIZE_STRING);
-
+      $payment_id = filter_input(INPUT_POST, 'razorpay_payment_id', FILTER_SANITIZE_STRING);
+      // echo $payment_id; die();
       // Basic validation to ensure payment_id is not empty
       if (empty($payment_id)) {
           echo "Invalid payment ID";
@@ -194,16 +216,19 @@ public function fetch_token_by_payment_id() {
 
       // Prepare sanitized data
       $data = [
-          'payment_id' => $payment_id
+          'razorpay_payment_id' => $payment_id
       ];
+      
 
       $token_details = $this->nach_model->fetch_token_by_payment_id($data);
-      echo "<pre>";
+      // echo "<pre>";
       print_r($token_details);
       die();
+
   } else {
       echo "No data received";
   }
+  
 }
 
 
@@ -241,7 +266,9 @@ public function create_order_to_charge_customer() {
 
 
 public function create_recurring_payment() {
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
       // Sanitize and validate input
       $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
       $contact = filter_input(INPUT_POST, 'contact', FILTER_SANITIZE_STRING);
