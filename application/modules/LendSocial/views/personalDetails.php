@@ -24,7 +24,7 @@ $pan_status = "";
 		<div class="col-md-8">
 			<div class="surge-plans">
 				<div class="row text-center">
-					<img src="<?php echo $logo_path; ?>" class="surgelogo">
+					<img src="<?php echo $sub_logo_path; ?>" class="surgelogo">
 					<h2>Personal Details</h2>
 				</div>
 				<form role="form" action="accountDetails" method="post" class="f1"  onsubmit="return userFunctionvalidate()">

@@ -232,6 +232,7 @@ class LendSocial extends CI_Controller
 			}
 			
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			
 			$this->load->view('template-LendSocial/header',$data);
 			$data['mobile'] = $this->input->post('mobile');
@@ -347,6 +348,7 @@ class LendSocial extends CI_Controller
 			public function processingInvestmentPayment(){
 
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;
 			$this->load->view('template-LendSocial/header',$data);
 			$this->checkSessionMobileNo();
 			$scheme_id = $this->input->post('scheme_id');
@@ -455,6 +457,7 @@ class LendSocial extends CI_Controller
 				$this->checkSessionMobileNo();
 			
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;
 		$this->load->view('template-LendSocial/header',$data);
 			$data['lists']['investmentList'] = json_decode($this->LendSocialmodel->getInvestmentList($this->sessionData["mobile"],$this->sessionData["lender_id"]),true); // getInvestmentList($mobile,$lender_id)
 			//  echo "<pre>"; print_r($data['lists']['investmentList']); die();
@@ -473,6 +476,7 @@ class LendSocial extends CI_Controller
 			$data['qualification'] = $this->LendSocialmodel->highest_qualification();
 			//echo "<pre>";print_r($data);die();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;
 		$this->load->view('template-LendSocial/header',$data);
 				$data['lists']['sessionData'] = $this->sessionData;
 				
@@ -506,6 +510,7 @@ class LendSocial extends CI_Controller
 				}
 				
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;
 		$this->load->view('template-LendSocial/header',$data);
 		$data['lists']['sessionData'] = $this->sessionData;
 		$this->load->view('accountDetails',$data);
@@ -517,6 +522,7 @@ class LendSocial extends CI_Controller
 						public function otpAadhaar(){
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			$data['lists']['msg']  = ($this->input->get('msg'));
 			$data['lists']['otpPageMsg'] = "";
 		$this->load->view('template-LendSocial/header',$data);
@@ -582,6 +588,7 @@ class LendSocial extends CI_Controller
 			public function verifyKYC(){
 				$this->checkSessionMobileNo();
 				$data['logo_path'] = $this->partnerInfo['logo_path'];
+				$data['sub_logo_path'] = $this->lender_logo_path;////
 		$this->load->view('template-LendSocial/header',$data);
 				$this->load->view('verifyKYC',$data);
 				$this->load->view('template-LendSocial/footer',$data);
@@ -763,6 +770,7 @@ class LendSocial extends CI_Controller
 				public function kycSuccessful(){
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			$data['lists']['msg']  = ($this->input->get('msg'));
 			$data['lenderSocialProductType'] = $this->sessionVariableData['lenderSocialProductType'];
 		$this->load->view('template-LendSocial/header',$data);
@@ -775,6 +783,7 @@ class LendSocial extends CI_Controller
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 		$this->load->view('template-LendSocial/header',$data);
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			$data['lists']['msg']  = ($this->input->get('msg'));
 			$this->load->view('kycFailed',$data);
 			$this->load->view('template-LendSocial/footer',$data);
@@ -786,6 +795,7 @@ class LendSocial extends CI_Controller
 				// print_r($this->input->post());
 				// print_r($reponseRedeemptionRequest);
 				$data['logo_path'] = $this->partnerInfo['logo_path'];
+				$data['sub_logo_path'] = $this->lender_logo_path;////
 		$this->load->view('template-LendSocial/header',$data);
 				if($reponseRedeemptionRequest['status']==1){
 					
@@ -829,6 +839,7 @@ class LendSocial extends CI_Controller
 				// die();
 				//	 print_r($reponseRedeemptionRequest);
 				$data['logo_path'] = $this->partnerInfo['logo_path'];
+				$data['sub_logo_path'] = $this->lender_logo_path;////
 				$this->load->view('template-LendSocial/header',$data);
 					if($lenderInvestmentRequest['status']==1){
 						$this->LendSocialmodel->saveInvestmentOtherFee($lenderInvestmentRequest['investment_no']); // for saving the payment info into "trans_fee_structure"
@@ -851,6 +862,7 @@ class LendSocial extends CI_Controller
 				//echo $this->lender_logo_path;
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			$data['lender_logo_path'] = $this->lender_logo_path;
 			$data['borrower_logo_path'] = $this->borrower_logo_path;
 		$this->load->view('template-LendSocial/header',$data);
@@ -925,6 +937,7 @@ class LendSocial extends CI_Controller
 			$data['lists']['generateOrderResp'] = $generateOrderResp;
 			$data['lists']['sessionData'] = $this->sessionData;
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 		$this->load->view("template-LendSocial/header",$data);
 		$this->load->view("getRegistrationFeeStatus",$data);
 		$this->load->view("template-LendSocial/footer");
@@ -948,6 +961,7 @@ class LendSocial extends CI_Controller
 				
 						$this->checkSessionMobileNo();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
+			$data['sub_logo_path'] = $this->lender_logo_path;////
 			//echo "<pre>"; print_r($this->sessionData);
 			$userType = $this->sessionVariableData['lenderSocialProductType'];
 			

@@ -15,7 +15,7 @@ $account_status = "";
 		<!--------end of surgeDiv------->
 			<div class="surge-plans" id="surgePlansDiv">
 				<div class="row text-center">
-					<img src="<?php echo $logo_path; ?>" class="surgelogo">
+					<img src="<?php echo $sub_logo_path; ?>" class="surgelogo">
 					<h2>Account Details</h2>
 				</div>
 				<form role="form" action="verifyKYC" method="post" class="f1"  onsubmit="return verifyKycStatusDiv();">

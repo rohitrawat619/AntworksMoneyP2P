@@ -14,7 +14,7 @@ $sessionData = $lists['sessionData'];
 <div class="col-md-8 col-xs-12 text-center ">
 
 <div class="surge-plans">
-				<div class=""><img  class="surgeant-icon" src="<?php echo $logo_path; ?>"></div>
+				<div class=""><img  class="surgeant-icon" src="<?php echo $sub_logo_path; ?>"></div>
 				<h2>-</h2>
 				<div class="" style="text-align:left;">
 				<ul>

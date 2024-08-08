@@ -7,7 +7,7 @@ $investmentData = $lists['investmentList'];
 	<div class="row">
 		<div class="col-md-12 col-xs-12 text-center">
 			<div class="surge-success col-md-12 col-sm-12">
-				<div class="col-md-12 col-sm-12 text-center"><img src="<?php echo $logo_path; ?>" class="surgeant-icon"></div>
+				<div class="col-md-12 col-sm-12 text-center"><img src="<?php echo $sub_logo_path; ?>" class="surgeant-icon"></div>
 				<div class="col-md-12 col-sm-12">
 					<ul class="investment-box">
 						<li><?php echo $investmentData['investment_details']['total_investment_amount']; ?> <span>Total Investment</span></li>
