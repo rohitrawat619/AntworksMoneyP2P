@@ -164,7 +164,7 @@ class Surgemodel extends CI_Model
 				$ids[] = $item['scheme_id'];
 			}
 
-			$comma_separated_ids = implode(',', $ids);
+			$comma_separated_ids = $ids; // implode(',', $ids);
 			//echo $comma_separated_ids; // Output: 10,11,17,18,19
 			if($comma_separated_ids==""){
 				$comma_separated_ids = "11111123456789,234567";
@@ -925,8 +925,45 @@ $this->cldb->limit($limit, $start);
 		return $result = $res->result_array();
 	}
 	
+		public function getRedemptionListV2($limit, $start,$status,$vender_id)
+	{		
+		// $this->cldb->select('f.*, f.id as lendsocial_lender_payout_schedule_table_id, a.*, a.id as p2p_lender_investment_table_id, a.redemption_status,
+		$this->cldb->select('f.id as lendsocial_lender_payout_schedule_table_id, f.*, a.*, a.redemption_status,
+  (CASE
+            WHEN a.redemption_status = 4 THEN "Redeemed"
+            WHEN a.redemption_status = 2 THEN "Under Process"
+            WHEN a.redemption_status = 5 THEN "Generate Bank File Pending"
+            WHEN a.redemption_status = 1 THEN "Approval Pending"
+            ELSE "Unknown Status" END)
+         AS redemption_status_name, b.name as lender_name, b.mobile as lender_mobile, c.account_no as lender_account_number, d.Scheme_Name as scheme_name, e.Company_Name as partner_name, e.Address as address');
+		$this->cldb->from('p2p_lender_investment as a');
+		$this->cldb->join('p2p_lender_list as b', 'a.lender_id =b.lender_id', 'LEFT');
+		$this->cldb->join('p2p_borrower_bank_res AS c', 'c.lender_id = b.user_id', 'LEFT');
+				$this->cldb->join('invest_scheme_details as d', 'a.scheme_id =d.id', 'LEFT');
+				$this->cldb->join('invest_vendors as e', 'b.vendor_id =e.VID', 'LEFT');
+				$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', 'LEFT');
+				
+		 $this->cldb->where('f.payout_date<=' , date("Y-m-d"));
+		 $this->cldb->where('f.payout_status' , 0);
+      //   $this->cldb->where_not_in('f.redemption_status', array(5, 2, 4));
+         $this->cldb->where_in('f.redemption_status', $status);
+
+
+				if(($this->partner_id!="") and ($this->session->userdata('role_id')==11 OR  $this->session->userdata('role_id') ==12)){
+		$this->cldb->where("b.vendor_id",$this->partner_id);
+		}
+		$this->cldb->where('f.investment_no IS NOT NULL', NULL);
+		//$this->cldb->limit(1);
+		// dated: 2023-dec-07 $this->cldb->where('b.vendor_id',$vender_id);
+	//	$this->cldb->limit($limit, $start);
+	 //	$this->cldb->GROUP_BY("a.reinvestment_id");
+		$this->cldb->ORDER_BY('a.reinvestment_id', 'desc');
+		$res = $this->cldb->get();
+
+		return $result = $res->result_array();
+	}
 	
-			public function generate_bank_file_excel($ids)
+			public function generate_bank_file_excel_v2($ids)
 				{
 					$idsArray = explode(",", urldecode($ids));
 
@@ -937,7 +974,7 @@ $this->cldb->limit($limit, $start);
 					$idsArray = array_filter($idsArray);
 					
 					$this->cldb->select('
-					a.amount, 
+					f.payout_type, f.payment_type, f.payout_amount, 
 			 CONCAT("`","'.ANTWORKS_BANK_AC.'") as Debited_Account_No,
 			 c.ifsc_code as IFSC_CODE,
 			  CONCAT("`",c.account_no) as Benificiary_AC_No,
@@ -953,14 +990,93 @@ $this->cldb->limit($limit, $start);
 					$this->cldb->join('p2p_borrower_bank_res AS c', 'c.lender_id = b.user_id', 'LEFT');
 							$this->cldb->join('invest_scheme_details as d', 'a.scheme_id =d.id', 'LEFT');
 							$this->cldb->join('invest_vendors as e', 'b.vendor_id =e.VID', 'LEFT');
+							$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', 'LEFT');
 					
-					 $this->cldb->where_in('a.reinvestment_id',$idsArray);
-					$this->cldb->GROUP_BY("a.reinvestment_id");
-					$this->cldb->ORDER_BY('a.reinvestment_id', 'desc');
+					 $this->cldb->where_in('f.id',$idsArray);
+					$this->cldb->GROUP_BY("f.id");
+					//$this->cldb->ORDER_BY('a.reinvestment_id', 'desc');
 					$res = $this->cldb->get();
 
 					return $res; // $result = $res->result_array();
 				}
+				
+				
+					public function update_investment_status_v2($status,$ids,$remarks,$payment_type,$investment_no,$api_response,$batch_id){
+		$current_time = date('Y-m-d H:i:s');
+		$dataRslt = array(
+		"status"=>0,
+		"msg"=>"Missing Paramter"
+		);
+	//	echo $ids."--".$status."--<br>";
+			$data_entry_id = $this->session->userdata('user_id');
+			if($status!="" && $ids!=""){ // && $payment_type!=""
+				
+				
+				$idsArray = explode(",", urldecode($ids));
+
+				// Remove single quotes from each element in the array
+				$idsArray = array_map('trim', $idsArray);
+
+				// You may want to remove empty values if any
+				$idsArray = array_filter($idsArray);
+
+				
+			
+			switch($status){
+				case "5": // 5->"Generate Bank File pending"; 
+				$arrayData['batch_id'] = $batch_id;
+				$arrayData['redemption_status'] = $status;
+				$arrayData['approved_by'] = $data_entry_id;
+				$arrayData['approved_by_data_entry_time'] = $current_time;
+				break;
+				
+				case "2":  // 2->"processing pending";  
+				$arrayData['api_response'] = $api_response;
+				$arrayData['batch_id'] = $batch_id;
+				$arrayData['redemption_status'] = $status;
+				$arrayData['generated_bank_file_by'] = $data_entry_id;
+				$arrayData['generated_bank_file_by_data_entry_time'] = $current_time;
+				break;
+				
+				case "4": // 4->"redeemed" 
+				$arrayData['api_response'] = $api_response;
+				$arrayData['batch_id'] = $batch_id;
+				$arrayData['redemption_status'] = $status;
+				$arrayData['processed_by'] = $data_entry_id;
+				$arrayData['processed_by_remarks'] = $remarks;
+				$arrayData['processed_by_data_entry_time'] = $current_time;
+				break;
+
+			}
+					$this->cldb->where_in('id', $idsArray);
+					$this->cldb->update('lendsocial_lender_payout_schedule',$arrayData); // lendsocial_lender_payout_schedule
+					
+					if($payment_type=="InterestAndPrinciple"){
+						
+						$this->cldb->where_in('investment_No', $investment_no);
+						$this->cldb->update('p2p_lender_investment',$arrayData); // p2p_lender_investment
+					}
+			
+				
+				
+					if ($this->cldb->affected_rows() > 0) {
+				$dataRslt = array(
+		"status"=>1,
+		"msg"=>"Investment Status Updated Successfully"//.$this->cldb->last_query()
+		);
+			}else{
+				$dataRslt = array(
+		"status"=>0,
+		"msg"=>"Error While Processing"//.$this->cldb-last_query()
+		);
+			}
+			
+			}
+		
+	//	$dataRslt['lastquery'] = $this->cldb->last_query();
+		$dataRslt['data'] = $ids;
+		return json_encode($dataRslt);
+	}
 	
 	public function getCountRedemptionListStatus($status,$vender_id)
 	{
@@ -972,6 +1088,16 @@ $this->cldb->limit($limit, $start);
 		return $this->cldb->count_all_results();
 	}
 	
+	public function getCountRedemptionListStatusV2($status,$vender_id)
+	{
+		$this->cldb->select('a.id');
+		$this->cldb->from('p2p_lender_investment as a');
+		$this->cldb->join('p2p_lender_list as b', 'a.lender_id =b.lender_id', 'LEFT');
+		$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', 'LEFT');
+		 $this->cldb->where_in('f.redemption_status' , $status);
+		  $this->cldb->where('b.vendor_id',$vender_id);
+		return $this->cldb->count_all_results();
+	}
 	
 	
 	public function update_investment_status($status,$ids,$remarks){
@@ -1203,7 +1329,53 @@ $this->cldb->select('b.comment_id, b.user_id, b.comment_text, CASE WHEN b.user_i
     return $sum;
 }
 
-		/*
+	
+	
+	public function getLenderDetailsByLenderId($lender_id){ // LR100020
+		
+		$this->cldb->select('a.lender_id, a.name, a.email, a.mobile as contact, "customer" as type, b.bank_name, "bank_account" as account_type, b.ifsc_code as ifsc, b.account_number');
+		$this->cldb->from('p2p_lender_list a');
+		$this->cldb->join('p2p_borrower_bank_details b', 'a.user_id = b.lender_id');
+		$this->cldb->where('a.lender_id', $lender_id);
+
+		$query = $this->cldb->get();
+		$result = $query->row_array(); // Use result_array() for fetching the result as an associative array
+		return $result;
+
+	}
+	
+public function getMasterRazorpayPayoutContactByLenderId($lender_id) {
+    $this->cldb->select('a.*');
+    $this->cldb->from('master_razorpay_payout_contact a');
+    $this->cldb->where('a.lender_id', $lender_id);
+
+    $query = $this->cldb->get();
+    $result = $query->row_array(); // Fetch a single row as an associative array
+
+    // Return true if the result is not empty, false otherwise
+			
+    return $result;
+}
+
+	
+	public function add_razorpayx_create_contact($arr_data){
+		
+	//	'user_id' => $this->session->userdata('user_id'),
+
+		
+			  $insertResult = $this->cldb->insert('master_razorpay_payout_contact ', $arr_data);
+			  if($insertResult){
+				    $insert_id = $this->cldb->insert_id();
+				  $resp['status'] = 1;
+				  $resp['msg'] = "Razorpay Payout Contact Created: #".$insert_id;
+				  return $resp;
+			  }else{
+				    $resp['status'] = 0;
+				  $resp['msg'] = "Razorpay Payout Contact Creation Failed";
+				  return $resp;
+			  }
+	}
+	/*
 	public function get_count_premiumplanuserlist()
 	{
 		$this->db_money_money->select('id');

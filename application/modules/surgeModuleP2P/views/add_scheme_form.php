@@ -121,6 +121,7 @@
 							<option value="40"  <?php echo(($lists['Lockin_Period']=="40") ? "selected" : ""); ?>>40 Days</option>
 							<option value="70"  <?php echo(($lists['Lockin_Period']=="70") ? "selected" : ""); ?>>70 Days</option>
 							<option value="100"  <?php echo(($lists['Lockin_Period']=="100") ? "selected" : ""); ?>>100 Days</option>
+							<option value="375"  <?php echo(($lists['Lockin_Period']=="375") ? "selected" : ""); ?>>375 Days</option>
 						</select>
                              </div>
                                     <div class="col-md-6 form-group">
@@ -131,6 +132,7 @@
 							<option value="40"  <?php echo(($lists['Tenure']=="40") ? "selected" : ""); ?>>40 Days</option>
 							<option value="70"  <?php echo(($lists['Tenure']=="70") ? "selected" : ""); ?>>70 Days</option>
 							<option value="100"  <?php echo(($lists['Tenure']=="100") ? "selected" : ""); ?>>100 Days</option>
+							<option value="375"  <?php echo(($lists['Tenure']=="375") ? "selected" : ""); ?>>375 Days</option>
 						</select>
                         
                     </div>
