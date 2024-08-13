@@ -211,7 +211,7 @@ public function create_order($data) {
       'account_type' => htmlspecialchars($data['account_type'], ENT_QUOTES, 'UTF-8')
   ];
 
-  
+//   pr($sanitized_data);die();
 
   // Call the API to create the order and get the response
   $response_api = $this->create_order_api($sanitized_data);
@@ -241,7 +241,7 @@ public function create_order($data) {
       $response['status'] = 0;
       $response['msg'] = "Data inserted but API call failed";
   }
-
+// pr($response);die();
   return $response;
 
 }
@@ -281,7 +281,7 @@ public function create_order_api($data) {
       ]
   ]);
 
-
+//   pr($postFields);die();
   curl_setopt_array($curl, [
       CURLOPT_URL => 'https://api.razorpay.com/v1/orders',
       CURLOPT_RETURNTRANSFER => true,
@@ -310,6 +310,7 @@ public function create_order_api($data) {
   curl_close($curl);
 
   $responseArray = json_decode($response, true);
+//   pr($responseArray);die();
   return $responseArray;
 }
 

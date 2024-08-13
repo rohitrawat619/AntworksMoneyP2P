@@ -99,3 +99,5 @@ defined('SMS_GATEWAY_SENDER')      OR define('SMS_GATEWAY_SENDER', 'ANTFIN');//
 defined('ANTWORKS_BANK_AC')      OR define('ANTWORKS_BANK_AC', '0004102000040071');// dated: 15-nov-2023 using this for generate bank file in surge module
 defined('NACH_EXPIRE_AT')      OR define('NACH_EXPIRE_AT', strtotime('+1 year'));
 defined('NACH_AMOUNT')      OR define('NACH_AMOUNT', '100000');
+defined('RAZORPAY_KEY')      OR define('RAZORPAY_KEY', 'rzp_live_PeZTIp1sCphoZd');
+defined('API_EXPIRE_TIME')      OR define('API_EXPIRE_TIME', strtotime('+60 seconds'));// DATED 08/08/2024 using this for nach apis

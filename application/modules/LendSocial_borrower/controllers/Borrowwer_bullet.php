@@ -9,7 +9,7 @@ class Borrowwer_bullet extends CI_Controller{
 
 
         // details to fill
-        $this->sessionData['mobile']=9015439079;
+        $this->session->set_userdata('mobile',9015439079);
         
         $this->borrowerProductImagePath = "../../document/surge/img/borrower/buddy-credit-line.png";
         $this->imageBaseUrl = "../../document/surge/img/borrower"; 
@@ -23,7 +23,7 @@ class Borrowwer_bullet extends CI_Controller{
 		//$partnerInfo = $this->LendSocialmodel->getPartnersTheme($this->sessionVariableData['partner_id']);
 		//$this->sessionData = $this->LendSocialmodel->getUserDetail($this->sessionVariableData['mobile']);
 		
-		$this->mobile = $this->sessionData['mobile'];
+		$this->mobile = $this->session->userdata('mobile');
 		//$partnerInfo['logo_path'] =	str_replace('D:/public_html/antworksp2p.com','../..',$partnerInfo['logo_path'])."?q=".rand();
 		//$this->partnerInfo = $partnerInfo;
 						
@@ -35,22 +35,22 @@ class Borrowwer_bullet extends CI_Controller{
     }
 
 public function checkSessionMobileNo(){
-						if($this->sessionData["mobile"]==""){
+						if($this->session->userdata("mobile")==""){
 						 $this->session->set_flashdata('notification',array('error'=>0,'message'=>"Session Failed"));	
 						 redirect(base_url('LendSocial/').'signIn');
 								}
 						}
     public function getBorrowerId(){
-    		return $_SESSION['borrower_id'];
+    		return $this->session->userdata('borrower_id');
     }
     public function setBorrowerId($borrower_id){
-    	$_SESSION['borrower_id'] = $borrower_id;
+    	$this->session->set_userdata('borrower_id',$borrower_id);
     }
     public function getLoanId(){
-    		return $_SESSION['loan_id'];
+    		return $this->session->userdata('loan_id');
     }
     public function setLoanId($loan_id){
-    	$_SESSION['loan_id'] = $loan_id;
+    	$this->session->set_userdata('loan_id',$loan_id);
     }
 
     
@@ -121,6 +121,32 @@ public function success(){
   $this->load->view('template-LendSocial/footer',$data);
 }
 
+public function emandate_page(){ 
+  $borrower_id = 1;
+  
+  $user_details=$this->credit_line_model->get_borrower_details($this->mobile);
+  // pr($user_details);
+  $data['customer_details'] = $this->credit_line_model->create_customer($user_details);
+  // echo "<pre>";print_r($data);die(); 
+  if($data['customer_details']['status'] == 1){
+  $data['payment_details'] = $this->credit_line_model->payment_details_via_borrower_id($borrower_id);
+  $this->load->view('credit_line/index',$data);
+
+  }else{
+    http_response_code(400);
+    // alert();
+  }
+
+}
+
+
+public function create_order(){
+  $borrower_id = 1;
+  $user_details=$this->credit_line_model->get_borrower_details($this->mobile);
+  $response = $this->credit_line_model->create_order($user_details);
+  echo json_encode($response);die();
+}
+
 public function e_sign(){
   //details to fill 
   
@@ -180,6 +206,7 @@ public function e_sign_success(){
   $this->load->view('template-LendSocial/footer',$data);
 }
 
+
 public function dashboard(){
 
   $this->setBorrowerId('100767');
@@ -194,7 +221,7 @@ public function dashboard(){
   // $data['imageBaseUrl'] = $this->imageBaseUrl;
   // $data['logo_path'] = $this->partnerInfo['logo_path'];
    $this->load->view('template-LendSocial/header',$data);
- // $this->load->view('credit_line_templates/nav');
+//  $this->load->view('credit_line_templates/nav');
   $this->load->view('credit_line/dashboard',$data);
   $this->load->view('template-LendSocial/footer',$data);
 }
@@ -212,9 +239,7 @@ public function disburse(){
 }
 
   echo json_encode($response);die();
-
-
-  
+ 
 }
 
 

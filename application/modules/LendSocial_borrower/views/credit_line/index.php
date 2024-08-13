@@ -15,7 +15,7 @@
         response = JSON.parse(response); 
         if (response.status === 1) {
           var options = {
-            "key": "rzp_live_PeZTIp1sCphoZd",
+            "key": RAZORPAY_KEY,
             "order_id": response.order_id,
             "customer_id": response.customer_id,
             "recurring": "1",
@@ -30,6 +30,9 @@
           };
           var rzp1 = new Razorpay(options);
           rzp1.open();
+        }
+        else if(response.status === 0){
+          alert(response.messages);
         }
       },
       error: function(xhr, status, error) {
