@@ -352,7 +352,8 @@ public function fetch_token_by_payment_id($data) {
       $update_data = [
           'resp_payment_id' => htmlspecialchars($response['id'], ENT_QUOTES, 'UTF-8'),
           'resp_token_id' => htmlspecialchars($response['token_id'], ENT_QUOTES, 'UTF-8'),
-          'nach_balance' => NACH_AMOUNT
+          'nach_balance' => NACH_AMOUNT,
+          'api_response' => $response
       ];
 
       // Perform the database update
