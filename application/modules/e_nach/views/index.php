@@ -6,7 +6,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   var options = {
-    "key": "rzp_live_PeZTIp1sCphoZd",
+    "key": "<?=RAZORPAY_NACH_KEY;?>",
     "order_id": "<?= $payment_details['order_id'] ?>",
     "customer_id": "<?= $payment_details['customer_id'] ?>",
     "recurring": "1",

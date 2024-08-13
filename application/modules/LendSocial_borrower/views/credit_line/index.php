@@ -15,7 +15,7 @@
         response = JSON.parse(response); 
         if (response.status === 1) {
           var options = {
-            "key": RAZORPAY_KEY,
+            "key": RAZORPAY_NACH_KEY,
             "order_id": response.order_id,
             "customer_id": response.customer_id,
             "recurring": "1",
