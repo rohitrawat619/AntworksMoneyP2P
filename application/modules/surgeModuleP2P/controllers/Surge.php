@@ -889,8 +889,49 @@ class Surge extends CI_Controller
 						]
 						];
 
-						return perform_razorpay_payout($array,$investment_no); // helper function
+						$payoutApiResp =  perform_razorpay_payout($array,$investment_no); // helper function
+						
+						/***req_***/
+						$array['notes_key_1'] = ($array['notes']['notes_key_1']);
+						$array['notes_key_2'] = ($array['notes']['notes_key_2']);
+						unset($array['notes']);
+						$arrayForInsertion1 = $this->prependKeyPrefix($array, "req_");
+							/****req_****/
+	
+
+												/***res_***/
+						$payoutApiRespArray = json_decode($payoutApiResp,true);
+						$payoutApiRespArray['notes_key_1'] = ($payoutApiRespArray['notes']['notes_key_1']);
+						$payoutApiRespArray['notes_key_2'] = ($payoutApiRespArray['notes']['notes_key_2']);
+						unset($payoutApiRespArray['notes']);
+						
+						
+						$payoutApiRespArray['status_details_description'] = ($payoutApiRespArray['status_details']['description']);
+						$payoutApiRespArray['status_details_source'] = ($payoutApiRespArray['status_details']['source']);
+						$payoutApiRespArray['status_details_reason'] = ($payoutApiRespArray['status_details']['reason']);
+						unset($payoutApiRespArray['status_details']);
+						$arrayForInsertion2 = $this->prependKeyPrefix($payoutApiRespArray, "res_");
+							/****res_****/
+						$combinedArray = array_merge($arrayForInsertion1,$arrayForInsertion2);
+					//	echo"<pre>"; print_r($combinedArray); die();
+							
+					//	die();
+						
+						$payoutDataBaseInsertResp = $this->Surgemodel->add_razorPayxPerform_razorpay_payout($combinedArray);
+						
+						return $payoutApiResp;
 		}
+		
+		
+		function prependKeyPrefix($array, $prefix) {
+    $prefixedArray = [];
+    foreach ($array as $key => $value) {
+        // If the value is an array, apply prefix recursively
+       
+        $prefixedArray[$prefix . $key] = $value;
+    }
+    return $prefixedArray;
+}
 		
 		public function razorpayx_create_contact($lender_id,$batch_id){ // 2024-august-05 Dheeraj Dutta
                           $this->load->helper('razorpay');

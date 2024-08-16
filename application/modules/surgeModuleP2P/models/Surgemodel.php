@@ -944,7 +944,9 @@ $this->cldb->limit($limit, $start);
 				$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', 'LEFT');
 				
 		 $this->cldb->where('f.payout_date<=' , date("Y-m-d"));
+		 if($status==1){
 		 $this->cldb->where('f.payout_status' , 0);
+		 }
       //   $this->cldb->where_not_in('f.redemption_status', array(5, 2, 4));
          $this->cldb->where_in('f.redemption_status', $status);
 
@@ -1049,6 +1051,9 @@ $this->cldb->limit($limit, $start);
 
 			}
 					$this->cldb->where_in('id', $idsArray);
+					if($status==4){
+						$arrayData['payout_status'] = 1;
+					}
 					$this->cldb->update('lendsocial_lender_payout_schedule',$arrayData); // lendsocial_lender_payout_schedule
 					
 					if($payment_type=="InterestAndPrinciple"){
@@ -1372,6 +1377,22 @@ public function getMasterRazorpayPayoutContactByLenderId($lender_id) {
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "Razorpay Payout Contact Creation Failed";
+				  return $resp;
+			  }
+	}
+	
+	
+	public function add_razorPayxPerform_razorpay_payout($arr_data){
+		
+		  $insertResult = $this->cldb->insert('trans_razorpay_payouts ', $arr_data);
+			  if($insertResult){
+				    $insert_id = $this->cldb->insert_id();
+				  $resp['status'] = 1;
+				  $resp['msg'] = "Razorpay Payout Payment Insertion In DB Successfully: #".$insert_id;
+				  return $resp;
+			  }else{
+				    $resp['status'] = 0;
+				  $resp['msg'] = "Razorpay Payout Payment Insertion In Failed";
 				  return $resp;
 			  }
 	}
