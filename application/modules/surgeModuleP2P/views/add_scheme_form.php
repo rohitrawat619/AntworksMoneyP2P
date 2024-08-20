@@ -96,6 +96,20 @@
 							<option value="Simple"  <?php echo(($lists['Interest_Type']=="Simple") ? "selected" : ""); ?>>Simple</option>
 						</select>
                     </div>
+					
+					
+					 <div class="col-md-6 form-group">
+                        <label for="payout_type">
+						Payout Type:</label><br>
+						
+                        
+						<select class="form-control" id="payout_type" name="payout_type" required>
+							<option value="">Payout Type</option>
+							<option value="monthly"  <?php echo(($lists['payout_type']=="monthly") ? "selected" : ""); ?>>Monthly</option>
+							<option value="maturity"  <?php echo(($lists['payout_type']=="maturity") ? "selected" : ""); ?>>Maturity</option>
+						</select>
+                    </div>
+					
                                     <div class="col-md-6 form-group" style="display:none">
                         <label for="withrawl_anytime">
 						Withrawl_Anytime:</label><br>

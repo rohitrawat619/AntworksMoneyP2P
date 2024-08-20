@@ -26,7 +26,7 @@ class Surge extends CI_Controller
 		
 	
 	public function dashboardBorrower(){
-		$partner_id=10;
+		$partner_id=$this->partner_id;
 		
 		$data['noOfBorrower']=$this->Surgemodel->getNoOfBorrower($partner_id);
 		$data['borrowerAmount']=$this->Surgemodel->getBorrowerAmount($partner_id);

@@ -50,24 +50,23 @@ class LendSocialCommunicationModel extends CI_Model{
 					$scheme_data_bySchemeId = $respData['scheme_data_bySchemeId'];
 
 				//replace template var with value
-				$token = array(
-				'PARTNER_NAME' => $partner_data_byParterId['Company_Name'],
-				'PARTNER_CONTACT_NO' => $partner_data_byParterId['Phone'],
+				$token['PARTNER_NAME'] = $partner_data_byParterId['Company_Name'];
+				$token['PARTNER_CONTACT_NO'] = $partner_data_byParterId['Phone'];
 
-				'SITE_URL' => 'https://www.antworksp2p.com/',
-				'SITE_NAME' => 'lend-social',
+				$token['SITE_URL'] = 'https://www.antworksp2p.com/';
+				$token['SITE_NAME'] = 'lend-social';
 		
-				'NAME' => $user_data_byUserId['fname']." ".$user_data_byUserId['lname'],
-				'MOBILE' => $user_data_byUserId['mobile'],
+				$token['NAME'] = $user_data_byUserId['fname']." ".$user_data_byUserId['lname'];
+				$token['MOBILE'] = $user_data_byUserId['mobile'];
 				
-				'SCHEMENAME' => $scheme_data_bySchemeId['Scheme_Name'],
+				$token['SCHEMENAME'] = $scheme_data_bySchemeId['Scheme_Name'];
 				
-				'LEND_SOCIAL_LOGIN_URL' => '<a href="https://www.antworksp2p.com/login/admin-login">https://www.antworksp2p.com/login/admin-login</a>',
-				'USER_EMAIL' => $input_data['user_email'],
-				'PASSWORD' => $input_data['password'],
+				$token['LEND_SOCIAL_LOGIN_URL'] = '<a href="https://www.antworksp2p.com/login/admin-login">https://www.antworksp2p.com/login/admin-login</a>';
+				$token['USER_EMAIL'] = $input_data['user_email'];
+				$token['PASSWORD'] = $input_data['password'];
 				
 				//'LOAN_APPLICATION_NO' => "202404311158",
-				);
+				
 				$pattern = '[%s]';
 				foreach ($token as $key => $val) {
 				$varMap[sprintf($pattern, $key)] = $val;
@@ -102,7 +101,7 @@ class LendSocialCommunicationModel extends CI_Model{
 				//$this->email->from('support@antworksmoney.com', 'Antpay');
 				$this->email->from('support@creditdoctor.in', 'lend-social');
 				$this->email->to("dheeraj.antworks@gmail.com");// change it to yours
-				$this->email->cc("dheeraj.antworks@gmail.com");// change it to yours
+			//	$this->email->cc("dheeraj.antworks@gmail.com");// change it to yours
 				$this->email->subject($result->instance);
 				$this->email->message($msg);
 				
