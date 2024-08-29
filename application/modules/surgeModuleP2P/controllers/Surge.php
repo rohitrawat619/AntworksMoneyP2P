@@ -288,6 +288,7 @@ class Surge extends CI_Controller
 		public function update_scheme(){
 			 
 			$updateSchemeResp = $this->Surgemodel->update_scheme();
+				
 			$scheme_id = $updateSchemeResp['scheme_id'];
 		
 					if($updateSchemeResp['status']==1){
@@ -367,6 +368,7 @@ class Surge extends CI_Controller
 			public function add_user(){
 					
 			$updateUserResp = $this->Surgemodel->add_user();
+			
 			$user_id = $updateUserResp['user_id'];
 		
 					if($updateUserResp['status']==1){
@@ -901,6 +903,7 @@ class Surge extends CI_Controller
 
 												/***res_***/
 						$payoutApiRespArray = json_decode($payoutApiResp,true);
+						
 						$payoutApiRespArray['notes_key_1'] = ($payoutApiRespArray['notes']['notes_key_1']);
 						$payoutApiRespArray['notes_key_2'] = ($payoutApiRespArray['notes']['notes_key_2']);
 						unset($payoutApiRespArray['notes']);
@@ -909,7 +912,10 @@ class Surge extends CI_Controller
 						$payoutApiRespArray['status_details_description'] = ($payoutApiRespArray['status_details']['description']);
 						$payoutApiRespArray['status_details_source'] = ($payoutApiRespArray['status_details']['source']);
 						$payoutApiRespArray['status_details_reason'] = ($payoutApiRespArray['status_details']['reason']);
+						$payoutApiRespArray['message'] = json_encode($payoutApiRespArray['error']);
 						unset($payoutApiRespArray['status_details']);
+						unset($payoutApiRespArray['error']);
+						//echo"<pre>"; print_r(json_encode($payoutApiRespArray['error'])); die();
 						$arrayForInsertion2 = $this->prependKeyPrefix($payoutApiRespArray, "res_");
 							/****res_****/
 						$combinedArray = array_merge($arrayForInsertion1,$arrayForInsertion2);

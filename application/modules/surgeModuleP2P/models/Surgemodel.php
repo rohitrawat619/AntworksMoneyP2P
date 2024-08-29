@@ -570,7 +570,7 @@ class Surgemodel extends CI_Model
 		return $this->cldb->count_all_results();
 	}
 	
-				public function update_user(){
+				public function update_user(){ // mail done
 		
 	$postParameters = array(
     'role_id',
@@ -612,16 +612,14 @@ foreach ($postParameters as $param) {
 					
 					/***********start of mail send*************/
 							$product_type_id = "LendSocialDashboard"; $instance_id = "UserCreation"; //"Welcome Mail";
-							$input_data['scheme_id'] = $scheme_id;
-							$input_data['user_id'] = $this->session->userdata('user_id');
-							$input_data['mobileLender'] =  "9213855703";
-							$input_data['mobileBorrower'] =  "9213855703";
-							$input_data['partner_id'] = $arr_user['partner_id'];  
-							
-							$input_data['user_email'] = $arr_user['email'];
+							$input_data['module_name'] = "user_creation";
+							$insert_id = $this->cldb->insert_id();
+							$input_data['user_id'] = !empty($user_id) ? $user_id : $insert_id;
+						    $input_data['user_email'] = $arr_user['email'];
 							$input_data['password'] = $this->input->post('password');
-							$resp = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
 							/****************end of mail send*******************/
+							
 				  $resp['status'] = 1;
 				  $resp['msg'] = "User Updated Successfully: Update ID:".$user_id;
 				  $resp['user_id'] = $user_id;
@@ -634,7 +632,7 @@ foreach ($postParameters as $param) {
 			  }
 	}
 	
-					public function add_user(){
+					public function add_user(){ // mail done
 		
 	$postParameters = array(
     'role_id',
@@ -683,10 +681,22 @@ foreach ($postParameters as $param) {
 								
 			  if($insertResult){
 				     $insert_id = $this->cldb->insert_id();
+					 
+					 /***********start of mail send*************/
+							$product_type_id = "LendSocialDashboard"; $instance_id = "UserCreation"; //"Welcome Mail";
+							$input_data['module_name'] = "user_creation";
+							//$insert_id = $this->cldb->insert_id();
+							$input_data['user_id'] = !empty($user_id) ? $user_id : $insert_id;
+						    $input_data['user_email'] = $arr_user['email'];
+							$input_data['password'] = $this->input->post('password');
+							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							/****************end of mail send*******************/
+						//	return($respa);// die();
+							
 				  $resp['status'] = 1;
 				  $resp['msg'] = "User Added Successfully"; //: Update ID:".$insert_id;
 				  $resp['user_id'] = $insert_id;
-				 
+						
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "User Creation Failed";
@@ -780,7 +790,7 @@ $this->cldb->limit($limit, $start);
 	
 	
 	
-					public function update_scheme(){
+					public function update_scheme(){ // mail done
 		
 	$arr_scheme = array(
     'Vendor_ID' => $this->input->post('Vendor_ID'),
@@ -817,36 +827,34 @@ $this->cldb->limit($limit, $start);
 			  $insertResult = $this->cldb->update('invest_scheme_details', $arr_scheme);
 								
 			  if($insertResult){
-				  $arr_scheme['scheme_details_id'] = $scheme_id;
-							 $insertResult = $this->cldb->insert('invest_scheme_detail_logs', $arr_scheme);
-							 
-							 
-							 
-							 
-							/***********start of mail send*************/
-							$product_type_id = "LendSocialDashboard"; $instance_id = "Scheme Edit"; //"Welcome Mail";
+				 			
+													/***********start of mail send*************/
+							$product_type_id = "LendSocialDashboard"; $instance_id = "Scheme Edit"; 
+							$input_data['module_name'] = "scheme";
+						//	$insert_id = $this->cldb->insert_id();
 							$input_data['scheme_id'] = $scheme_id;
 							$input_data['user_id'] = $this->session->userdata('user_id');
-							$input_data['mobileLender'] =  "9213855703";
-							$input_data['mobileBorrower'] =  "9213855703";
-							$input_data['partner_id'] = "1";  
-							$resp = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							
+							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
 							/****************end of mail send*******************/
-							
-							
+						//	return $respa;
+				   $arr_scheme['scheme_details_id'] = $scheme_id;
+				  $insertResult = $this->cldb->insert('invest_scheme_detail_logs', $arr_scheme);			
 				  $resp['status'] = 1;
-				  $resp['msg'] = "Scheme Updated Successfully: Update ID:";
+				  $resp['msg'] = "Scheme Updated Successfully: Update ID:".$scheme_id; //. "{$respa}";
 				  $resp['scheme_id'] = $scheme_id;
+				  $resp['mail_sent_status'] = $respa;
 				  return $resp;
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "Scheme Updation Failed";
 				  $resp['scheme_id'] = $scheme_id;
+				   $resp['mail_sent_status'] = $respa;
 				  return $resp;
 			  }
 	}
 	
-					public function add_scheme(){
+					public function add_scheme(){ // mail done
 		
 		$arr_scheme = array(
     'Vendor_ID' => $this->input->post('Vendor_ID'),
@@ -884,14 +892,28 @@ $this->cldb->limit($limit, $start);
 								
 			  if($insertResult){
 				     $insert_id = $this->cldb->insert_id();
+					 
+					 
+					 	/***********start of mail send*************/
+							$product_type_id = "LendSocialDashboard"; $instance_id = "Scheme Edit"; 
+							$input_data['module_name'] = "scheme";
+							//$insert_id = $this->cldb->insert_id();
+							$input_data['scheme_id'] = !empty($scheme_id) ? $scheme_id : $insert_id;
+							$input_data['user_id'] = $this->session->userdata('user_id');
+							
+							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							/****************end of mail send*******************/
+							
 				  $resp['status'] = 1;
-				  $resp['msg'] = "Scheme Added Successfully: Update ID:".$insert_id;
+				  $resp['msg'] = "Scheme Added Successfully: Update ID:".$insert_id;//."{$respa}";
 				  $resp['scheme_id'] = $insert_id;
+				   $resp['mail_sent_status'] = $respa;
 				  return $resp;
 			  }else{
 				    $resp['status'] = 0;
 				  $resp['msg'] = "Scheme Addition Failed";
 				  $resp['scheme_id'] = "";
+				   $resp['mail_sent_status'] = $respa;
 				  return $resp;
 			  }
 	}
@@ -931,22 +953,24 @@ $this->cldb->limit($limit, $start);
 	{		
 		// $this->cldb->select('f.*, f.id as lendsocial_lender_payout_schedule_table_id, a.*, a.id as p2p_lender_investment_table_id, a.redemption_status,
 		$this->cldb->select('f.id as lendsocial_lender_payout_schedule_table_id, f.*, a.*, a.redemption_status,
-  (CASE
-            WHEN a.redemption_status = 4 THEN "Redeemed"
-            WHEN a.redemption_status = 2 THEN "Under Process"
-            WHEN a.redemption_status = 5 THEN "Generate Bank File Pending"
-            WHEN a.redemption_status = 1 THEN "Approval Pending"
-            ELSE "Unknown Status" END)
-         AS redemption_status_name, b.name as lender_name, b.mobile as lender_mobile, c.account_no as lender_account_number, d.Scheme_Name as scheme_name, e.Company_Name as partner_name, e.Address as address');
+       (CASE
+            WHEN f.redemption_status = 4 THEN "Redeemed"
+            WHEN f.redemption_status = 2 THEN "Under Process"
+            WHEN f.redemption_status = 5 THEN "Generate Bank File Pending"
+            WHEN f.redemption_status = 1 THEN "Approval Pending"
+			WHEN f.redemption_status = 0 THEN "Approval Pending V2"
+            ELSE "Unknown Status" 
+		END)
+         AS redemption_status_name, f.api_response, b.name as lender_name, b.mobile as lender_mobile, c.account_no as lender_account_number, d.Scheme_Name as scheme_name, e.Company_Name as partner_name, e.Address as address');
 		$this->cldb->from('p2p_lender_investment as a');
 		$this->cldb->join('p2p_lender_list as b', 'a.lender_id =b.lender_id', 'LEFT');
 		$this->cldb->join('p2p_borrower_bank_res AS c', 'c.lender_id = b.user_id', 'LEFT');
 				$this->cldb->join('invest_scheme_details as d', 'a.scheme_id =d.id', 'LEFT');
 				$this->cldb->join('invest_vendors as e', 'b.vendor_id =e.VID', 'LEFT');
-				$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', 'LEFT');
+				$this->cldb->join('lendsocial_lender_payout_schedule as f', 'f.investment_No =a.investment_No', '');
 				
 		 $this->cldb->where('f.payout_date<=' , date("Y-m-d"));
-		 if($status==1){
+		 if($status==0){
 		 $this->cldb->where('f.payout_status' , 0);
 		 }
       //   $this->cldb->where_not_in('f.redemption_status', array(5, 2, 4));

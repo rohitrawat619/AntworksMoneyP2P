@@ -48,3 +48,5 @@ application/modules/LendSocial/views/credit_line/e_sign_@old_2024-june-14.php
 application/modules/surgeModuleP2P/models/Surgemodel_2024-august-19.php
 application/modules/surgeModuleP2P/models/LendSocialCommunicationModel_2024-august-19.php
 application/helpers/backup/dc_helper-04-12-23.php
+application/modules/credit-line/models/Borrowerinfomodel_@old2024-june-06.php
+application/modules/credit-line/models/Borrowerinfomodel_@old_2024-june-10.php

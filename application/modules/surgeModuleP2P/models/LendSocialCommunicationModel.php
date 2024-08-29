@@ -26,7 +26,54 @@ class LendSocialCommunicationModel extends CI_Model{
 				
 				$scheme_id = $input_data['scheme_id'];
 				$user_id = $input_data['user_id'];
+				$attachment_instance_id = "";
+				$token['SITE_URL'] = 'https://www.antworksp2p.com/';
+				$token['SITE_NAME'] = 'lend-social';
+				$ccMailList = "";
+				if($input_data['module_name'] == 'user_creation'){
+					$userData = $this->getUserData($input_data['user_id']); // table admin_user_list "admin_id"
+					 $partnerData = $this->getPartnerDetails($userData['partner_id']);
+					$token['NAME'] = $userData['fname']." ".$userData['lname'];
+					$token['LEND_SOCIAL_LOGIN_URL'] = '<a href="https://www.antworksp2p.com/login/admin-login">https://www.antworksp2p.com/login/admin-login</a>';
+					$token['USER_EMAIL'] = $input_data['user_email'];
+					$token['PASSWORD'] = $input_data['password'];
+					$toMailList = $userData['email'];
+					$ccMailList = $partnerData['Email'];
+					
+				}else if($input_data['module_name']=="scheme"){
+					$userData = $this->getUserData($input_data['user_id']); // table admin_user_list "admin_id"
+					$token['NAME'] = $userData['fname']." ".$userData['lname'];		
+					$schemeData = $this->getSchemeDetails($input_data['scheme_id']);
+					$token['SCHEMENAME'] = $schemeData['Scheme_Name'];
+					$toMailList = $userData['email'];
 
+				}else if($input_data['module_name']=="InvestmentConfirmation"){
+					
+					$token['NAME'] = $input_data['investor_name'];
+					$token['INVESTMENT_AMOUNT'] = $input_data['investment_amount'];
+					$schemeData = $this->getSchemeDetails($input_data['scheme_id']);
+					$token['SCHEMENAME'] = $schemeData['Scheme_Name'];
+					
+					$partnerData = $this->getPartnerDetails($schemeData['Vendor_ID']); // partner ID
+					$token['COMPANY_NAME'] = $partnerData['Company_Name'];
+					$token['COMPANY_CONTACT'] = $partnerData['Phone']; 
+					$token['INVESTMENT_NUMBER'] = $input_data['investment_no'];
+					$toMailList = $input_data['investor_email'];
+					//print_r($token); die();
+				}else if($input_data['module_name']=="OneTimeRegistrationPaymentConfirmation"){
+					$token['NAME'] = $input_data['investor_name'];
+					$partnerData = $this->getPartnerDetails($input_data['partner_id']); // partner ID
+					$token['COMPANY_NAME'] = $partnerData['Company_Name'];
+					$token['COMPANY_CONTACT'] = $partnerData['Phone']; 
+					$toMailList = $input_data['investor_email'];
+					$attachment_instance_id = "Registration Payment Confirmation PDF Attachment";
+					
+					//$token['INVOICE_AMOUNT'] = $input_data["invoice_amount"];
+					//$token['INVOICE_DATE']  = $input_data["invoice_date"];
+					//$token1 = array_combine($token,$input_data['USER_DATA']);
+				     // echo"<pre>";	print_r($token); die();
+				}else{
+				/*
 				$respData['mail_type']['product_type'] = $product_type_id;
 				$respData['mail_type']['instance_name'] = $instance_id;
 				$respData['user_data_byUserId'] = $this->getUserData($user_id); // table admin_user_list
@@ -48,13 +95,12 @@ class LendSocialCommunicationModel extends CI_Model{
 					$borrower_data_byBorrowerMobileNo = $respData['borrower_data_byBorrowerMobileNo'];
 					$partner_data_byParterId = $respData['partner_data_byParterId'];
 					$scheme_data_bySchemeId = $respData['scheme_data_bySchemeId'];
-
+					
 				//replace template var with value
 				$token['PARTNER_NAME'] = $partner_data_byParterId['Company_Name'];
 				$token['PARTNER_CONTACT_NO'] = $partner_data_byParterId['Phone'];
 
-				$token['SITE_URL'] = 'https://www.antworksp2p.com/';
-				$token['SITE_NAME'] = 'lend-social';
+				
 		
 				$token['NAME'] = $user_data_byUserId['fname']." ".$user_data_byUserId['lname'];
 				$token['MOBILE'] = $user_data_byUserId['mobile'];
@@ -63,8 +109,8 @@ class LendSocialCommunicationModel extends CI_Model{
 				
 				$token['LEND_SOCIAL_LOGIN_URL'] = '<a href="https://www.antworksp2p.com/login/admin-login">https://www.antworksp2p.com/login/admin-login</a>';
 				$token['USER_EMAIL'] = $input_data['user_email'];
-				$token['PASSWORD'] = $input_data['password'];
-				
+				$token['PASSWORD'] = $input_data['password']; */
+				  }
 				//'LOAN_APPLICATION_NO' => "202404311158",
 				
 				$pattern = '[%s]';
@@ -100,13 +146,32 @@ class LendSocialCommunicationModel extends CI_Model{
 				$this->email->set_newline("\r\n");
 				//$this->email->from('support@antworksmoney.com', 'Antpay');
 				$this->email->from('support@creditdoctor.in', 'lend-social');
-				$this->email->to("dheeraj.antworks@gmail.com");// change it to yours
-			//	$this->email->cc("dheeraj.antworks@gmail.com");// change it to yours
+				$this->email->to($toMailList);// 
+				if($ccMailList!=""){
+									$this->email->cc($ccMailList);// 
+				}
+				
+				if($attachment_instance_id!=""){
+					$pattern = '[%s]';
+				//	echo"<pre>"; print_r($input_data['USER_DATA']); die();
+				foreach ($input_data['USER_DATA'] as $key => $val) {
+				$varMapMail[sprintf($pattern, $key)] = $val;
+				}
+					$htmlTemplateContent = $this->get_notification($product_type_id, $attachment_instance_id);
+					//return $htmlTemplateContent; 
+					$htmlTemplateContentArray = strtr($htmlTemplateContent->email_content, $varMapMail);
+					
+					$pdf_file_path = $this->generatePdfFromHTML("",$htmlTemplateContentArray);
+					//return $pdf_file_path;
+					$this->email->attach($pdf_file_path);
+				}
+				
+				$this->email->bcc("dheeraj.antworks@gmail.com");// change it to yours
 				$this->email->subject($result->instance);
 				$this->email->message($msg);
 				
 				if ($this->email->send()) {
-				//return "true";
+				return "true";
 				} else {
 				return "false".$this->email->print_debugger();
 				} 
@@ -192,6 +257,27 @@ class LendSocialCommunicationModel extends CI_Model{
 				return $query->row_array(); // Return user details as an associative array
 				}
 				/**********************end of get scheme detail********************/
+				
+				
+						 function generatePdfFromHTML($mobile,$report_view){
+							// echo $report_view; die();
+							
+		require_once APPPATH . "/third_party/mpdf/vendor/autoload.php";
+					$file_name = "";
+					$document_storage_path = './document/Lendsocial/Invoice/';
+					$file_name = $mobile . 'Registration Payment-' . date('Ymdhis') . '.pdf';
+					$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'pagenumPrefix' => 'Page | ']);
+
+					//$report_view =  "<h2>Dheeraj Dutta</h2>";
+					$mpdf->setFooter('{PAGENO}');
+					$mpdf->WriteHTML($report_view, 2);
+					if (!is_dir($document_storage_path)) {
+					mkdir($document_storage_path, 0777, true); // Creates the directory with permissions
+					}
+					$mpdf->Output($document_storage_path . $file_name, 'F');
+					$attched_file_invoice = FCPATH . str_replace('./','',$document_storage_path). $file_name;
+					return $attched_file_invoice;
+		}
 }
 
 
