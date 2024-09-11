@@ -23,7 +23,61 @@ class Surge extends CI_Controller
 		$this->session->set_userdata(array("partnerInfo"=>$this->Surgemodel->getPartnersList(1, 0,"")));
 	}
 
-		
+
+		public function findValuesViaInvestmentFunction(){
+		//$_POST['minInvestment'] = $this->input->get('q'); //"20000";
+		//print_r($_POST['minInvestment']); die();
+  if(isset($_POST['minInvestment'])){
+  $minInvestment = (int)$_POST['minInvestment'];
+
+  // Check if the minimum investment is less than 12,500
+  if ($minInvestment > 0 && $minInvestment < 12500) {
+      // Apply rules if the minimum investment is less than 12,500
+      $lenderDiversificationInitial = 4;
+      $lenderDiversificationStepUp = 2;
+  } else {
+      // rules when the minimum investment is 12,500 or more
+      $lenderDiversificationInitial = 10;
+      $lenderDiversificationStepUp = 5;
+  }
+
+  // Initialize variables to hold the last successful values
+  $lastSuccessfulStepUp = 0;
+  $lastSuccessfulLenderDiversificationFactor = 0;
+
+  // Define the range for the loan amount
+  $minLoanAmount = 5000;
+  $maxLoanAmount = 20000;
+
+  for ($lenderDiversificationFactor = $lenderDiversificationInitial; $lenderDiversificationFactor <= 100; $lenderDiversificationFactor += $lenderDiversificationStepUp) {
+
+      $stepUp = $minInvestment / $lenderDiversificationFactor;
+
+      if (intval($stepUp) == $stepUp) {
+
+          $loanAmount = 4 * $stepUp;
+
+          // Check if stepUp falls within the loan amount range
+          if ($loanAmount >= $minLoanAmount && $loanAmount <= $maxLoanAmount) {
+              // Update the last successful values
+              $lastSuccessfulStepUp = $stepUp;
+              $lastSuccessfulLenderDiversificationFactor = $lenderDiversificationFactor;
+          }
+      }
+  }
+
+  // Prepare the result as an array
+  $result = [
+      'step_up_value' => $lastSuccessfulStepUp,
+      'diversification_factor_value' => $lastSuccessfulLenderDiversificationFactor,
+      'minimum_loan_amount' => 4 * $lastSuccessfulStepUp
+  ];
+
+  // Return the result as JSON
+  echo json_encode($result);
+
+}
+}
 	
 	public function dashboardBorrower(){
 		$partner_id=$this->partner_id;

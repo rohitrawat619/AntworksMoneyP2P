@@ -794,6 +794,16 @@ $this->cldb->limit($limit, $start);
 		
 	$arr_scheme = array(
     'Vendor_ID' => $this->input->post('Vendor_ID'),
+    'scheme_descripiton' => $this->input->post('scheme_descripiton'),
+	
+	 'lender_management_fee_percentage' => $this->input->post('lender_management_fee_percentage'),
+    'lender_management_fee_rupee' => $this->input->post('lender_management_fee_rupee'),
+    'type_of_lender_management_fee' => $this->input->post('type_of_lender_management_fee'),
+	
+	 'step_up_value' => $this->input->post('step_up_value'),
+    'diversification_factor_value' => $this->input->post('diversification_factor_value'),
+    'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
+	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
     'Min_Inv_Amount' => $this->input->post('Min_Inv_Amount'),
     'Max_Inv_Amount' => $this->input->post('Max_Inv_Amount'),
@@ -858,6 +868,17 @@ $this->cldb->limit($limit, $start);
 		
 		$arr_scheme = array(
     'Vendor_ID' => $this->input->post('Vendor_ID'),
+	 'scheme_descripiton' => $this->input->post('scheme_descripiton'),
+	 
+    'lender_management_fee_percentage' => $this->input->post('lender_management_fee_percentage'),
+    'lender_management_fee_rupee' => $this->input->post('lender_management_fee_rupee'),
+    'type_of_lender_management_fee' => $this->input->post('type_of_lender_management_fee'),
+	
+	 'step_up_value' => $this->input->post('step_up_value'),
+    'diversification_factor_value' => $this->input->post('diversification_factor_value'),
+    'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
+	
+	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
     'Min_Inv_Amount' => $this->input->post('Min_Inv_Amount'),
     'Max_Inv_Amount' => $this->input->post('Max_Inv_Amount'),
