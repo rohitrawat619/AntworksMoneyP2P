@@ -22,6 +22,7 @@ $sessionData = $lists['sessionData'];
 
 				<li><i class="fa fa-check-circle"></i> Lender Processing Fee: <i class="fa fa-rupee"></i><?php echo $lists['lender_processing_fee']; ?></li>
 				<li><i class="fa fa-check-circle"></i> Lender Platform Fee: <i class="fa fa-rupee"></i><?php echo $lists['lender_platform_fee']; ?></li>
+				<li><i class="fa fa-check-circle"></i> Lender Management Fee: <i class="fa fa-rupee"></i><?php echo $lists['lender_management_fee']; ?></li>
 				<li><i class="fa fa-check-circle"></i> Total Amount: <i class="fa fa-rupee"></i><?php echo $lists['total_amount']; ?></li>
 				</ul>
 							</div>

@@ -136,6 +136,33 @@ public function success(){
   $this->load->view('template-LendSocial/footer',$data);
 }
 
+
+public function emandate_page(){ 
+ 
+  
+  $user_details=$this->credit_line_model->get_borrower_details($this->mobile);
+    //  pr($user_details['borrower_id']); die();
+  $data['customer_details'] = $this->credit_line_model->create_customer($user_details);
+  // echo "<pre>";print_r($data);die(); 
+  if($data['customer_details']['status'] == 1){
+ // $data['payment_details'] = $this->credit_line_model->payment_details_via_borrower_id($user_details['borrower_id']);
+  $this->load->view('credit_line/emandate_page',$data);
+
+  }else{
+    http_response_code(400);
+    // alert();
+  }
+
+}
+
+
+public function create_order(){
+  
+  $user_details=$this->credit_line_model->get_borrower_details($this->mobile);
+  $response = $this->credit_line_model->create_order($user_details);
+  echo json_encode($response);die();
+}
+
 public function e_sign(){
   
 

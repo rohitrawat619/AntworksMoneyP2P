@@ -45,7 +45,35 @@ class LendSocial extends CI_Controller
 						
 							}
 
+				public function array_key_uppercase($array){
+				//$upperCaseKeysArray = array_combine(array_map('strtoupper', array_keys($array)),array_values($array));
+				$upperCaseKeysArray = array_combine(array_map(function($key) {return strtoupper($key) . '_SESSN';}, array_keys($array)),array_values($array));
+				return $upperCaseKeysArray;
+				}
 		public function testing(){
+			
+							
+					/***********start of mail send*************/
+					$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
+					$product_type_id = "LendSocialDashboard"; $instance_id = "Registration Payment Confirmation"; //abcd
+					$input_data['module_name'] = "OneTimeRegistrationPaymentConfirmation";
+					$input_data['partner_id'] = $this->sessionData['partners_id'];
+					$input_data['investor_name'] = $this->sessionData['name'];
+					$input_data['investor_email'] = $this->sessionData['email_id'];
+					$input_data['USER_DATA'] = $this->array_key_uppercase($this->sessionData);
+					$input_data['USER_DATA']['INVOICE_AMOUNT'] = 749;
+					$input_data['USER_DATA']['INVOICE_DATE'] = date("Y-m-d");
+					$input_data['USER_DATA']['INVOICE_NO'] = time();
+					$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+					print_r($respa);
+					/****************end of mail send*******************/
+			
+			/* //  echo"<pre>"; print_r($this->sessionData);
+			echo $this->sessionData['name'];
+			echo $this->sessionData['email_id'];
+			echo $this->sessionData['mobile'];
+
+			die();
 			$scheme_id = $this->input->get('scheme_id');
 			$scheme_data = $this->LendSocialmodel->getSchemeDataById($scheme_id);
 			if($scheme_data!=""){
@@ -54,7 +82,7 @@ class LendSocial extends CI_Controller
 				$error_msg = "By Scheme ID data not found for Interest rate";
 			}
 			echo"<pre>"; print_r($scheme_data['Interest_Rate']);
-			
+			 */
 		
 		}
 		
@@ -344,20 +372,91 @@ class LendSocial extends CI_Controller
 			print_r($this->input->post());
 		}
 		
+					public function e_sign_lender_agreement(){
+					 //  echo"<pre>"; print_r($this->input->post('scheme_id'));
+					 $this->checkSessionMobileNo();
+					$scheme_id = $this->input->post('scheme_id');
+			        $amount = $this->input->post('amount');
+
+				    $respCalculateLenderChargesFinal = $this->calculateLenderChargesFinal($scheme_id,$amount);		
+					$view_lender_agreement = "Lender Agreement <br>".json_encode($respCalculateLenderChargesFinal)."<br>"; //$this->credit_line_model->viewLoanaggrement(12);
+					
+					$data['view_lender_agreement']=$view_lender_agreement;
+					$data['encryptedInvestSchemeNAmount'] = base64_encode(base64_encode($amount.",".$scheme_id));
+					$data['logo_path'] = $this->partnerInfo['logo_path'];
+					$this->load->view('template-LendSocial/header',$data);
+					// $this->load->view('credit_line_templates/nav');
+					$this->load->view('e_sign_lender_agreement',$data);
+					$this->load->view('template-LendSocial/footer',$data);
+
+					}
+		
+		public function e_sign_lender_agreement_send_otp(){
+			$this->checkSessionMobileNo();
+			$response = $this->LendSocialmodel->e_sign_lender_agreement_send_otp($this->sessionData);
+				
+				 echo $response; die();
+				 }
+				
+			public function e_sign_lender_agreement_otp(){
+				
+				$this->checkSessionMobileNo();
+					$data['logo_path'] = $this->partnerInfo['logo_path'];
+					$data['mobile']  = $this->sessionData['mobile'];
+					$data['encryptedInvestSchemeNAmount']  = $this->input->get('q');
+					$this->load->view('template-LendSocial/header',$data);
+					// $this->load->view('credit_line_templates/nav');
+					$this->load->view('e_sign_lender_agreement_otp',$data);
+					$this->load->view('template-LendSocial/footer',$data);
+			}
+			
+			public function e_sign_verify_lender_agreement_otp(){
+				$this->checkSessionMobileNo();
+				$response = $this->LendSocialmodel->e_sign_verify_lender_agreement_otp($this->sessionData,$this->input->post('otp'));
+				
+				 echo $response; die();
+			}
+			
+			public function calculateLenderChargesFinal($scheme_id,$amount){
+				$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],"lender"); // userType: borrower/lender
+			$scheme_data = $this->LendSocialmodel->getSchemeDataById($scheme_id);
+			
+			$arrayOne = $feeStructureData[0];
+			$arrayOne['lender_management_fee_percentage'] = $scheme_data['lender_management_fee_percentage'];
+			$arrayOne['lender_management_fee_rupee'] = $scheme_data['lender_management_fee_rupee'];
+			$arrayOne['type_of_lender_management_fee'] = $scheme_data['type_of_lender_management_fee'];
+	//	echo"<pre>";	print_r($arrayOne); die();
+			return  $this->calculateLenderInvestmentChargeFee($arrayOne,$amount);
+				
+			}
 			
 			public function processingInvestmentPayment(){
-
+	//  echo base64_decode(base64_decode($this->input->get('q')));
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 			$data['sub_logo_path'] = $this->lender_logo_path;
 			$this->load->view('template-LendSocial/header',$data);
 			$this->checkSessionMobileNo();
-			$scheme_id = $this->input->post('scheme_id');
-			$amount = $this->input->post('amount');
 			$mobile = $this->sessionData["mobile"];
-
-			$feeStructureData = $this->LendSocialmodel->get_master_fee_structure_by_partnerId($this->sessionVariableData['partner_id'],"lender"); // userType: borrower/lender
-			$calculationLenderFeeResp = $this->calculateLenderInvestmentChargeFee($feeStructureData[0],$amount);
-			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($calculationLenderFeeResp['total_amount'],$mobile),true);
+			
+			
+			
+			
+			$inputRequestData = $this->input->get('q');
+			if($inputRequestData!=""){
+			$encryptedInvestSchemeNAmount = explode(",",base64_decode(base64_decode($inputRequestData)));
+			$amount = $encryptedInvestSchemeNAmount[0];		
+			$scheme_id = $encryptedInvestSchemeNAmount[1];
+		//	echo $amount;
+			}else{
+				$scheme_id = $this->input->post('scheme_id');
+			$amount = $this->input->post('amount');
+			}
+			
+			$calculationLenderFeeResp = $this->calculateLenderChargesFinal($scheme_id,$amount);
+			
+			
+			//echo"<pre>"; print_r($calculationLenderFeeResp); die();
+			$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($calculationLenderFeeResp['total_amount'],$mobile,'social-lending'),true);
 			
 			$data['lists'] = $calculationLenderFeeResp;
 			$data['lists']['generateOrderResp'] = $generateOrderResp;
@@ -395,16 +494,24 @@ class LendSocial extends CI_Controller
 	$lender_platform_fee_rupee = $inputData['lender_platform_fee_rupee'];
 	$lender_platform_fee_percentage = $inputData['lender_platform_fee_percentage'];
 	
+	
+	$lender_management_fee_percentage = $inputData['lender_management_fee_percentage'];
+	$lender_management_fee_rupee = $inputData['lender_management_fee_rupee'];
+	$type_of_lender_management_fee = $inputData['type_of_lender_management_fee'];
+	
 		
-			
+			//echo"<pre>"; print_r($inputData); die();
 			$lenderProcessingFee = 	$this->getLenderProcessingFee($amount,$lender_processing_fee_percentage,$lender_processing_fee_rupee);
 			$lenderPlatformFee = $this->getLenderPlatformFee($amount, $lender_platform_fee_percentage, $lender_platform_fee_rupee, $type_of_Lender_platform_fee);
+			$lenderManagementFee = $this->getLenderManagementFee($amount,$lender_management_fee_percentage,$lender_management_fee_rupee,$type_of_lender_management_fee);
 			
 	$resp =  array(
 						'amount'=> $amount,
 						'lender_processing_fee'=> $lenderProcessingFee,
 						'lender_platform_fee'=>$lenderPlatformFee,
-						'total_amount'=> ($amount+$lenderProcessingFee+$lenderPlatformFee),
+						'lender_management_fee'=> $lenderManagementFee,
+						'total_amount'=> ($amount+$lenderProcessingFee+$lenderPlatformFee+$lenderManagementFee),
+						
 						
 						);
 					return $resp;
@@ -434,6 +541,19 @@ class LendSocial extends CI_Controller
 		return $result;
 		}
 
+		}
+		
+		function getLenderManagementFee($amount,$inPercentageValue,$inRupeeValue,$type_of_lender_management_fee){
+			//echo $inRupeeValue;
+			if($type_of_lender_management_fee=="InPercentage"){
+
+		$result = ($amount * (($inPercentageValue) / 100));
+		return $result;
+		}else if($type_of_lender_management_fee=="InRupee"){
+		$result = $inRupeeValue;
+		return $result;
+		}
+			
 		}
 		
 				public function redeemRequestPreview(){
@@ -818,7 +938,8 @@ class LendSocial extends CI_Controller
 
 				public function lenderInvestmentProcessing(){ 
 				$this->checkSessionMobileNo();
-
+				//$this->load->model('../LendSocialCommunicationModel');
+				$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
 				$ant_txn_id = $this->input->post('ant_txn_id');
 				$mobile = $this->input->post('mobile');
 				$investment_amount = $this->input->post('investment_amount');
@@ -841,9 +962,34 @@ class LendSocial extends CI_Controller
 				$data['logo_path'] = $this->partnerInfo['logo_path'];
 				$data['sub_logo_path'] = $this->lender_logo_path;////
 				$this->load->view('template-LendSocial/header',$data);
+				
+				
+				
 					if($lenderInvestmentRequest['status']==1){
 						$this->LendSocialmodel->saveInvestmentOtherFee($lenderInvestmentRequest['investment_no']); // for saving the payment info into "trans_fee_structure"
 					$this->calculate_lender_payout_schedule_data_processing($investment_amount,$scheme_id,$mobile,$lenderInvestmentRequest['investment_no']); // { //testControllerlenderInvestmentProcessing
+						
+						
+						
+					
+						/***********start of mail send*************/
+							/* 	echo $this->sessionData['name'];
+								echo $this->sessionData['email_id'];
+								echo $this->sessionData['mobile']; */
+							$product_type_id = "LendSocialDashboard"; $instance_id = "Investment Confirmation"; //abcd
+							$input_data['module_name'] = "InvestmentConfirmation";
+					
+							
+						    $input_data['investment_no'] = $lenderInvestmentRequest['investment_no'];
+						    $input_data['investment_amount'] = $investment_amount;
+							 $input_data['scheme_id'] = $scheme_id;
+							 $input_data['investor_name'] = $this->sessionData['name'];
+							 $input_data['investor_email'] = $this->sessionData['email_id'];
+							 
+							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+							//print_r($respa);
+							/****************end of mail send*******************/
+						
 						$data['lists']['title'] = "Investment Successfully";
 						$data['lists']['text'] = "click on below link for home page";
 						$data['lists']['link'] = "lenderDashboard";
@@ -874,7 +1020,7 @@ class LendSocial extends CI_Controller
 				}
 		
 		public function get_registration_fee_status(){
-			
+			$this->checkSessionMobileNo();
 			$userType = $this->sessionVariableData['lenderSocialProductType'];
 			
 			if($userType=="borrowerBullet"){ // 
@@ -925,7 +1071,7 @@ class LendSocial extends CI_Controller
 
 				}else{
 				//	echo "payment order"; die();
-				$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($feeStructureMasterData[0]['partner_registration_fee_charges'],$this->sessionVariableData['mobile']),true);
+				$generateOrderResp = json_decode($this->LendSocialmodel->generateOrder($feeStructureMasterData[0]['partner_registration_fee_charges'],$this->sessionVariableData['mobile'],'antworks-p2p'),true);
 		
 		
 		$transFeeStructureData['user_type'] = $userType; // field name

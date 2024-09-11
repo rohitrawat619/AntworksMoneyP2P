@@ -6,7 +6,7 @@
 			<div class="surge-success">
 				<img src="<?php echo $lender_logo_path; ?>" class="surgeant-icon">
 				<h2 class="success-">Choose an investment amount</h2>
-				<form role="form" action="processingInvestmentPayment" onsubmit="return validateForm();" method="post">
+				<form role="form" action="e_sign_lender_agreement" onsubmit="return validateForm();" method="post">
 					<div class="col-md-12 col-xs-12 text-left">
 						<div class="col-md-12 col-xs-12">
 							<div class="form-group">

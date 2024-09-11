@@ -352,6 +352,128 @@ public function viewLoanaggrement($borrower_id){
     return $response;
       
         }
+
+
+       public function create_customer($user_details) {
+            return $this->create_customer_api($user_details);
+       
+    }
+    
+    public function create_customer_api($result) {
+      $curl = curl_init();
+  
+      // Prepare the POST fields as an associative array
+      $post_fields = [
+          'name' => $result['name'],
+          'email' => $result['email'],
+          'contact' => $result['mobile'],
+          'notes_key_1' => $result['name'].'_customer_created',
+          'notes_key_2' => $result['email'].'_customer_created',
+          'borrower_id' => $result['borrower_id'],
+          'expire_time' => API_EXPIRE_TIME
+      ];
+      // pr($post_fields);
+      
+      // Convert the POST fields to a query string
+      $query_string = http_build_query($post_fields);
+  
+      // Encode the query string in Base64
+      $encoded_query_string = encrypt_string($query_string);
+      // echo $encoded_query_string;die();
+  
+      curl_setopt_array($curl, array(
+          CURLOPT_URL => base_url('/e_nach/nach_controller/create_customer'),
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => $encoded_query_string,
+          CURLOPT_HTTPHEADER => array(
+              'Content-Type: application/x-www-form-urlencoded',
+              'Cookie: p2p_2018_2019_session=j3gi4bk3e8jm52ckplhk0b2r7ic5okp0'
+          ),
+      ));
+  
+      $response = curl_exec($curl);
+  
+      if (curl_errno($curl)) {
+          $error_msg = curl_error($curl);
+      }
+  
+      curl_close($curl);
+  
+      if (isset($error_msg)) {
+          return ['status' => 0, 'msg' => $error_msg];
+      }
+  // echo $response;die();
+      // Decode the response if needed
+      $response = json_decode($response, true);
+      return $response;
+  }
+
+
+
+    public function create_order($user_details) {
+          $create_order_api = $this->create_order_api($user_details);
+          return $create_order_api;
+  }
+  
+  public function create_order_api($result) {
+      // Initialize cURL
+      $curl = curl_init();
+  
+      // Prepare the POST data
+      $postData = http_build_query([
+          'borrower_id' => $result['borrower_id'],
+          'notes_key_1' => $result['name'].'_order_created',
+          'notes_key_2' => $result['borrower_id'].'_order_created',
+          'auth_type' => $this->input->post('payment_type'),
+          'token_notes_key_1' => $result['bank_details']->account_number.'_order_created',
+          'token_notes_key_2' => $result['bank_details']->ifsc_code.'_order_created',
+          'beneficiary_name' => $result['bank_details']->bank_registered_name,
+          'account_number' => $result['bank_details']->account_number,
+          'ifsc_code' => $result['bank_details']->ifsc_code,
+          'account_type' => $result['bank_details']->account_type,
+          'expire_time' => API_EXPIRE_TIME
+      ]);
+      // return $postData;
+      // Convert the POST fields to a query string
+      // $query_string = http_build_query($postData);
+  
+      // Encode the query string in Base64
+      $encoded_query_string = encrypt_string($postData);
+  
+      // Set cURL options
+      curl_setopt_array($curl, array(
+          CURLOPT_URL => base_url('e_nach/nach_controller/create_order'), // Corrected URL concatenation
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => $encoded_query_string,
+          CURLOPT_HTTPHEADER => array(
+              'Content-Type: application/x-www-form-urlencoded'
+          ),
+      ));
+  
+      // Execute cURL request and get the response
+      $response = curl_exec($curl);
+  
+      // Close cURL session
+      curl_close($curl);
+      // echo $response;
+      // Decode JSON response
+      $response = (array)json_decode($response, true);
+  
+      // Return the response
+      return $response;
+  }
     
         public function credit_line_sendOtpsignature($borrower_id,$loan_id){
     

@@ -20,9 +20,133 @@ class LendSocialmodel extends CI_Model
 			
 			$this->authorization = 'Authorization: Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==';
 			$this->oath_token = "oath_token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjAyMDU1Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiOTIxMzg1NTcwMyIsImRldmljZV9pZCI6IiIsImFwcF92ZXJzaW9uIjpudWxsLCJnZW5lcmF0ZWRfdGltZXN0YW1wIjoiMjAyNC0wMi0yMCAxNjowODozNSIsImlwX2FkZHJlc3MiOiI1NC44Ni41MC4xMzkifQ.6o3tDNV52ntG-C26VXjsnCnVk24F9rslkoIRz7cDwiM";
-			
+			$this->sessionData = $this->session->userdata();
 		
 	}
+	
+	public function e_sign_lender_agreement_send_otp($lenderInfo)
+    {
+           
+            if ($lenderInfo!="") {
+               
+                $otp = rand(100000, 999999);
+                $this->load->model('Smssetting');
+                $setting = $this->Smssetting->smssetting();
+                
+				
+                $this->db->select('*');
+                $this->db->from('p2p_lender_otp_signature');
+                $this->db->where('mobile', $lenderInfo['mobile']);
+                $this->db->where('lender_id', $lenderInfo['lender_id']);
+                $this->db->where('date_added >= now() - INTERVAL 1 DAY');
+                $query = $this->db->get();
+                if ($this->db->affected_rows() > 0) {
+                    $result = count($query->result_array());
+                    if ($result > 1000) {
+                        $errmsg = array("error_msg" => "Your tried multiple times please try again");
+                        $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                        return;
+                    } else {
+                        $arr["mobile"] = $lenderInfo['mobile'];
+                    $arr["lender_id"] = $lenderInfo['lender_id'];
+                        $arr["otp"] = $otp;
+                        $query = $this->db->insert('p2p_lender_otp_signature', $arr);
+                    }
+                } else {
+                    $arr["mobile"] = $lenderInfo['mobile'];
+                    $arr["lender_id"] = $lenderInfo['lender_id'];
+                    $arr["otp"] = $otp;
+                    $query = $this->db->insert('p2p_lender_otp_signature', $arr);
+                }
+
+             
+			 
+				$msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
+				$msg = "$otp is your Antworks Account verification code - ANTWORKS";
+				//            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
+				$message = rawurlencode($msg);
+
+            // Prepare data for POST request
+            $data = array('username' => SMS_GATEWAY_USERNAME, 'hash' => SMS_GATEWAY_HASH_API, 'numbers' =>  $lenderInfo['mobile'], "sender" => SMS_GATEWAY_SENDER, "message" => $message);
+			
+			 $ch = curl_init('https://api.textlocal.in/send/');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $responseCurl = curl_exec($ch);
+                curl_close($ch);
+                $res = json_decode($responseCurl, true);
+                if ($res['status'] == 'success') {
+                    $response = array(
+                        'status' => 1,
+                        'msg' => 'OTP sent successfully'
+                    );
+					
+                    return json_encode($response);
+                } else {
+                    $response = array(
+                        'status' => 0,
+                        'msg' => 'Something went wrong!!'.$responseCurl
+                    );
+						return json_encode($response);
+                }
+
+            } else {
+                $errmsg = array("error_msg" => validation_errors());
+                return json_encode($errmsg);
+            }
+       /*  }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+     */
+	 }
+	 
+	 
+	 	 public function e_sign_verify_lender_agreement_otp($lenderInfo,$otp)
+    {
+
+		
+        $this->db->select('otp, ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(date_added)) / 60) AS MINUTE');
+        $this->db->from('p2p_lender_otp_signature');
+        $this->db->where('lender_id', $lenderInfo['lender_id']);
+        $this->db->where('mobile', $lenderInfo['mobile']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+		//  return $this->db->last_query();
+        if ($this->db->affected_rows() > 0) {
+            $result = $query->row();
+            if ($otp == $result->otp) {
+                if ($result->MINUTE <= 10) {
+					
+				
+				$this->db->set('is_verified', '1');	
+				$this->db->set('source', 'lendsocialLender');	
+				$this->db->where('otp', $otp);
+				$this->db->where('lender_id', $lenderInfo['lender_id']);
+				$this->db->where('mobile', $lenderInfo['mobile']);
+				$this->db->update('p2p_lender_otp_signature', $data);
+		
+                    return json_encode(array(
+                        'status' => '1',
+                        'msg' => 'Otp verified'
+                    ));
+                } else {
+                    return json_encode(array(
+                        'status' => '0',
+                        'msg' => 'Sorry Your OTP is expired please try again'
+                    ));
+                }
+            } else {
+                return json_encode(array(
+                    'status' => '0',
+                    'msg' => 'your OTP is not verified please enter correct OTP'
+                ));
+            }
+        } else {
+            return false;
+        }
+    
+    }
 	
 					public function get_master_fee_structure_by_partnerId($partner_id,$userType) //'borrowerRegistrationFee','lenderRegistrationFee'
 	{		
@@ -42,6 +166,14 @@ class LendSocialmodel extends CI_Model
 			return $result;
 	}
 	
+	
+	public function array_key_uppercase($array){
+				//$upperCaseKeysArray = array_combine(array_map('strtoupper', array_keys($array)),array_values($array));
+				$upperCaseKeysArray = array_combine(array_map(function($key) {return strtoupper($key) . '_SESSN';}, array_keys($array)),array_values($array));
+				return $upperCaseKeysArray;
+				}
+				
+				
 	public function saveRegistrationFee(){
 		
 				$arr["transactionType"] = $this->input->post('transactionType');
@@ -63,6 +195,23 @@ class LendSocialmodel extends CI_Model
 						//return $arr;
 	
 						if ($query) {
+							
+												/***********start of mail send 2024-Aug-26 Not Yet Commit*************/
+					$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
+					$product_type_id = "LendSocialDashboard"; $instance_id = "Registration Payment Confirmation"; //abcd
+					$input_data['module_name'] = "OneTimeRegistrationPaymentConfirmation";
+					$input_data['partner_id'] = $this->sessionData['partners_id'];
+					$input_data['investor_name'] = $this->sessionData['name'];
+					$input_data['investor_email'] = $this->sessionData['email_id'];
+					$input_data['USER_DATA'] = $this->array_key_uppercase($this->sessionData);
+					$input_data['USER_DATA']['INVOICE_AMOUNT'] = $this->input->post('amount');// 749;
+					$input_data['USER_DATA']['INVOICE_DATE'] = date("Y-m-d");
+					$input_data['USER_DATA']['INVOICE_NO'] = time();
+					$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
+				//	print_r($respa);
+					/****************end of mail send*******************/
+
+							
 							return "Insertion successful.";
 						} else {
 							return "Insertion failed.";
@@ -608,8 +757,11 @@ curl_setopt_array($curl, array(
 
 
 /******************starting of generateOrder here*************/
-		public function generateOrder($amount,$mobile){  
-							
+		public function generateOrder($amount,$mobile,$service){  
+							/*
+							INSERT INTO `activate_pg_by_services` (`id`, `channel`, `service_name`, `pg_name`, `fee_rate`, `payu_merchant_id`, `payu_merchant_salt`, `razorpay_key`, `short_text`, `long_text`) VALUES (NULL, 'PG', 'antworks-p2p', 'Razorpay', '0', '', '', 'rzp_live_rkIuQRMRkiHJzM', '2.15% extra convenience fee', '2.15% extra convenience fee');
+
+							*/
 		
 			$curl = curl_init();
 
@@ -626,7 +778,7 @@ curl_setopt_array($curl, array(
 			  "amount":"'.$amount.'",
 			  "channel":"PG",
               "mobile":"'.$mobile.'", 
-              "service":"social-lending",
+              "service":"'.$service.'",
 				 "source":"surge"
 						} ',
 						
