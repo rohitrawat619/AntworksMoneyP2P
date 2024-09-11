@@ -134,7 +134,7 @@ if (@lists) {
             <td><?php echo $list['interest_days']; ?></td>
 			 <td><?php echo $list['redemption_status_name']; ?></td>
 			 <td><?php echo $list['partner_name']; ?></td>
-			 <td><?php echo $api_response['error']['description'] ?></td>
+			 <td><?php echo json_encode($api_response); ?></td>
 			
    
         <?php
