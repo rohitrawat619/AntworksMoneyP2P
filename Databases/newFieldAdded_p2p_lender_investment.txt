@@ -1,1 +1,3 @@
 ALTER TABLE `p2p_lender_investment` ADD `system_generated_redemption_date` DATETIME NULL AFTER `tenure`;
+
+ALTER TABLE `borrower_proposed_list` ADD `investment_no` VARCHAR(60) NULL AFTER `system_date`;
