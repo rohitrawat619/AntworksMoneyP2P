@@ -4,5 +4,5 @@ ALTER TABLE `borrower_proposed_list` ADD `investment_no` VARCHAR(60) NULL AFTER 
 
 ALTER TABLE `borrower_proposed_list` ADD `processing_status` INT NOT NULL COMMENT '0: pending response from lender; 1: request processed by the lender' AFTER `investment_no`;
 
-ALTER TABLE `borrower_proposed_list`  ADD `rejected_by` ENUM('lender','system') NULL  AFTER `processing_status`;ALTER TABLE `borrower_proposed_list`  ADD `rejected_by` ENUM('lender','system') NULL  AFTER `processing_status`;
+ALTER TABLE `borrower_proposed_list`  ADD `rejected_by` ENUM('lender','system') NULL  AFTER `processing_status`;
 ALTER TABLE `borrower_proposed_list` ADD `lender_priority_queue_id` INT NULL AFTER `borrower_priority_queue_id`;
