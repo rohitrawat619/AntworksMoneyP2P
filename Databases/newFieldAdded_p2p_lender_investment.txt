@@ -6,3 +6,5 @@ ALTER TABLE `borrower_proposed_list` ADD `processing_status` INT NOT NULL COMMEN
 
 ALTER TABLE `borrower_proposed_list`  ADD `rejected_by` ENUM('lender','system') NULL  AFTER `processing_status`;
 ALTER TABLE `borrower_proposed_list` ADD `lender_priority_queue_id` INT NULL AFTER `borrower_priority_queue_id`;
+ALTER TABLE `borrower_proposed_list` ADD INDEX( `lender_priority_queue_id`);
+ALTER TABLE `borrower_proposed_list` ADD CONSTRAINT `lender_priority_queue constraint` FOREIGN KEY (`lender_priority_queue_id`) REFERENCES `p2p_lender_priority_queue`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
