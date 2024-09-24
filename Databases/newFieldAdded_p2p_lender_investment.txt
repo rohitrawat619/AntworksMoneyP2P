@@ -11,5 +11,5 @@ ALTER TABLE `borrower_proposed_list` ADD CONSTRAINT `lender_priority_queue const
 
 
 ALTER TABLE `p2p_lender_priority_queue_logs` ADD `logs_type` VARCHAR(500) NULL AFTER `payout_date`; 
-ALTER TABLE `p2p_borrower_priority_queue_logs` ADD `logs_type` VARCHAR(500) NULL AFTER `payout_status`; ALTER TABLE `p2p_borrower_priority_queue_logs` ADD `logs_type` VARCHAR(500) NULL AFTER `payout_status`; 
+ALTER TABLE `p2p_borrower_priority_queue_logs` ADD `logs_type` VARCHAR(500) NULL AFTER `payout_status`; 
 ALTER TABLE `partners_theme` ADD `system_generated_id` VARCHAR(600) NULL AFTER `partner_type`;
