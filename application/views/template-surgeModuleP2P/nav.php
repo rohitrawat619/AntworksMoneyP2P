@@ -153,7 +153,7 @@ if($sessionVariableData['role_id']==10){
             </li>		<?php } */ ?>
 			
 			<?php if(in_array('redemption', $user_permissions)){?>
-		     <li class="lenderSection treeview <?php echo (strpos($controller_name, 'redemption') !== false) ? 'active' : ''; ?> ">
+		     <li class="lenderSection treeview <?php echo (strpos($controller_name, 'redemption') !== false && strpos($controller_name, '_v2') === false) ? 'active' : ''; ?> ">
                 <a href="#">
                     <i class="fa fa-trophy"></i>
                     <span>Redemption Management</span>
@@ -177,6 +177,30 @@ if($sessionVariableData['role_id']==10){
             </li>		<?php } ?>
 					
 
+				<?php if(in_array('redemptionV2', $user_permissions)){?>
+		     <li class="lenderSection treeview <?php echo (strpos($controller_name, '_v2') !== false) ? 'active' : ''; ?> ">
+                <a href="#">
+                    <i class="fa fa-trophy"></i>
+                    <span> Redemption Mgmt (V2)</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+				<?php if(in_array('redemption_list_pending_v2', $user_permissions)){?>
+				<li class="profile1 <?php echo ($controller_name === 'redemption_list_pending_v2') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'surge/redemption_list_pending_v2';?>">Pending List (V2)</a></li>  <?php } ?>
+				
+				<?php if(in_array('redemption_list_generate_bank_file_v2', $user_permissions)){?>
+				<li class="profile1 <?php echo ($controller_name === 'redemption_list_generate_bank_file_v2') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'surge/redemption_list_generate_bank_file_v2';?>">Generate Bank File List (V2)</a></li>  <?php } ?>
+				
+				<?php if(in_array('redemption_list_under_process_v2', $user_permissions)){?>
+				<li class="profile1 <?php echo ($controller_name === 'redemption_list_under_process_v2') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'surge/redemption_list_under_process_v2';?>">Under Process List (V2)</a></li>  <?php } ?>
+				
+				<?php if(in_array('redemption_list_redeemed_v2', $user_permissions)){?>
+				<li class="profile1 <?php echo ($controller_name === 'redemption_list_redeemed_v2') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'surge/redemption_list_redeemed_v2';?>">Redeemed List (V2)</a></li>   <?php } ?>
+                </ul>
+            </li>		<?php } ?>
+			
 			<?php if(in_array('scheme', $user_permissions)){?>
 			  <li class="lenderSection treeview <?php echo ($controller_name === 'scheme_list' || $controller_name === 'add_scheme_form') ? 'active' : ''; ?> ">
                 <a href="#">
@@ -193,7 +217,26 @@ if($sessionVariableData['role_id']==10){
                     <li class="profile2 <?php echo ($controller_name === 'add_scheme_form') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'surge/add_scheme_form';?>"></span>Add Scheme</a></li>  <?php } ?>
                 </ul>
             </li>
-				<?php } } ?>
+				<?php }
+ if (array_intersect(['loan_management'], $user_permissions)){ ?>
+
+		  <li class="lenderSection treeview <?php echo in_array($controller_name, ['loan_plan_list','add_loan_plan_form']) ? 'active' : ''; ?>">
+
+                <a href="#">
+                    <i class="fa fa-money"></i>
+                    <span>Loan Management</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="profile1 <?php echo ($controller_name === 'loan_plan_list') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/loan_plan_list';?>">Loan Plan List</a></li>
+                    <li class="profile2 <?php echo ($controller_name === 'add_loan_plan_form') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/add_loan_plan_form';?>">Add Loan Plan</a></li>
+                    
+                </ul>
+            </li>
+				<?php } 
+				} ?>
 			
 			
 			<!-------------------starting of borrowerSection------------------>
@@ -216,6 +259,9 @@ if($sessionVariableData['role_id']==10){
 				</ul>
             </li>
 					<?php } ?>
+				
+				
+									
 				
 				<?php if (array_intersect(['step_1', 'step_2', 'step_3','step_4','step_5','step_6','step_7'], $user_permissions)){ ?>
 
@@ -241,6 +287,7 @@ if($sessionVariableData['role_id']==10){
                 </ul>
             </li>
 				<?php } ?>
+			
 			
 			<?php if (array_intersect(['rule', 'report'], $user_permissions)){ ?>
             <li class="borrowerSection treeview <?php echo in_array($controller_name, ['rule', 'report']) ? 'active' : ''; ?>">
@@ -276,7 +323,7 @@ if($sessionVariableData['role_id']==10){
 					
 					} ?>
 					
-					
+					<?php 	if(in_array($partnerType,['both','borrower'])){ ?>
 					
 								<?php if(in_array('disburse', $user_permissions)){?>
 		     <li class="borrowerSection treeview <?php echo (strpos($controller_name, 'disburse') !== false) ? 'active' : ''; ?> ">
@@ -308,7 +355,9 @@ if($sessionVariableData['role_id']==10){
 				<?php if(in_array('disbursement_under_process_rejected_list', $user_permissions)){?>
 				<li class="profile1 <?php echo ($controller_name === 'disbursement_under_process_rejected_list') ? 'active' : ''; ?>"><a href="<?=base_url().$path.'borrower/disbursement_under_process_rejected_list';?>">Under Process Rejected List</a></li>   <?php } ?>
                 </ul>
-            </li>		<?php } ?>
+            </li>		<?php }
+										}
+			?>
 					
 					<!--------------------ending of borrowerSection-------------------->
 			
