@@ -2,3 +2,4 @@ ALTER TABLE `invest_scheme_details` ADD `borrower_classifier` VARCHAR(100) NOT N
 ALTER TABLE `p2p_borrowers_list` ADD `profession_id` INT NULL COMMENT 'this is from trans_profession table' AFTER `occuption_id`;
 ALTER TABLE `invest_scheme_detail_logs` ADD `borrower_classifier` VARCHAR(100) NOT NULL COMMENT 'this is a trans_profession table id' AFTER `minimum_loan_amount`
 ALTER TABLE `invest_scheme_details` ADD `occuption_id` VARCHAR(20) NULL AFTER `borrower_classifier`;
+ALTER TABLE `partner_loan_plan` ADD `scheme_id` INT NOT NULL AFTER `updated_id`;
