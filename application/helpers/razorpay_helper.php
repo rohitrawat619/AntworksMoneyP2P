@@ -134,11 +134,13 @@ function perform_razorpay_payout($data,$investment_no){ // Dated: 2024-august-08
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_HTTPHEADER => array(
-            'X-Payout-Idempotency: '.$investment_no, //53cda91c-8f81-4e77-bbb9-7388f4ac6bf4',
-            'Content-Type: application/json',
-            'Authorization: Bearer cnpwX3Rlc3RfcGl6S2NTV293U004enE6ZTdjVWs3eHJKaEI1cG8zYXF6NW1GdFN1'
-        ),
+		
+		CURLOPT_HTTPHEADER => array(
+    'X-Payout-Idempotency: '.$investment_no, //53cda91c-9f81-4e77-bbb9-7388f4ac6b',
+    'Content-Type: application/json',
+    'Authorization: Basic   cnpwX2xpdmVfcmtJdVFSTVJraUhKek06bnF3S0lkUDBCcmtIc2VuV3V1d1VNT05Q'
+  ),
+  
     ));
     
     // Execute the cURL request and get the response
