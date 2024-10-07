@@ -1,4 +1,7 @@
-
+<?php
+// print_r($schemeList);
+//print_r($lists['scheme_id']);
+?>
 <!-- Main content -->
 <section class="content" >
 	<?= getNotificationHtml(); ?>
@@ -19,7 +22,7 @@
 		?>
 		
 		<form class="form form-material" 
-			  action="../borrower/<?php echo $path; ?>/" onsubmit="return validateMobileNumber() && validateEmail()" method="POST"  > 
+			  action="../borrower/<?php echo $path; ?>/"  method="POST"  > 
 			<div class="col-md-12" >
 			<h2><?php echo ($edit == true) ? 'Update Loan Plan' : 'Add Loan Plan'; ?></h2>
 
@@ -29,13 +32,33 @@
 					<div class="row">
 
 					
-					  
+					 <div class="col-md-6 form-group">
+        <label for="scheme_id">Scheme:</label><br>
+        <select  class="form-control" name="scheme_id" id="scheme_id" >
+		<option value="">Select Scheme</option>
+		<?php for($i=0; $i<count($schemeList); $i++){
+				if($schemeList[$i]['id'] == $lists['scheme_id']){
+					$selected = "selected";
+				}else{
+					$selected = "";
+					}	
+						
+			echo '<option '.$selected.' value="'.$schemeList[$i]['id'].'">'.$schemeList[$i]['Scheme_Name'].'</option>';
+		}
+			?>
+		
+		</select>
+    </div> 
 
+    <!-- start  -->
     <div class="col-md-6 form-group">
         <label for="amount"> Amount:</label><br>
-        <input  class="form-control" class="form-control"type="text" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['amount']; ?>"  id="amount" name="amount" placeholder="Enter Amount">
+		
+        <input  class="form-control" class="form-control"type="text" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['amount']; ?>"  id="amount" name="amount" placeholder="Enter Amount"  min="<?php echo htmlspecialchars((int)$LenderSchemeData['minimum_loan_amount'], ENT_QUOTES); ?>" 
+        step="<?php echo htmlspecialchars((int)$LenderSchemeData['step_up_value'], ENT_QUOTES); ?>" pattern="\d*">
 		
     </div>
+	 <!-- end  -->
 
     
     <div class="col-md-6 form-group">

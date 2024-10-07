@@ -1,4 +1,3 @@
-
 <!-- Main content -->
 <section class="content" >
 	<?= getNotificationHtml(); ?>
@@ -198,7 +197,9 @@
 						Scheme Description:</label><br>
                         <textarea class="form-control"  type="text" id="scheme_descripiton" onkeyup="validate_scheme_description();" name="scheme_descripiton" required><?php echo $lists['scheme_descripiton']; ?></textarea>
 					<span id="scheme_descripiton_error" style="font-weight:bold;"></span>
-				   </div>					 
+				   </div>	
+
+			
 							
 													<div class="col-md-3 form-group">
     <label for="Lender Registration Fees" id="lender_partner_management_fee"> Lender Management Fee:
@@ -221,6 +222,45 @@
 </div>
 
 
+
+<div class="col-md-6 form-group">
+		<label for="occuption_id">Occupation:</label><br>
+		<select  class="form-control" required name="occuption_id" id="occuption_id" >
+		<option value="">Select Occupation</option>
+		<?php 
+			
+		foreach($occupation_list as $occupation_listValue){
+					 if($occupation_listValue['id']==$lists['occuption_id']){
+					$selected = "selected";
+					}else{
+					$selected = "";
+					} 
+		echo'<option '.$selected.' value="'.$occupation_listValue['id'].'">'.$occupation_listValue['name'].'</option>';
+		}
+		?>
+		</select>
+		</div>		
+
+<div class="col-md-6 form-group">
+		<label for="borrower_classifier">Borrower Classifier:</label><br>
+		<select  class="form-control"  name="borrower_classifier" id="borrower_classifier" >
+		<option value="">Select Borrower Classifier</option>
+		<?php 
+
+		foreach($borrower_classifier as $borrower_classifierValue){
+			
+					 if($borrower_classifierValue['id']==$lists['borrower_classifier']){
+					$selected = "selected";
+					}else{
+					$selected = "";
+					}  				
+					//  $selected = in_array($borrower_classifierValue['id'], $lists['borrower_classifier']) ? "selected" : ""; 
+
+		echo'<option '.$selected.' value="'.$borrower_classifierValue['id'].'">'.$borrower_classifierValue['name'].'</option>';
+		}
+		?>
+		</select>
+		</div>
 							
         <div class="row" id="updateButtonId">
         <div class="col-md-12">

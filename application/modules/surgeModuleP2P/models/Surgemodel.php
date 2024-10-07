@@ -17,6 +17,31 @@ class Surgemodel extends CI_Model
 		$this->partner_id = $this->session->userdata('partner_id');
 	}
 		
+		
+					public function getOccupationList()
+			{
+			$limit = 1000; $start = 0;
+			$this->cldb->select('*');
+			$this->cldb->from('p2p_occupation_details_table');
+			
+			$this->cldb->limit($limit, $start);
+			$res = $this->cldb->get();
+
+			return $result = $res->result_array();
+			}
+			
+			public function getProfessionList()
+			{
+			$limit = 1000; $start = 0;
+			$this->cldb->select('*');
+			$this->cldb->from('trans_profession');
+			$this->cldb->where('status',1);
+			$this->cldb->limit($limit, $start);
+			$res = $this->cldb->get();
+
+			return $result = $res->result_array();
+			}
+		
 							public function getInvestmentNoOfInvestor($type) // today  
 	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
 		$this->cldb->select('lender_id');
@@ -28,6 +53,30 @@ class Surgemodel extends CI_Model
 		$this->cldb->where_in('scheme_id',$scheme_ids);
 		return $this->cldb->count_all_results();
 	}
+	
+		// start 
+
+	public function getSystemGeneratedLenderId($partner_id){ // Dated: 2024-sept-24
+		$this->cldb->select('*');
+		$this->cldb->from('partners_theme');
+		// add the conditions
+		 $this->cldb->where('partner_id',$partner_id);
+
+		$query = $this->cldb->get()->row_array();
+		return $query['system_generated_id'];
+	}
+
+	public function getLenderSchemeData($partner_id){ // Dated: 2024-sept-24
+		$this->cldb->select('*');
+		$this->cldb->from('invest_scheme_details');
+		// add the conditions
+		$this->cldb->where('Vendor_ID',$partner_id);
+		$query = $this->cldb->get()->row_array();
+		return $query;
+	}
+
+
+	// end 
 	
 						public function getOutstandingInvestmentNoInvestor($type) // today  
 	{  $scheme_ids = $this->getlSchemeIdsByPartnerId();
@@ -168,6 +217,8 @@ class Surgemodel extends CI_Model
 			//echo $comma_separated_ids; // Output: 10,11,17,18,19
 			if($comma_separated_ids==""){
 				$comma_separated_ids = "11111123456789,234567";
+			}else if(empty($comma_separated_ids)){
+				$comma_separated_ids = "5454454554";
 			}
 		 return  $comma_separated_ids; 
 	}
@@ -362,6 +413,13 @@ class Surgemodel extends CI_Model
 			  $insertResult = $this->cldb->insert('partners_theme', $arr_partners_theme);
 			  if($insertResult){
 				    $insert_id = $this->cldb->insert_id();
+					
+					
+					if($arr_partners_theme['partner_type']=='lender'){ // Added On 2024-Sept-20
+						$this->cldb->where('theme_id',$insert_id); // theme_id
+						$this->cldb->update('partners_theme',array("system_generated_id"=>base64_encode($arr_partners_theme['partner_id']),'partner_type'=>$arr_partners_theme['partner_type']));
+						}
+					
 				  $resp['status'] = 1;
 				  $resp['msg'] = "Partner Added Successfully"; // Insert ID:".$insert_id;
 				  $resp['insert_id'] = $insert_id;
@@ -804,6 +862,9 @@ $this->cldb->limit($limit, $start);
     'diversification_factor_value' => $this->input->post('diversification_factor_value'),
     'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
 	
+    'borrower_classifier' =>$this->input->post('borrower_classifier'),// implode(",",$this->input->post('borrower_classifier')),
+	'occuption_id' => $this->input->post('occuption_id'),
+	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
     'Min_Inv_Amount' => $this->input->post('Min_Inv_Amount'),
     'Max_Inv_Amount' => $this->input->post('Max_Inv_Amount'),
@@ -847,7 +908,7 @@ $this->cldb->limit($limit, $start);
 							
 							$respa = $this->LendSocialCommunicationModel->sendEmail($product_type_id, $instance_id,$input_data);
 							/****************end of mail send*******************/
-						//	return $respa;
+						//	echo json_encode($respa); die();
 				   $arr_scheme['scheme_details_id'] = $scheme_id;
 				  $insertResult = $this->cldb->insert('invest_scheme_detail_logs', $arr_scheme);			
 				  $resp['status'] = 1;
@@ -878,6 +939,8 @@ $this->cldb->limit($limit, $start);
     'diversification_factor_value' => $this->input->post('diversification_factor_value'),
     'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
 	
+    'borrower_classifier' => implode(",",$this->input->post('borrower_classifier')),
+	'occuption_id' => $this->input->post('occuption_id'),
 	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
     'Min_Inv_Amount' => $this->input->post('Min_Inv_Amount'),
@@ -966,7 +1029,7 @@ $this->cldb->limit($limit, $start);
 		$this->cldb->GROUP_BY("a.reinvestment_id");
 		$this->cldb->ORDER_BY('a.reinvestment_id', 'desc');
 		$res = $this->cldb->get();
-
+		
 		return $result = $res->result_array();
 	}
 	

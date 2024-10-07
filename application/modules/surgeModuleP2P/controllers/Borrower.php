@@ -33,7 +33,7 @@ class Borrower extends CI_Controller
 	   $this->available_balance = (($this->getInvestmentAmount)-($this->getFees)-($this->getDisbursedAmount));
 	}
 	
-	public function add_loan_plan_form(){
+	/* public function add_loan_plan_form(){
 		
 		
 			$data['pageTitle'] = "Loan Plan";
@@ -45,7 +45,54 @@ class Borrower extends CI_Controller
 			//echo"<pre>"; print_r($data);
 			$this->load->view('borrower/add_loan_plan_form', $data);
 			$this->load->view('template-surgeModuleP2P/footer');
+	} */
+	
+		public function add_loan_plan_form(){
+			
+			//print_r($_REQUEST); die();
+		
+		    $partner_id = $this->partner_id;
+		//	print_r($partner_id); die();
+			$data['pageTitle'] = "Loan Plan";
+			$data['title'] = "Borrower Loan Plan";
+			$data['schemeList'] =  $this->Surgemodel->getSchemeList(100, 0,array("invest_scheme_details.status"=>1));
+			//$this->Surgemodel->getLenderSchemeData($partner_id);
+			
+			
+			//echo "<pre>"; print_r($data); 
+           // $getSystemGeneratedLenderId = $this->Surgemodel->getSystemGeneratedLenderId($partner_id);
+
+            // pr($getSystemGeneratedLenderId);
+            $getSeprateValues = $this->getSeprateValues($this->Surgemodel->getSystemGeneratedLenderId($partner_id));
+            // pr($getSeprateValues);
+
+            $data['LenderSchemeData'] = $this->Surgemodel->getLenderSchemeData($getSeprateValues['partner_id']);
+            // pr($data);
+
+			$this->load->view('template-surgeModuleP2P/header');
+			$this->load->view('template-surgeModuleP2P/nav');
+			$data['lists'] = ($this->P2pborrowermodel->get_partner_loan_plan_list(array('id' => $this->input->get('id'))))[0];
+			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,$where);
+			//echo"<pre>"; print_r($data);
+			$this->load->view('borrower/add_loan_plan_form', $data);
+			$this->load->view('template-surgeModuleP2P/footer');
 	}
+
+
+    // Place this function in helper 
+    public function getSeprateValues($input){
+        $input = base64_decode($input);
+        $values = explode('||', $input);
+        list($value1, $value2) = $values;
+        $arr = array(
+            'theme_id' => $value1,
+            'partner_id' => $value2
+        );
+        return $arr;
+
+    }
+
+    // end 
 	
 				public function loan_plan_list(){
 
@@ -67,6 +114,7 @@ class Borrower extends CI_Controller
 				$interest = $this->input->post('interest');
 				$tenor = $this->input->post('tenor');
 				$partner_id = $this->input->post('partner_id');
+				$scheme_id = $this->input->post('scheme_id');
 				//$id = $this->input->post('id');
 
 				$arr_data = array(
@@ -74,6 +122,7 @@ class Borrower extends CI_Controller
 				'interest' => $interest,
 				'tenor' => $tenor,
 				'partner_id' => $partner_id,
+				'scheme_id' => $scheme_id,
 				'created_id' => $this->session->userdata('user_id'),			
 				);
 
@@ -97,6 +146,7 @@ class Borrower extends CI_Controller
 				$interest = $this->input->post('interest');
 				$tenor = $this->input->post('tenor');
 				$partner_id = $this->input->post('partner_id');
+				$scheme_id = $this->input->post('scheme_id');
 				$id = $this->input->post('id');
 
 				$arr_data = array(
@@ -104,6 +154,7 @@ class Borrower extends CI_Controller
 				'interest' => $interest,
 				'tenor' => $tenor,
 				//'partner_id' => $partner_id,
+				'scheme_id' => $scheme_id,
 				'id' => $id,
 				'updated_id' => $this->session->userdata('user_id'),
 				);

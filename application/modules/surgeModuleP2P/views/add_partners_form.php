@@ -116,7 +116,7 @@
 				<option>Select Partner Type</option>
 				<option  value="borrower" <?php echo (($lists['partner_type'] == "borrower") ? 'selected' : ''); ?>>Borrower</option>
 				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Lender</option>
-				<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Both</option>
+			<?php /*	<option  value="both" <?php echo (($lists['partner_type'] == "both") ? 'selected' : ''); ?>>Both</option>  */ ?>
 		</select>		<?php } ?>
 						</div>
 						

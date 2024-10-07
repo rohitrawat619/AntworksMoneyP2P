@@ -145,7 +145,8 @@ class LendSocialCommunicationModel extends CI_Model{
 				$this->email->set_mailtype("html");
 				$this->email->set_newline("\r\n");
 				//$this->email->from('support@antworksmoney.com', 'Antpay');
-				$this->email->from('support@creditdoctor.in', 'lend-social');
+				//$this->email->from('support@creditdoctor.in', 'lend-social');
+				$this->email->from('p2psupport@antworksmoney.com', 'lend-social');
 				$this->email->to($toMailList);// 
 				if($ccMailList!=""){
 									$this->email->cc($ccMailList);// 

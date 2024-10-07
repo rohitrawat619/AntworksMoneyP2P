@@ -140,6 +140,15 @@ class Surge extends CI_Controller
 			$this->load->view('template-surgeModuleP2P/footer');
 		}
 
+
+	public function getProfessionList(){
+		$resp = 	$this->Surgemodel->getProfessionList();
+			//  echo json_encode($resp);
+			echo "<pre>"; echo var_dump($resp); 
+	}
+	
+	
+	
 	public function partners_list(){
 		
 			$where = ""; 
@@ -327,6 +336,8 @@ class Surge extends CI_Controller
 			
 			$schemeData = $this->Surgemodel->getSchemeList(1, 0,array('id'=>$this->input->get('id')));
 			$data['lists'] = $schemeData[0];
+			$data['borrower_classifier'] = 	$this->Surgemodel->getProfessionList();
+			$data['occupation_list'] = 	$this->Surgemodel->getOccupationList();
 			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,$where);
 			
 			
