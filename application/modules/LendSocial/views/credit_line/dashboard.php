@@ -99,12 +99,14 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
  <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+		 <?php if($partner_loan_plans!=""){?>
             <div class="row">
                 <div class="col-md-12 col-xs-12">
-                    <?php foreach($partner_loan_plans as $partner_loan_plan) {?>
+                   <?php
+						foreach($partner_loan_plans as $partner_loan_plan) {?>
                     <div class="col-md-4 col-xs-12">
                         <div class="model-loanbox">
-                            <ul class="model-creditloan-dtls" data-id="<?=$partner_loan_plan['id']?>">
+                            <ul class="model-creditloan-dtls" data-id="<?=$partner_loan_plan['partner_plan_id']?>">
                                 <li>Amount Approved<span>Rs. <?=$partner_loan_plan['amount']?></span></li>
                                 <li>Loan Tenure<span><?=$partner_loan_plan['tenor']?> Days</span></li>
                                 <li>Repayment Amount<span>Rs. <?php echo calculateRepaymentAmount($partner_loan_plan['amount'],$partner_loan_plan['interest'],$partner_loan_plan['tenor']); ?></span></li>
@@ -112,7 +114,10 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
                             </ul>
                         </div>
                     </div>
-                    <?php } ?>
+                    <?php }
+					
+
+					?>
 
                     <div class="col-md-12 col-xs-12">
                         <!-- Submit Plan Details button -->
@@ -120,6 +125,14 @@ function calculateRepaymentAmount($principal, $annualInterestRate, $timeInDays) 
                     </div>
                 </div>
             </div>
+			<?php }else{ ?>
+			            <div class="row">
+                <div class="col-md-12 col-xs-12">
+				<div class="model-loanbox">
+						 No Loan Plan Found.
+						 </div> </div>
+								</div>
+					<?php } ?>
         </div>
     </div>
 </div>
