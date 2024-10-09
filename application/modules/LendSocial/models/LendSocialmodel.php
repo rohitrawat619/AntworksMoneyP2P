@@ -24,6 +24,56 @@ class LendSocialmodel extends CI_Model
 		
 	}
 	
+	public function investmentRequestListProcessing($requestPayload){
+		
+					$this->db->set('request_status', 'rejected');		
+					$this->db->set('processing_status', '1');
+					$this->db->set('rejected_by','lender');
+					$this->db->set('request_update_date', date("Y-m-d H:i:s"));	
+					$this->db->set('requestor_id', $this->session->userdata('user_id'));	
+					$this->db->where('lender_id', $requestPayload['lender_id']);
+					$this->db->where('batch_id', $requestPayload['batch_id']);
+					$this->db->where('investment_no', $requestPayload['investment_no']);
+					$this->db->where('processing_status',0);
+					
+					$this->db->update('borrower_proposed_list'); 
+				
+			    if ($this->db->affected_rows() > 0)
+					{
+						
+						$this->db->set('request_status', 'approved');	
+						$this->db->where('lender_id', $requestPayload['lender_id']);
+						$this->db->where_in('id', explode(',',$requestPayload['borrower_proposed_list_ids']));
+						$this->db->where('batch_id', $requestPayload['batch_id']);
+						$this->db->where('investment_no', $requestPayload['investment_no']);
+						$this->db->update('borrower_proposed_list');  
+							$resp['status'] = 1;
+							$resp['msg'] = "Updated Successful";
+					
+				   } else { 
+							http_response_code(405);
+							$resp['status'] = 0;
+							$resp['msg'] = "Updation Failed";
+				        }
+				
+				 return json_encode($resp);
+				
+				}
+	
+		public function get_borrower_proposed_list($lender_id,$investment_no)
+	{
+		$this->db->select('a.*, a.id as borrower_proposed_list_id ,b.name as borrower_name');
+		$this->db->from('borrower_proposed_list a');
+		$this->db->join("p2p_borrowers_list b","a.borrower_id = b.borrower_id","LEFT");
+		$this->db->where("investment_no", $investment_no);
+		$this->db->where("lender_id",$lender_id);
+		$this->db->where("processing_status",0);
+		//$this->db->limit(40);	
+		$query = $this->db->get();
+
+		return $query->result();  
+	}
+	
 	public function e_sign_lender_agreement_send_otp($lenderInfo)
     {
            
@@ -50,13 +100,15 @@ class LendSocialmodel extends CI_Model
                         $arr["mobile"] = $lenderInfo['mobile'];
                     $arr["lender_id"] = $lenderInfo['lender_id'];
                         $arr["otp"] = $otp;
+						$arr['source'] = 'LSLA';
                         $query = $this->db->insert('p2p_lender_otp_signature', $arr);
                     }
                 } else {
-                    $arr["mobile"] = $lenderInfo['mobile'];
-                    $arr["lender_id"] = $lenderInfo['lender_id'];
-                    $arr["otp"] = $otp;
-                    $query = $this->db->insert('p2p_lender_otp_signature', $arr);
+						$arr["mobile"] = $lenderInfo['mobile'];
+						$arr["lender_id"] = $lenderInfo['lender_id'];
+						$arr["otp"] = $otp;
+						$arr['source'] = 'LSLA';
+						$query = $this->db->insert('p2p_lender_otp_signature', $arr);
                 }
 
              
@@ -101,6 +153,87 @@ class LendSocialmodel extends CI_Model
 	 }
 	 
 	 
+	 	public function e_sign_borrower_proposed_list_send_otp($lenderInfo)
+		{
+           
+            if ($lenderInfo!="") {
+               
+                $otp = rand(100000, 999999);
+                $this->load->model('Smssetting');
+                $setting = $this->Smssetting->smssetting();
+                
+				
+                $this->db->select('*');
+                $this->db->from('p2p_lender_otp_signature');
+                $this->db->where('mobile', $lenderInfo['mobile']);
+                $this->db->where('lender_id', $lenderInfo['lender_id']);
+                $this->db->where('date_added >= now() - INTERVAL 1 DAY');
+                $query = $this->db->get();
+                if ($this->db->affected_rows() > 0) {
+                    $result = count($query->result_array());
+                    if ($result > 1000) {
+                        $errmsg = array("error_msg" => "Your tried multiple times please try again");
+                        $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                        return;
+                    } else {
+                        $arr["mobile"] = $lenderInfo['mobile'];
+                    $arr["lender_id"] = $lenderInfo['lender_id'];
+					 $arr["batch_id"] = $lenderInfo['batch_id'];
+                        $arr["otp"] = $otp;
+                        $query = $this->db->insert('p2p_lender_otp_signature', $arr);
+                    }
+                } else {
+                    $arr["mobile"] = $lenderInfo['mobile'];
+                    $arr["lender_id"] = $lenderInfo['lender_id'];
+					 $arr["batch_id"] = $lenderInfo['batch_id'];
+                    $arr["otp"] = $otp;
+                    $arr["source"] = $otp;
+                    $query = $this->db->insert('p2p_lender_otp_signature', $arr);
+                }
+
+             
+			 
+				$msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
+				$msg = "$otp is your Antworks Account verification code - ANTWORKS";
+				//            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
+				$message = rawurlencode($msg);
+
+            // Prepare data for POST request
+            $data = array('username' => SMS_GATEWAY_USERNAME, 'hash' => SMS_GATEWAY_HASH_API, 'numbers' =>  $lenderInfo['mobile'], "sender" => SMS_GATEWAY_SENDER, "message" => $message);
+			
+			 $ch = curl_init('https://api.textlocal.in/send/');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $responseCurl = curl_exec($ch);
+                curl_close($ch);
+                $res = json_decode($responseCurl, true);
+                if ($res['status'] == 'success') {
+                    $response = array(
+                        'status' => 1,
+                        'msg' => 'OTP sent successfully',
+					    'requestPayloadParm' => $lenderInfo['requestPayloadParm']
+                    );
+					
+                    return json_encode($response);
+                } else {
+                    $response = array(
+                        'status' => 0,
+                        'msg' => 'Something went wrong!!'.$responseCurl,
+						'requestPayloadParm' => $lenderInfo['requestPayloadParm']
+						
+                    );
+						return json_encode($response);
+                }
+
+            } else {
+                $errmsg = array("error_msg" => validation_errors());
+                return json_encode($errmsg);
+            }
+       /*  }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+     */
+	 }
 	 	 public function e_sign_verify_lender_agreement_otp($lenderInfo,$otp)
     {
 
@@ -119,8 +252,7 @@ class LendSocialmodel extends CI_Model
                 if ($result->MINUTE <= 10) {
 					
 				
-				$this->db->set('is_verified', '1');	
-				$this->db->set('source', 'lendsocialLender');	
+				$this->db->set('is_verified', '1');		
 				$this->db->where('otp', $otp);
 				$this->db->where('lender_id', $lenderInfo['lender_id']);
 				$this->db->where('mobile', $lenderInfo['mobile']);
@@ -140,6 +272,57 @@ class LendSocialmodel extends CI_Model
                 return json_encode(array(
                     'status' => '0',
                     'msg' => 'your OTP is not verified please enter correct OTP'
+                ));
+            }
+        } else {
+            return false;
+        }
+    
+    }
+	
+	
+	
+		 	 public function e_sign_verify_borrower_proposed_list_otp($lenderInfo,$otp)
+    {
+
+		
+        $this->db->select('otp, ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(date_added)) / 60) AS MINUTE');
+        $this->db->from('p2p_lender_otp_signature');
+        $this->db->where('lender_id', $lenderInfo['lender_id']);
+        $this->db->where('mobile', $lenderInfo['mobile']);
+        $this->db->order_by('id', 'desc');
+        $this->db->limit(1);
+        $query = $this->db->get();
+		//  return $this->db->last_query();
+        if ($this->db->affected_rows() > 0) {
+            $result = $query->row();
+            if ($otp == $result->otp) {
+                if ($result->MINUTE <= 10) {
+					
+				
+				$this->db->set('is_verified', '1');	
+				$this->db->where('otp', $otp);
+				$this->db->where('lender_id', $lenderInfo['lender_id']);
+				$this->db->where('mobile', $lenderInfo['mobile']);
+				$this->db->update('p2p_lender_otp_signature', $data);
+		
+                    return json_encode(array(
+                        'status' => '1',
+                        'msg' => 'Otp verified',
+						'requestPayloadParm' => $lenderInfo['requestPayloadParm']
+                    ));
+                } else {
+                    return json_encode(array(
+                        'status' => '0',
+                        'msg' => 'Sorry Your OTP is expired please try again',
+						'requestPayloadParm' => $lenderInfo['requestPayloadParm']
+                    ));
+                }
+            } else {
+                return json_encode(array(
+                    'status' => '0',
+                    'msg' => 'your OTP is not verified please enter correct OTP',
+						'requestPayloadParm' => $lenderInfo['requestPayloadParm']
                 ));
             }
         } else {
@@ -652,7 +835,7 @@ curl_setopt_array($curl, array(
 			));
 
 			$response = curl_exec($curl);
-
+			
 			curl_close($curl);
 			return $response;
 
@@ -663,6 +846,39 @@ curl_setopt_array($curl, array(
 				
 	/**************ending of allInOneKyc here**************/
 
+
+/************************starting of allInOneKycStatus**************************/
+public function getAllInOneKycStatus($mobile,$user_type){ // Dated: 2024-oct-01
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://antworksp2p.com/kycapi/all_in_one_kyc_status',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS =>'{
+    "mobile": "'.$mobile.'",
+    "user_type": "'.$user_type.'"
+}',
+  CURLOPT_HTTPHEADER => array(
+    'Authorization: NTk0MDcxOmJhMjUzZTM4ZmM0NDBkMjQ4Yjk1NWRmOGYzMzZmNzRl',
+    'Content-Type: application/json',
+    'Cookie: p2p_2018_2019_session=uf8t4ss1brv4373s0btvp503vcdchnnh; PHPSESSID=j359ho9ekg8r2gcf1o7ru37dej; p2p_2018_2019_session=mm1i0dcgl6qc5242edja01tojrqqtj52'
+  ),
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+return $response;
+
+}
+/****************end of allInOneKycStatus*******************************/
 
 /******************starting of Bank KYC here*************/
 		public function userBankKYC($account_no,$caccount_no,$fullname,$ifsc_code,$lender_id,$phone){  
@@ -1108,874 +1324,4 @@ curl_setopt_array($curl, array(
 			return $response;
 
 				}
-/*
-	public function get_count_premiumplanuserlist()
-	{
-		$this->db_money_money->select('id');
-		$this->db_money_money->from('ant_all_leads');
-		$this->db_money_money->where('assigned_to', $this->session->userdata('user_id'));
-		$this->db_money_money->where('product_type', 10);
-		return $this->db_money_money->count_all_results();
-	}
-
-	public function premiumplanuserlist($limit, $start)
-	{
-
-		$this->db_money_money->select('*');
-		$this->db_money_money->from('ant_all_leads');
-		$this->db_money_money->where('assigned_to', $this->session->userdata('user_id'));
-		$this->db_money_money->limit($limit, $start);
-		$this->db_money_money->order_by("id", "desc");
-		$this->db_money_money->where('product_type', 10);
-		$query = $this->db_money_money->get();
-		if ($this->db_money_money->affected_rows() > 0) {
-			return $result = $query->result_array();
-		} else {
-			return false;
-		}
-
-	}
-
-	function getcompany($str)
-	{
-		$this->db_money_money->select("concat(company_name, '_', company_category) as id, company_name as text");
-		$this->db_money_money->like('company_name', $str);
-		$query = $this->db_money_money->get('ant_crm_company_list');
-		if ($this->db_money_money->affected_rows() > 0) {
-			$result = $query->result();
-		} else {
-			$result[] = (object)array(
-				'id' => '99999',
-				'text' => 'Others',
-			);
-		}
-		return $result;
-	}
-
-	function fetch_state()
-	{
-		$this->db_money_money->order_by("state_name", "ASC");
-		$query = $this->db_money_money->get("state_master");
-		return $query->result();
-	}
-
-
-	public function userdetailList($id)
-	{
-		$this->db_money_money->select('all.*,sou.name');
-		$this->db_money_money->from('ant_all_leads as all');
-		$this->db_money_money->join('ant_source as sou', 'sou.id =all.source_of_lead ', 'left');
-		$this->db_money_money->where('all.id', $id);
-		$this->db_money_money->where('all.product_type', 10);
-		$query = $this->db_money_money->get();
-		if ($this->db_money_money->affected_rows() > 0) {
-			return $result = $query->row_array();
-		} else {
-			return false;
-		}
-	}
-
-
-	public function getPreviouscomment($lead_id)
-	{
-
-		$this->db_money_money->select('comment,created_date');
-		$this->db_money_money->from('history_ant_all_leads');
-		$this->db_money_money->where('lead_id', $lead_id);
-		$this->db_money_money->limit(4);
-		$this->db_money_money->order_by('id', 'desc');
-		$query = $this->db_money_money->get();
-
-		if ($this->db_money_money->affected_rows() > 0) {
-			return $query->result();
-		} else {
-			return false;
-		}
-	}
-	
-    public function getPaymentDetails($lead_id)
-	{
-
-		$this->db_money_money->select('*');
-		$this->db_money_money->from('p2p_res_borrower_payment');
-		$this->db_money_money->where('lead_id', $lead_id);
-		$this->db_money_money->limit(25);
-		$this->db_money_money->order_by('id', 'desc');
-		$query = $this->db_money_money->get();
-
-		if ($this->db_money_money->affected_rows() > 0) {
-			return $query->result();
-		} else {
-			return false;
-		}
-	}
-
-public function getLeadData($id){ // 
-	/*******************
-					$query = $this->db_money_money->select('*')->get_where('ant_all_leads',array('id' => $id, 'assigned_to'=> $this->session->userdata('user_id')));
-			$resp['status'] = count($query->result());
-			$resp['data'] = $this->db_money_money->last_query();//$query->result();
-		return $resp;
-
-
-			  /*********************
-}
-	public function userdetailUpdate($id)
-	{
-		$company_name = '';
-		$company_category_code = '';
-		if ($this->input->post('reminder_date') == '') {
-
-		} else {
-			$reminder_date = date('Y-m-d H:i:s', strtotime($this->input->post('reminder_date')));
-		}
-        if ($this->input->post('company_name') != '')
-		{
-			$company = explode('_', $this->input->post('company_name'));
-			$company_name = $company[0];
-			$company_category_code = $company[1];
-		}
-
-		$arr_update = array(
-			'fname' => $this->input->post('fname'),
-			'lname' => $this->input->post('lname'),
-			'email' => $this->input->post('email'),
-			'alternatemobile' => $this->input->post('alternatemobile'),
-			'loan_amount' => $this->input->post('loan_amount'),
-			'state' => $this->input->post('state'),
-			'city' => $this->input->post('city'),
-			'address1' => $this->input->post('address1'),
-			'pin' => $this->input->post('pin'),
-			'dob' => $this->input->post('dob'),
-			'residence_type' => $this->input->post('residence_type'),
-			'year_in_curr_residence' => $this->input->post('year_in_curr_residence') ?? '',
-			'is_parmanent_address' => $this->input->post('is_parmanent_address') ?? '',
-			'pan' => $this->input->post('pan'),
-			'cibil_score' => $this->input->post('cibil_score'),
-			'occupation' => $this->input->post('occupation'),
-			'new_to_cibil' => $this->input->post('new_to_cibil'),
-			'company_type' => $this->input->post('company_type'),
-			'company_name' => $company_name,
-			'campany_category' => $company_category_code,
-			'itr_form_16_status' => $this->input->post('itr_form_16_status'),
-			'mode_of_salary' => $this->input->post('mode_of_salary'),
-			'working_since' => $this->input->post('working_since'),
-			'designation' => $this->input->post('designation'),
-			'salary_account' => $this->input->post('salary_account'),
-			'profession_type' => $this->input->post('profession_type'),
-			'experiance' => $this->input->post('experiance'),
-			'last2yearitramount' => $this->input->post('last2yearitramount'),
-			'turnover1' => $this->input->post('turnover1'),
-			'turnover2' => $this->input->post('turnover2'),
-			'office_ownership' => $this->input->post('office_ownership'),
-			'audit_done' => $this->input->post('audit_done'),
-			'officeaddress' => $this->input->post('officeaddress'),
-			'industry_type' => $this->input->post('industry_type'),
-			'persuing' => $this->input->post('persuing'),
-			'educational_institute_name' => $this->input->post('educational_institute_name'),
-			'income' => $this->input->post('income'),
-			'outstanding_loan_details' => $this->input->post('outstanding_loan_details'),
-			'brief_outstanding_loan_details' => $this->input->post('brief_outstanding_loan_details'),
-			'reminder_date' => $reminder_date,
-			'status' => $this->input->post('status'),
-			 'last_update_lead_time' => date('Y-m-d H:i:s'),
-		);
-		if($this->input->post('status')=='2'){
-			$arr_update['hot_lead_status'] = $this->input->post('hot_lead_status');
-		}
-		$this->db_money_money->where('id', $this->input->post('id'));
-		$this->db_money_money->update('ant_all_leads', $arr_update);
-
-		$this->db_money_money->where('id', $this->input->post('id'));
-		$this->db_money_money->set('lead_counter', 'lead_counter + 1', false);
-		$this->db_money_money->update('ant_all_leads');
-
-		if ($this->input->post('status') == 3 || $this->input->post('status') == 7) {
-			$this->db_money_money->where('id', $this->input->post('id'));
-			$this->db_money_money->set('assigned_to', '0');
-			//$this->db_money_money->set('last_update_lead_time', date('Y-m-d H:i:s'));
-			$this->db_money_money->update('ant_all_leads');
-		}
-
-			/*******************
-					$query = $this->db_money_money->select('lead_counter,created_date,last_update_lead_time')->limit(1)->get_where('ant_all_leads',array('id' => $this->input->post('id')));
-$result = $query->row_array();
-$lead_counter_value = $result['lead_counter'];
-$lead_created_date = $result['created_date'];
-$last_update_lead_time = $result['last_update_lead_time'];
-
-			  /*********************
-
-		///make history
-		$arr_history = array(
-			'lead_id' => $this->input->post('id'),
-			'assigned_to' => $this->session->userdata('user_id'),
-			'fname' => $this->input->post('fname'),
-			'lname' => $this->input->post('lname'),
-			'email' => $this->input->post('email'),
-			'loan_amount' => $this->input->post('loan_amount'),
-			'product_type' => $this->input->post('product_type'),
-			'comment' => $this->input->post('comment'),
-			'status' => $this->input->post('status'),
-			'reminder_date' => $this->input->post('reminder_date'),
-			'lead_open_time' => $this->input->post('lead_open_time'),
-			'lead_counter' => $lead_counter_value,
-			'lead_created_date' => $lead_created_date,
-			'leadUpdateType' => 'normal PP',
-			'last_update_lead_time' => $last_update_lead_time,
-		);
-		$this->db_money_money->insert('history_ant_all_leads', $arr_history);
-
-
-		$company_category_list = array(
-			'CAT A',
-			'CAT B',
-			'CAT C',
-			'CAT GOVT',
-			'CATGA',
-			'CATGB',
-			'CATGC',
-			'GOVT',
-			'SCATA',
-			'Super A',
-
-		);
-		if (in_array($company_category_code, $company_category_list))
-		{
-			//Insert here for personal loan
-			$this->db_money_money->get_where('ant_all_leads', array('mobile' => $this->input->post('mobile'), 'product_type' => '27'));
-			if ($this->db_money_money->affected_rows() <= 0)
-			{
-				$arr_personal_loan = array(
-					'fname' => $this->input->post('fname') ?? '',
-					'lname' => $this->input->post('lname') ?? '',
-					'email' => $this->input->post('email') ?? '',
-					'mobile' => $this->input->post('mobile') ?? '',
-					'alternatemobile' => $this->input->post('alternatemobile') ?? '',
-					'loan_amount' => $this->input->post('loan_amount') ?? '',
-					'state' => $this->input->post('state') ?? '',
-					'city' => $this->input->post('city') ?? '',
-					'address1' => $this->input->post('address1') ?? '',
-					'pin' => $this->input->post('pin') ?? '',
-					'dob' => $this->input->post('dob') ?? '',
-					'residence_type' => $this->input->post('residence_type') ?? '',
-					'year_in_curr_residence' => $this->input->post('year_in_curr_residence') ?? '',
-					'is_parmanent_address' => $this->input->post('is_parmanent_address') ?? '',
-					'pan' => $this->input->post('pan') ?? '',
-					'cibil_score' => $this->input->post('cibil_score') ?? '',
-					'occupation' => $this->input->post('occupation') ?? '',
-					'product_type' => '27',
-					'new_to_cibil' => $this->input->post('new_to_cibil') ?? '',
-					'company_type' => $this->input->post('company_type') ?? '',
-					'company_name' => $company_name,
-					'campany_category' => $company_category_code,
-					'itr_form_16_status' => $this->input->post('itr_form_16_status') ?? '',
-					'mode_of_salary' => $this->input->post('mode_of_salary') ?? '',
-					'working_since' => $this->input->post('working_since') ?? '',
-					'designation' => $this->input->post('designation') ?? '',
-					'salary_account' => $this->input->post('salary_account') ?? '',
-					'profession_type' => $this->input->post('profession_type') ?? '',
-					'experiance' => $this->input->post('experiance') ?? '',
-					'last2yearitramount' => $this->input->post('last2yearitramount') ?? '',
-					'turnover1' => $this->input->post('turnover1') ?? '',
-					'turnover2' => $this->input->post('turnover2') ?? '',
-					'office_ownership' => $this->input->post('office_ownership') ?? '',
-					'audit_done' => $this->input->post('audit_done') ?? '',
-					'officeaddress' => $this->input->post('officeaddress') ?? '',
-					'industry_type' => $this->input->post('industry_type') ?? '',
-					'persuing' => $this->input->post('persuing') ?? '',
-					'educational_institute_name' => $this->input->post('educational_institute_name') ?? '',
-					'income' => $this->input->post('income') ?? '',
-					'outstanding_loan_details' => $this->input->post('outstanding_loan_details') ?? '',
-					'brief_outstanding_loan_details' => $this->input->post('brief_outstanding_loan_details') ?? '',
-					'source_of_lead' => 21,
-				);
-				$this->db_money_money->insert('ant_all_leads', $arr_personal_loan);
-			}
-		}
-		
-	if ($this->input->post('cibil_score') > 649)
-		{
-			//Insert here for personal loan
-			$this->db_money->get_where('ant_all_leads', array('mobile' => $this->input->post('mobile'), 'product_type' => '27'));
-			if ($this->db_money->affected_rows() <= 0)
-			{
-				$arr_cibil_personal_loan = array(
-					'fname' => $this->input->post('fname') ?? '',
-					'email' => $this->input->post('email') ?? '',
-					'mobile' => $this->input->post('mobile') ?? '',
-					'dob' => $this->input->post('dob') ?? '',
-					'pan' => $this->input->post('pan') ?? '',
-					'product_type' => '27',
-					'cibil_score' => $this->input->post('cibil_score'),
-					'company_type' => $this->input->post('company_type') ?? '',
-					'company_name' => $company_name,
-					'campany_category' => $company_category_code,
-					'source_of_lead' => 23,
-				);
-				$this->db_money->insert('ant_all_leads', $arr_cibil_personal_loan);
-				//echo $this->db_money->last_query();exit;
-			}
-		}
-
-
-
-
-
-		return array(
-			'status' => 1,
-            'file_experian' => $file_experian,
-			'msg' => 'User update successfully',
-		);
-
-	
-	}
-
-
-	public function hotLeadUserDetailUpdate($id)
-	{		// print_r($this->input->post()); die();
-		
-		$arr_update = array(
-			'fname' => $this->input->post('fname'),
-			'lname' => $this->input->post('lname'),
-			'email' => $this->input->post('email'),
-			'alternatemobile' => $this->input->post('alternatemobile'),
-			'loan_amount' => $this->input->post('loan_amount'),
-			'state' => $this->input->post('state'),
-			'city' => $this->input->post('city'),
-			'address1' => $this->input->post('address1'),
-			'pin' => $this->input->post('pin'),
-			'dob' => $this->input->post('dob'),
-			'residence_type' => $this->input->post('residence_type'),
-			'year_in_curr_residence' => $this->input->post('year_in_curr_residence') ?? '',
-			'is_parmanent_address' => $this->input->post('is_parmanent_address') ?? '',
-			'pan' => $this->input->post('pan'),
-			'cibil_score' => $this->input->post('cibil_score'),
-			'occupation' => $this->input->post('occupation'),
-			'new_to_cibil' => $this->input->post('new_to_cibil'),
-			'company_type' => $this->input->post('company_type'),
-			'company_name' => $this->input->post('company_name'),
-			'itr_form_16_status' => $this->input->post('itr_form_16_status'),
-			'mode_of_salary' => $this->input->post('mode_of_salary'),
-			'working_since' => $this->input->post('working_since'),
-			'designation' => $this->input->post('designation'),
-			'salary_account' => $this->input->post('salary_account'),
-			'profession_type' => $this->input->post('profession_type'),
-			'experiance' => $this->input->post('experiance'),
-			'last2yearitramount' => $this->input->post('last2yearitramount'),
-			'turnover1' => $this->input->post('turnover1'),
-			'turnover2' => $this->input->post('turnover2'),
-			'office_ownership' => $this->input->post('office_ownership'),
-			'audit_done' => $this->input->post('audit_done'),
-			'officeaddress' => $this->input->post('officeaddress'),
-			'industry_type' => $this->input->post('industry_type'),
-			'persuing' => $this->input->post('persuing'),
-			'educational_institute_name' => $this->input->post('educational_institute_name'),
-			'income' => $this->input->post('income'),
-			'outstanding_loan_details' => $this->input->post('outstanding_loan_details'),
-			'brief_outstanding_loan_details' => $this->input->post('brief_outstanding_loan_details'),
-			'comment' => $this->input->post('comment'),
-			 'last_update_lead_time' => date('Y-m-d H:i:s'),
-			'hot_lead_status' =>$this->input->post('hot_lead_status'),
-		);
-		if($this->input->post('hot_lead_status')==15){
-			$arr_update['status'] = $this->input->post('hot_lead_status');
-		}
-		$this->db_money_money->where('id', $this->input->post('id'));
-		$this->db_money_money->update('ant_all_leads', $arr_update);
-
-		$this->db_money_money->where('id', $this->input->post('id'));
-		$this->db_money_money->set('hot_lead_counter', 'hot_lead_counter + 1', false);
-		$this->db_money_money->update('ant_all_leads');
-
-				/*******************
-					$query = $this->db_money_money->select('lead_counter,created_date,last_update_lead_time')->limit(1)->get_where('ant_all_leads',array('id' => $this->input->post('id')));
-$result = $query->row_array();
-$lead_counter_value = $result['lead_counter'];
-$lead_created_date = $result['created_date'];
-$last_update_lead_time = $result['last_update_lead_time'];
-
-			  /*********************
-
-
-		///make history
-		$arr_history = array(
-			'lead_id' => $this->input->post('id'),
-			'assigned_to' => $this->session->userdata('user_id'),
-			'fname' => $this->input->post('fname'),
-			'lname' => $this->input->post('lname'),
-			'email' => $this->input->post('email'),
-			'loan_amount' => $this->input->post('loan_amount'),
-			'product_type' => $this->input->post('product_type'),
-			'comment' => $this->input->post('comment'),
-			'lead_open_time' => $this->input->post('lead_open_time'),
-			'lead_counter' => $lead_counter_value,
-			'lead_created_date' => $lead_created_date,
-			'leadUpdateType' => 'hotlead PP',
-			'last_update_lead_time' => $last_update_lead_time,
-		);
-		if($this->input->post('hot_lead_status')==15){
-			$arr_history['status'] = $this->input->post('hot_lead_status');
-		}
-		$this->db_money_money->insert('history_ant_all_leads', $arr_history);
-
-		return array(
-			'status' => 1,
-			'msg' => 'User update successfully',
-		);
-
-	
-	}
-	
-	
-	
-	public function getNextuser()
-	{
-		
-		
-		
-		$lead_data = array();
-		$where = "product_type = 10";
-		$where_pnp_ = "last_update_lead_time <= '" . date('Y-m-d H:i:s', strtotime('-30 minutes')) . "'";
-		$where_pnp_day_ = "last_update_lead_time <= '" . date('Y-m-d H:i:s', strtotime('-1 day')) . "'";
-		$query = $this->db_money_money->select('id')->limit(1)->get_where('ant_all_leads',
-			array(
-				'assigned_to' => $this->session->userdata('user_id'),
-				'status' => 6,
-				'product_type' => 10,
-				'reminder_date <= ' => date('Y-m-d H:i:s'),
-			)
-		);
-
-
-		if ($this->db_money_money->affected_rows() > 0) {
-			$result = $query->row_array();
-			//$this->db_money_money->where('id', $result['id']);
-		//	$this->db_money_money->set('lead_counter', 'lead_counter + 1', false);
-		//	$this->db_money_money->update('ant_all_leads');
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "a",
-				'type' => 'Normal'
-			);
-		}
-
-				#Already Assigned Dated: 2023-10-31
-		$query = $this->db_money_money->select('id, assigned_to')
-		//	->where("(assigned_to='" . $this->session->userdata('user_id') . "' AND status = 7) OR (assigned_to='" . $this->session->userdata('user_id') . "' AND status = 3)")
-			->where("assigned_to='" . $this->session->userdata('user_id') . "' AND status = 3")
-		//->order_by('id', 'desc')
-			->limit(1)->get_where('ant_all_leads', array('product_type' => 10));
-
-		if ($this->db_money_money->affected_rows() > 0) {
-			$result = $query->row_array();
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "bb",
-				'type' => 'Normal'
-			);
-
-		}
-
-		#Fresh
-		$query = $this->db_money_money->select('id, assigned_to')
-			->where('char_length(mobile)', '10')
-			->where("(lead_counter <= 1) and ((assigned_to='" . $this->session->userdata('user_id') . "' AND status = 0) OR (assigned_to = 0 AND status = 0))")
-			//->order_by('id', 'desc')
-			->limit(1)->get_where('ant_all_leads', array('product_type' => 10));
-
-		if ($this->db_money_money->affected_rows() > 0) {
-			$result = $query->row_array();
-			if ($result['assigned_to'] == 0) {
-				$this->db_money_money->where('id', $result['id']);
-				$this->db_money_money->where('assigned_to', 0);
-				$this->db_money_money->set('assigned_to', $this->session->userdata('user_id'));
-				$this->db_money_money->update('ant_all_leads');
-				//Lead Update
-			}
-
-			/*$this->db_money_money->where('id', $result['id']);
-			$this->db_money_money->set('lead_counter', 'lead_counter + 1', false);
-			$this->db_money_money->update('ant_all_leads'); /
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "b",
-				'type' => 'Normal'
-			);
-
-		}
-
-		#POOL
-		$this->load->model('Poolleadmodel');
-		$team = 'PL';
-		$response = $this->Poolleadmodel->lead($team);
-		if ($response['status'] == '1') {
-			$response['id'] = base64_encode($response['id']);
-			return $response;
-		}
-		#end Pooll
-
-		#PNP
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_)
-			//->order_by('RAND()')
-			//->order_by('lead_counter', 'asc')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '3',
-					'DATE(created_date)' => date('Y-m-d'),
-					'lead_counter <= ' => 4,
-					'CHAR_LENGTH(mobile)' => 10,
-					'assigned_to' => 0
-				));
-		
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "c",
-				'type' => 'Normal'
-			);
-		}
-
-
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_)
-			//  ->order_by('RAND()')
-			//->order_by('lead_counter', 'asc')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '3',
-					'DATE(created_date)' => date('Y-m-d', strtotime('- 1 day')),
-					'lead_counter <= ' => 8,
-					'CHAR_LENGTH(mobile)' => 10,
-					'assigned_to' => 0
-				));
-
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "d",
-				'type' => 'Normal'
-			);
-		}
-
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_)
-			//->order_by('id', 'desc')
-			//->order_by('RAND()')
-			//->order_by('lead_counter', 'asc')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '3',
-					'DATE(created_date)' => date('Y-m-d', strtotime('- 2 day')),
-					'lead_counter <= ' => 12,
-					'CHAR_LENGTH(mobile)' => 10,
-					'assigned_to' => 0
-				));
-
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "e",
-				'type' => 'Normal'
-			);
-		}
-
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_)
-			//->order_by('RAND()')
-			//->order_by('lead_counter', 'asc')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => 3,
-					'DATE(created_date)' => date('Y-m-d', strtotime('- 3 day')),
-					'lead_counter <= ' => 16,
-					'CHAR_LENGTH(mobile)' => 10,
-					'assigned_to' => 0
-				));
-
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "f",
-				'type' => 'Normal'
-			);
-		}
-
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_)
-			//->order_by('RAND()')
-			//->order_by('lead_counter', 'asc')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '3',
-					'DATE(created_date) <= ' => date('Y-m-d', strtotime('- 4 day')),
-					'lead_counter <= ' => 20,
-					'CHAR_LENGTH(mobile)' => 10,
-				    'assigned_to' => 0
-				));
-
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "g",
-				'type' => 'Normal'
-			);
-		}
-
-		#POOL Normal
-		$response = $this->Poolleadmodel->lead_normal($team);
-		if ($response['status'] == '1') {
-			$response['id'] = base64_encode($response['id']);
-			return $response;
-		}
-		#end Pooll
-
-		#PNP Order by asc counter
-		
-		$query = $this->db_money->select('id')
-			->where($where)
-			->where($where_pnp_day_)
-			//->order_by("id", "asc")
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '3',
-					'CHAR_LENGTH(mobile)' => 10,
-				//	'date(created_date) >=' => '2020-01-01',
-					'assigned_to' => 0
-				));
-
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "h",
-				'type' => 'Normal'
-			);
-		}    
-
-		$query = $this->db_money->select('id')
-			->where($where)
-		//	->order_by('RAND()')
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => '7',
-					'lead_counter <= ' => 6,
-					'CHAR_LENGTH(mobile)' => 10,
-					'assigned_to' => 0,
-					'date(created_date) >=' => '2021-01-01',
-					'date(created_date) <=' => '2021-08-01',
-				));
-//        echo "<pre>"; echo $this->db_money->last_query(); exit;
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "i",
-				'type' => 'Normal'
-			);
-		}
-
-
-//        // NI
-		$query = $this->db_money->select('id')
-			->where($where)
-			//->order_by('RAND()')
-			//->order_by("id", "desc")
-			->limit(1)->get_where('ant_all_leads',
-				array(
-					'status' => 7,
-					'CHAR_LENGTH(mobile)' => 10,
-					'lead_counter <= ' => 2, // 8 changed to 2 dated: 24-july-2023
-					'assigned_to' => 0,
-					'date(created_date) >=' => '2020-06-01',
-				//	'date(created_date) <=' => '2020-12-31',
-				));
-		if ($this->db_money->affected_rows() > 0) {
-			$result = $query->row_array();
-
-
-			$this->db_money->where('id', $result['id']);
-			$this->db_money->where('assigned_to', 0);
-			$this->db_money->set('assigned_to', $this->session->userdata('user_id'));
-			$this->db_money->update('ant_all_leads');
-
-			return $lead_data = array(
-				'id' => base64_encode($result['id']),
-				'block'=> "j",
-				'type' => 'Normal'
-			);
-		}
-
-		return false;
-	}
-
-	public function searchPayment()
-	{
-
-		$this->db_money_money->select('*');
-		$this->db_money_money->from('p2p_res_borrower_payment');
-		$this->db_money_money->where('email', $this->input->post('searchpayment'));
-		$this->db_money_money->or_where('mobile', $this->input->post('searchpayment'));
-		$query = $this->db_money_money->get();
-		if ($this->db_money_money->affected_rows() > 0) {
-			return (array)$query->row();
-			// return true;
-		} else {
-			return false;
-		}
-	}
-
-	public function update_batch()
-	{
-		#batch update
-		if ($this->input->post('reminder_date') && $this->input->post('status') == 6) {
-			$reminder_date = date('Y-m-d H:i:s', strtotime($this->input->post('reminder_date')));
-
-			$arr_update = array(
-				'assigned_to' => $this->session->userdata('user_id'),
-				'reminder_date' => $reminder_date,
-				'status' => $this->input->post('status'),
-			);
-			$this->db_money_money->where('id', $this->input->post('lead_id'));
-			$this->db_money_money->update('ant_all_leads', $arr_update);
-
-		} else {
-			$reminder_date = '';
-		}
-		$arr_update = array(
-			'name' => $this->input->post('fname'),
-			'email' => $this->input->post('email'),
-			'reminder' => $reminder_date,
-			'status' => $this->input->post('status'),
-		);
-		$this->db_money_money->where('id', $this->input->post('id'));
-		$this->db_money_money->update($this->input->post('batch_no'), $arr_update);
-		#end
-
-		///make history
-		$arr_history = array(
-			'lead_id' => $this->input->post('id'),
-			'mobile' => $this->input->post('mobile') ?? '',
-			'comment' => $this->input->post('comment'),
-			'status' => $this->input->post('status'),
-		);
-		$this->db_money_money->insert($this->input->post('batch_no') . '_history', $arr_history);
-
-		///make history
-		if ($this->input->post('lead_id')) {
-
-
-			$arr_history = array(
-				'lead_id' => $this->input->post('lead_id'),
-				'mobile' => $this->input->post('mobile') ?? '',
-				'comment' => $this->input->post('comment'),
-				'status' => $this->input->post('status'),
-			);
-			$this->db_money_money->insert('history_ant_all_leads', $arr_history);
-		}
-
-		return array(
-			'status' => 1,
-			'msg' => 'User update successfully',
-		);
-	}
-
-	public function searchbylead()
-	{
-		$where = "";
-
-		if ($this->input->post('id')) {
-			$where = "(id = '" . $this->input->post('id') . "')";
-		}
-		if ($this->input->post('mobile')) {
-			$where = "(mobile = '" . $this->input->post('mobile') . "')";
-		}
-		if ($this->input->post('email')) {
-			$where = "(email = '" . $this->input->post('email') . "')";
-		}
-		//echo $where;exit;
-		$this->db_money->select('*');
-		$this->db_money->from('ant_all_leads');
-		$this->db_money->where($where);
-		$query = $this->db_money->get();
-
-		if ($this->db_money->affected_rows() > 0) {
-			return $result = $query->result_array();
-		} else {
-			return false;
-		}
-	}
-	
-	public function hotLeadList()
-	{
-		$this->db_money_money->select('a.*');
-		$this->db_money_money->from('ant_all_leads  a');
-	    $this->db_money_money->where('a.product_type', 10);
-		$this->db_money_money->where('a.status !=', 15);
-		$this->db_money_money->where('a.status', 2);
-		$this->db_money_money->where('a.hot_lead_status !=', 15);
-		$this->db_money_money->where('a.hot_lead_status !=', 0);
-		$this->db_money_money->where('a.hot_lead_status !=', '');
-		$this->db_money_money->where('a.status !=', 15);
-		$this->db_money_money->order_by("last_update_lead_time", "asc");
-		$query = $this->db_money_money->get();
-	//	return $this->db_money_money->last_query();
-		if ($this->db_money_money->affected_rows() > 0) {
-
-			return $result = $query->result_array();
-		} else {
-			return false;
-		}
-	}   */
-
-}
+							}

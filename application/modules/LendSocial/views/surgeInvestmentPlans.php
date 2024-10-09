@@ -22,6 +22,9 @@
 </section>
 
 <section class="container mainsurge-plans">
+
+<a href='lenderDashboard'> Home</a>
+
 	<div class="row">
 			<?php  //  echo "<pre>"; print_r($lists['allSchemeList']['schemes']);
 

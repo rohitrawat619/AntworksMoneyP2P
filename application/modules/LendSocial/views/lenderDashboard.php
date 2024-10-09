@@ -37,7 +37,7 @@ $investmentData = $lists['investmentList'];
 					<form action="redeemRequestPreview" method="post" >
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="surge-list">
-					<p class="investmentno">Investment No.: <?php echo $current_investment['investment_No']; ?></p>
+					<p class="investmentno">Investment No.: <?php echo $current_investment['investment_No']; ?> <a href="investmentRequestList?q=<?php echo base64_encode(encrypt_string($current_investment['investment_No']));?>">Details</a> </p>
 					<p class="investmentname"><?php echo $current_investment['scheme_name']; ?></p>
 					<ul class="invest-details">
 						<li>Investment Amount <span><i class="fa fa-rupee"></i> <?php echo $current_investment['amount']; ?></span></li>

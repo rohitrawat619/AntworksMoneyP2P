@@ -3,10 +3,9 @@
 	<div class="row">
 		<div class="col-md-1 col-xs-12"></div>
 		<div class="col-md-10 col-xs-12 e-signbox">
-			<div class="e-signbox-txt">
-			<?php// echo $encryptedInvestSchemeNAmount; ?>
-				<?php echo $view_lender_agreement?>
-							</div>
+			<div class="e-signbox-txt">	
+				<?php echo $view_lender_agreement;?>
+				</div>
 		</div>
 	</div>
 	<div class="row">

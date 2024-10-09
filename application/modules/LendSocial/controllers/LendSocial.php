@@ -50,6 +50,13 @@ class LendSocial extends CI_Controller
 				$upperCaseKeysArray = array_combine(array_map(function($key) {return strtoupper($key) . '_SESSN';}, array_keys($array)),array_values($array));
 				return $upperCaseKeysArray;
 				}
+				
+				public function getAllInOneKycStatus(){
+					$mobile = "9213855703";
+					$user_type = "borrower";
+				$resp = 	json_decode($this->LendSocialmodel->getAllInOneKycStatus($mobile,$user_type),true);
+				echo"<pre>"; print_r($resp);
+				}
 		public function testing(){
 			
 							
@@ -86,6 +93,30 @@ class LendSocial extends CI_Controller
 		
 		}
 		
+		
+			public function getLenderInvestmentAgrement(){ // Dated: 2024-oct-02
+						$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
+						$product_type_id = "LendSocialDashboard"; $instance_id = "LenderInvestmentAgreement";
+			$token['INVESTMENT_AMOUNT'] = '₹ 50,00,000 (Rupees Fifty Lakhs Only)';
+					$pattern = '[%s]';
+				foreach ($token as $key => $val) {
+				$varMap[sprintf($pattern, $key)] = $val;
+				}
+				
+				$result = $this->LendSocialCommunicationModel->get_notification($product_type_id, $instance_id);
+				$msg = strtr($result->email_content, $varMap);
+				return $msg; //($result->email_content);
+	}
+	
+			public function getLenderRegistrationAgreement(){ // Dated: 2024-oct-03
+						$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
+						$product_type_id = "LendSocialDashboard"; $instance_id = "LenderRegistrationAgreement";
+			
+				$result = $this->LendSocialCommunicationModel->get_notification($product_type_id, $instance_id);
+				//$msg = strtr($result->email_content, $varMap);
+				print_r($result->email_content);
+	}
+	
 		public function calculate_lender_payout_schedule_data_processing($amount,$scheme_id,$mobile,$investment_no){ //testController lenderInvestmentProcessing
 						/*$days = (int) $this->input->get('days');
 						$amount = (float) $this->input->get('amount');
@@ -340,7 +371,7 @@ class LendSocial extends CI_Controller
 										redirect(base_url('LendSocial/').'lenderDashboard');
 									}
 							/***************end of lender logic***************/
-									}else{ echo"Else block of LendSocial"; }
+									}else{ echo"Else block of LendSocial".$this->sessionVariableData['lenderSocialProductType']; }
 									
 						}else{	// not verified
 							$error = 1;
@@ -379,7 +410,7 @@ class LendSocial extends CI_Controller
 			        $amount = $this->input->post('amount');
 
 				    $respCalculateLenderChargesFinal = $this->calculateLenderChargesFinal($scheme_id,$amount);		
-					$view_lender_agreement = "Lender Agreement <br>".json_encode($respCalculateLenderChargesFinal)."<br>"; //$this->credit_line_model->viewLoanaggrement(12);
+					$view_lender_agreement = $this->getLenderInvestmentAgrement(); //"Lender Agreement <br>".json_encode($respCalculateLenderChargesFinal)."<br>"; //$this->credit_line_model->viewLoanaggrement(12);
 					
 					$data['view_lender_agreement']=$view_lender_agreement;
 					$data['encryptedInvestSchemeNAmount'] = base64_encode(base64_encode($amount.",".$scheme_id));
@@ -397,6 +428,8 @@ class LendSocial extends CI_Controller
 				
 				 echo $response; die();
 				 }
+				 
+			
 				
 			public function e_sign_lender_agreement_otp(){
 				
@@ -588,6 +621,76 @@ class LendSocial extends CI_Controller
 			
 		}
 		
+		public function investmentRequestList(){
+			
+		//	echo"<pre>";
+		 //	print_r($this->session->userdata());
+			$investment_no =  decrypt_string(base64_decode($this->input->get("q")));
+			
+			$this->load->view('template-LendSocial/header',$data);
+			$data['lists']['investmentRequestList'] = $this->LendSocialmodel->get_borrower_proposed_list($this->sessionData['lender_id'],$investment_no);
+			$data['lists']['investmentNo'] = $investment_no;
+			$data['lists']['sessionData'] = $this->sessionData;
+			$this->load->view('investmentRequestList',$data);
+		//	$this->load->view('template-LendSocial/footer',$data);
+		}
+		
+		public function investmentRequestListProcessing(){
+			$requestPayload =  $this->getRequestPayloadArray($this->input->get('requestPayloadParm')); // $this->input->post('requestPayload')
+			
+			$respModelData =  json_decode($this->LendSocialmodel->investmentRequestListProcessing($requestPayload),true);
+			$this->session->set_flashdata('message', $respModelData['msg']);
+			redirect("LendSocial/investmentRequestList?msg=".$respModelData['msg']."&q=".base64_encode(encrypt_string($requestPayload['investment_no'])));
+			
+			
+		}
+		
+			 public function e_sign_borrower_proposed_list_send_otp(){
+			$this->checkSessionMobileNo();
+			$requestPayload =  $this->getRequestPayloadArray($this->input->post('requestPayload'));
+			$data = $this->sessionData;
+			$data['batch_id'] = $requestPayload['batch_id'];
+			$data['requestPayloadParm'] = $requestPayload['requestPayloadParm'];
+			$response = $this->LendSocialmodel->e_sign_borrower_proposed_list_send_otp($data);
+					
+				 echo $response; die(); 
+				 }
+				 
+				 			public function e_sign_borrower_proposed_list_otp_form(){ // form
+				
+				$this->checkSessionMobileNo();
+							$requestPayload =  $this->getRequestPayloadArray($this->input->get('requestPayloadParm'));
+					$data['logo_path'] = $this->partnerInfo['logo_path'];
+					$data['mobile']  = $this->sessionData['mobile'];
+					$data['requestPayloadParm'] = $requestPayload['requestPayloadParm'];
+					
+					$this->load->view('template-LendSocial/header',$data);
+					$this->load->view('e_sign_borrower_proposed_list_otp_form',$data);
+					$this->load->view('template-LendSocial/footer',$data);
+			}
+			
+				public function e_sign_verify_borrower_proposed_list_otp(){
+				$this->checkSessionMobileNo();
+				$data = $this->sessionData;
+				$data['requestPayloadParm'] = $this->input->post('requestPayloadParm');
+				$response = $this->LendSocialmodel->e_sign_verify_borrower_proposed_list_otp($data,$this->input->post('otp'));
+				
+				 echo $response; die();
+			}
+		
+		
+		public function getRequestPayloadArray($requestPayloadParm){ // $this->input->post('requestPayload')
+			$requestPayloadPost = json_decode(base64_decode($requestPayloadParm),true);
+		
+			$requestPayload1 =  explode("||",decrypt_string(base64_decode($requestPayloadPost['requestPayload'])));
+		
+			$requestPayload['lender_id'] = $requestPayload1[0];
+			$requestPayload['batch_id'] = $requestPayload1[1];
+			$requestPayload['investment_no'] = $requestPayload1[2];
+			$requestPayload['borrower_proposed_list_ids'] = $requestPayloadPost['borrower_proposed_list_ids'];
+			$requestPayload['requestPayloadParm'] = $requestPayloadParm;
+			return $requestPayload;
+		}
 		public function personalDetails(){
 				
 			$this->checkSessionMobileNo();
@@ -758,7 +861,7 @@ class LendSocial extends CI_Controller
 						
 							
 							$allInOneKycStatus =	json_decode($this->LendSocialmodel->allInOneKyc($phone,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id),true); //dated:2023-dec-21
-							
+							//echo $allInOneKycStatus;
 							//echo$phone; echo"--";
 							 //	echo"<pre>";	print_r($allInOneKycStatus); die();
 								$userTypeAllInOneKyc = $allInOneKycStatus['user_details']['user_type']; // lender/borrower			
@@ -780,7 +883,7 @@ class LendSocial extends CI_Controller
 							}			
 									/************End of Pan KYC****************/	
 									
-						//	print_r($kycStatus); die();
+						//	print_r($allInOneKycStatus); die();
 							
 										/************starting of Bank KYC***********/
 										
@@ -819,7 +922,8 @@ class LendSocial extends CI_Controller
 								
 							}else{
 								$kycStatus['status'] = 0;
-								$kycStatus['msg'] = json_encode($allInOneKycStatus); //$allInOneKycStatus['aadhar_kyc']['msg'].$allInOneKycStatus['error_msg'];
+								//$kycStatus['msg'] = $allInOneKycStatus['aadhar_kyc']['msg'].$allInOneKycStatus['error_msg'];
+								$kycStatus['msg'] = $allInOneKycStatus['aadhar_kyc']['aadhar_response']['msg'].$allInOneKycStatus['error_msg'];
 							}		
 										}
 								/***********Ending of Aadhaar Function********/

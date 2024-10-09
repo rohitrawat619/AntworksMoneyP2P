@@ -1,4 +1,4 @@
-<?php // print_r($lists);?>
+<?php // print_r($lists);  ?>
 <section class="container">
 	<div class="row">
 		<div class="col-md-2 col-sm-12 text-center"></div>
@@ -25,7 +25,7 @@
 						<div class="col-md-12 col-xs-12">
 							<div class="checkbox">
 								<input id="input1" name="checked[]" type="checkbox" value="I1">
-								<label for="input1" >I Agree to Terms of use</label>
+								<label for="input1" > </label> <a target="_blank" href="./getLenderRegistrationAgreement">I Agree to Terms of use</a>
 							</div>
 						</div>
 					</div>
