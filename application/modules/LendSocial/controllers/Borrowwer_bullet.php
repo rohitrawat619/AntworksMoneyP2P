@@ -228,9 +228,15 @@ public function e_sign_success(){
 public function dashboard(){
 
   $data=array();
-  //echo "<pre>";print_r($_SESSION);die();
+  //echo "<pre>";print_r($borrower_occupation_and_profession_id);die();
+  $borrower_occupation_and_profession_id = $this->credit_line_model->get_borrower_occupation_and_profession_details($this->getBorrowerId());
+ // echo "<pre>";print_r($borrower_occupation_and_profession_id);die();
   $loan_details=$this->credit_line_model->loan_details($this->getBorrowerId());
-    $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();
+  $borrower_occupation_and_profession_arr = $borrower_occupation_and_profession_id;
+  $borrower_occupation_and_profession_arr['partner_id'] = $this->getPartnerId();
+   $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans($borrower_occupation_and_profession_arr);
+ // echo "<pre>";print_r($data['partner_loan_plans']); die();
+  //  $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();
   $data['loan_details']=$loan_details;
   $data['imageBaseUrl'] = $this->imageBaseUrl;
   $data['logo_path'] = $this->partnerInfo['logo_path'];

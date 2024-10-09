@@ -52,3 +52,6 @@ application/modules/credit-line/models/Borrowerinfomodel_@old2024-june-06.php
 application/modules/credit-line/models/Borrowerinfomodel_@old_2024-june-10.php
 application/modules/LendSocial/controllers/LendSocial__@old_2024-august_22.php
 application/modules/surgeModuleP2P/unused/*
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-9.php
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-10.php
+application/modules/LendSocial/models/credit_line_model_@old_2024-Oct-09.php

@@ -5,9 +5,22 @@ public function __construct(){
     $this->apiBaseUrl= "https://antworksp2p.com/credit-line/"; //"https://antworksmoney.com/credit-line/p2papiborrower/";
     $this->authorization="Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==";
     $this->oath_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjA3MTk1Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiNjM5NTEzMDc4NyIsImRldmljZV9pZCI6IlVsTlNNUzR5TURFd01UTXVNREF4IiwiYXBwX3ZlcnNpb24iOm51bGwsImdlbmVyYXRlZF90aW1lc3RhbXAiOiIyMDIzLTEyLTI5IDE0OjU0OjEwIiwiaXBfYWRkcmVzcyI6IjEyMi4xNzYuNTMuMTkyIn0.BZF3795oRwh3_Uhti4LVIrlvRX3hGZmYY5Qayd00JPw";
+	$this->load->helper('seprateValues');
 
 }
 
+
+  public function get_borrower_occupation_and_profession_details($borrower_id){ // 2024-Oct-8
+        $this->db->select('*');
+        $query = $this->db->get_where('p2p_borrowers_list',array('id'=>$borrower_id))->row_array();
+        $arr = array(
+          'occuption_id' => $query['occuption_id'],
+          'profession_id' => $query['profession_id'],
+		  'status'=>1
+       //   'borrower_id' => $query['id']
+        );
+        return $arr;
+      }
 
 /***************start of get borrower detail 2024-may-31********************/
 			function getAntBorrowerRatinDetails($borrower_id){
@@ -647,14 +660,48 @@ public function viewLoanaggrement($borrower_id){
         // Credit-line Api Ends
 		
 		 public function get_loan_plans($where){
-         
-          $query=$this->db->get_where('partner_loan_plan',$where);
-         
+          
+          if($this->input->post('selectedId')){
+            $where['id']=$this->input->post('selectedId');
+          }
+          else{
+            $this->db->select('system_generated_id');
+            $query = $this->db->get_where('partners_theme',array('partner_id'=>$where['partner_id']))->row_array();
+            $arr = getSeprateValues($query['system_generated_id']);
+           
+            $where=array(
+              'isd.Vendor_ID'=>$arr['partner_id'],
+              'plp.partner_id'=>$arr['partner_id'],
+              'isd.occuption_id'=> $where['occuption_id'],
+              'isd.borrower_classifier' => $where['profession_id'],
+              'plp.status'=>1
+            );
+          }
+			
+          $this->db->select('plp.id as partner_plan_id, plp.amount,plp.tenor,plp.interest'); // Select the columns you need
+          $this->db->from('partner_loan_plan as plp');
+          $this->db->join('invest_scheme_details as isd', 'isd.id = plp.scheme_id', 'left'); 
+          $this->db->where($where); 
+          $query = $this->db->get();
+
+ //   echo $this->db->last_query(); die();
+          if($this->input->post('selectedId')){
+            if ($query->num_rows() > 0) {
+              return $query->row();
+          } else {
+              return false;// return the values what you want
+          }
+          }
+          else{
           if ($query->num_rows() > 0) {
+             
             return $query->result_array();
+
         } else {
-            return false;
-        } 
+            return false;// return the values what you want 
+        }
+
+        }
       }
 	  
 	          public function updateLoanDetails($loanDetail) {
