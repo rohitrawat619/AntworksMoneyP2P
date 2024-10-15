@@ -11,7 +11,7 @@
 				$edit=false;
 					$path= "add_scheme";
 			}
-		//	echo "<pre>";
+			//  echo "<pre>"; print_r($lists);
 		 //	print_r($lists['partnersData'][0]['Company_Name']);
 		?>
 		
@@ -243,18 +243,19 @@
 
 <div class="col-md-6 form-group">
 		<label for="borrower_classifier">Borrower Classifier:</label><br>
-		<select  class="form-control"  name="borrower_classifier" id="borrower_classifier" >
+		<select  class="form-control" id="select2"  multiple name="borrower_classifier[]" id="borrower_classifier" >
 		<option value="">Select Borrower Classifier</option>
 		<?php 
 
 		foreach($borrower_classifier as $borrower_classifierValue){
 			
-					 if($borrower_classifierValue['id']==$lists['borrower_classifier']){
+				/* 	 if($borrower_classifierValue['id']==$lists['borrower_classifier']){
 					$selected = "selected";
 					}else{
 					$selected = "";
-					}  				
-					//  $selected = in_array($borrower_classifierValue['id'], $lists['borrower_classifier']) ? "selected" : ""; 
+					}  	 */			
+					 $selected = in_array($borrower_classifierValue['id'], explode(",",$lists['borrower_classifier'])) ? "selected" : ""; 
+					  // <?php echo in_array($value, $selectedOptions) ? 'selected' : '';
 
 		echo'<option '.$selected.' value="'.$borrower_classifierValue['id'].'">'.$borrower_classifierValue['name'].'</option>';
 		}

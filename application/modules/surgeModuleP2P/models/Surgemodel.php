@@ -862,7 +862,7 @@ $this->cldb->limit($limit, $start);
     'diversification_factor_value' => $this->input->post('diversification_factor_value'),
     'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
 	
-    'borrower_classifier' =>$this->input->post('borrower_classifier'),// implode(",",$this->input->post('borrower_classifier')),
+    'borrower_classifier' => implode(",",$this->input->post('borrower_classifier')), // $this->input->post('borrower_classifier'),//
 	'occuption_id' => $this->input->post('occuption_id'),
 	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
@@ -939,7 +939,7 @@ $this->cldb->limit($limit, $start);
     'diversification_factor_value' => $this->input->post('diversification_factor_value'),
     'minimum_loan_amount' => $this->input->post('minimum_loan_amount'),
 	
-    'borrower_classifier' => implode(",",$this->input->post('borrower_classifier')),
+	'borrower_classifier' => implode(",",$this->input->post('borrower_classifier')), // $this->input->post('borrower_classifier'),//
 	'occuption_id' => $this->input->post('occuption_id'),
 	
     'Scheme_Name' => $this->input->post('Scheme_Name'),
