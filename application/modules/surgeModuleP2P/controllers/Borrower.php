@@ -306,7 +306,7 @@ public function filter_report()
 
             $response = $this->Basicfiltermodel->add_update_rule();
             $this->session->set_flashdata('notification', array('error' => 0, 'message' => $response['msg']));
-            redirect(base_url() . '/surgeModuleP2P/borrower/action');
+            redirect(base_url() . '/surgeModuleP2P/borrower/rule');
 
     }
 
