@@ -38,6 +38,7 @@ class Kyc_engine_Model extends CI_Model
 				#BANK KYC Start
 				
 			    $bank_kyc_result = $this->bank_kyc();
+				//pr($bank_kyc_result);exit;
 				if(!empty($bank_kyc_result)){
 				  $bank_response = array('status'=>$bank_kyc_result['status'],
 				  'msg'=>$bank_kyc_result['msg'],
@@ -78,6 +79,19 @@ class Kyc_engine_Model extends CI_Model
 			     $aadhar_kyc_response = $this->aadhar_validate_without_otp();
 				 $response = array('pan_kyc' => $pan_response, 'bank_kyc' => $bank_response, 'aadhar_kyc' => $aadhar_kyc_response);
 				 
+			}# For Half KYC
+			else if($kyc_rule['aadhar_OKYC']  == 'ok'){
+				#Aadhar OKYC Start
+			     $aadhar_okyc_response = $this->aadhar_initiate_okyc_send_otp_api();
+				 
+				 $user_details = array('user_type'=>$this->input->post('user_type'),'user_id'=>$aadhar_okyc_response['user_id'],'lender_id'=>$aadhar_okyc_response['lender_id']);
+				 
+				 $aadhar_response = array(
+				 'kyc_unique_id' => $aadhar_okyc_response['kyc_unique_id'],
+				 'aadhar_response' => $aadhar_okyc_response['aadhar_response'],
+				 );
+				 
+				 $response = array('user_details' => $user_details,'aadhar_kyc' => $aadhar_response,'pan_kyc' => array(), 'bank_kyc' => array());
 			}
 			 
 			
@@ -168,6 +182,22 @@ class Kyc_engine_Model extends CI_Model
 				 $response = array('aadhar_kyc' => $aadhar_kyc_response,'pan_kyc' => $pan_response, 'bank_kyc' => $bank_response, );
 				 
 			}
+			# Aadhar KYC
+			else if($kyc_rule['pan_kyc'] == '' && $kyc_rule['aadhar_OKYC']  == 'ok' && $kyc_rule['bank_account_kyc'] == ''){
+			#Aadhar KYC Start
+				//echo 'only Aadhar kyc';exit;
+			     $aadhar_okyc_response = $this->aadhar_validate_okyc_submit_otp();
+					if(!empty($aadhar_okyc_response)){
+					 $aadhar_response = array(
+					 'status' => $aadhar_okyc_response['status'],
+					 'msg' => $aadhar_okyc_response['msg'],
+					 'name_match'=>$aadhar_okyc_response['name_match'],
+					 'dataType'=>$aadhar_okyc_response['dataType'],
+					 );
+					}
+				//pr($response);exit;
+				$response = array('aadhar_kyc' => $aadhar_response);
+			}
 			$response_arr = array('status'=>1,'response'=>$response);
 			return $response_arr;
 	}
@@ -214,6 +244,7 @@ class Kyc_engine_Model extends CI_Model
 						'created_date'=>date("Y-m-d H:i:s"),
                         'modified_date'=>date("Y-m-d H:i:s"),
 						'vendor_id' => $postData['vendor_id'],
+						'raw_json_data' => json_encode($postData),
 					));
 					
 					$lenderID = $this->db->insert_id();
@@ -238,7 +269,8 @@ class Kyc_engine_Model extends CI_Model
 						'dob' => date("Y-m-d",strtotime($postData['dob'])),
 						'gender' => $postData['gender'],
 						'occuption_id' => $postData['occuption_id'],
-						'highest_qualification' => $postData['highest_qualification']
+						'highest_qualification' => $postData['highest_qualification'],
+						'raw_json_data' => json_encode($postData)."UpdateQuery",
 					));
 				
 				
@@ -265,6 +297,7 @@ class Kyc_engine_Model extends CI_Model
 						'created_date'=>date("Y-m-d H:i:s"),
                         'modified_date'=>date("Y-m-d H:i:s"),
 						'vendor_id' => $postData['vendor_id'],
+						'raw_json_data' => json_encode($postData),
 					));
 					
 					$borrower_id = $this->db->insert_id();
@@ -397,7 +430,7 @@ public function bank_kyc() {
      //$headers = $this->input->request_headers();
 	 $postData = $this->input->post();
 	 $userData = $this->get_user_details($postData);
-	 
+	 //pr($userData);exit;
 	 $lender_id = "";
 	 $borrower_id = "";
 		 if($postData['user_type']=="lender"){
@@ -421,7 +454,7 @@ public function bank_kyc() {
         )); 
 	  
 				$response = $this->Bank_Model->add_bank_detail_borrower_lender($postData);
-				
+				//pr($response);exit;
 				//$response_arr = json_decode($response, true);
 				$response_arr['status'] = $response['status'];
 				$response_arr['msg'] = $response['msg'];
@@ -544,6 +577,81 @@ public function bank_kyc() {
 			return $response;
 		
      }
+	 public function kyc_status(){
+		$postData = $this->input->post();
+		$response = array();
+			$query = $this->db->get_where('all_kyc_api_log', array('mobile' => $this->input->post('mobile')));
+			if ($this->db->affected_rows() > 0) {
+				$kycData = (array)$query->row();
+				//pr($kycData);exit;
+					$pan_response = array('status'=>0,'msg' => '','name_match'=>0);
+					$aadhar_response = array('status'=>0,'msg' => '','name_match'=>0);
+					$bank_response = array('status'=>0,'msg' => '','name_match'=>0);
+					if($kycData['pan_api_response']){
+						$pan_api_response = json_decode($kycData['pan_api_response'],true);
+						
+						if($pan_api_response['response']['result']['status'] == 'Invalid'){
+							$status = 0;
+						}else{
+							$status = 1;
+						}
+						$pan_response = array(
+						  'status'=>$status,
+						  'msg' => $pan_api_response['msg'],
+						  'name_match'=>$pan_api_response['name_match'],
+						  );
+					}
+					
+					if($kycData['aadhar_api_response']){
+						$aadhar_api_response = json_decode($kycData['aadhar_api_response'],true);
+						//pr($aadhar_api_response);exit;
+						if(isset($aadhar_api_response['name_match']) && $aadhar_api_response['name_match'] ==1){
+							$status = 1;
+						}else{
+							$status = 0;
+						}
+						$aadhar_response = array(
+						 'status' => $status,
+						 'msg' => isset($aadhar_api_response['aadhar_response']['msg'])?$aadhar_api_response['aadhar_response']['msg']:$aadhar_api_response['msg'],
+						 'name_match'=>$aadhar_api_response['name_match'] ?? '',
+						 );
+					}
+					
+					if($kycData['bank_kyc_response']){
+						$bank_kyc_response = json_decode($kycData['bank_kyc_response'],true);
+						$bank_response = array(
+						  'status'=>$bank_kyc_response['status'],
+						  'msg' => $bank_kyc_response['msg'],
+						  'name_match'=>$bank_kyc_response['name_match'],
+						  );
+					}
+					
+					if($aadhar_response['name_match'] == true && $pan_response['name_match'] == true &&  $bank_response['name_match'] == true){
+				     $this->db->where('mobile', $this->input->post('mobile'));
+				     $this->db->update('all_kyc_api_log', array('kyc_api_status'=>1));
+				      }else{
+						  $this->db->where('mobile', $this->input->post('mobile'));
+				          $this->db->update('all_kyc_api_log', array('kyc_api_status'=>0));
+					  } 
+					$lender_borrower_details = $this->get_lender_borrower_details($postData);
+					/* if($kycData['user_type'] == 'lender'){
+						$user_id = $kycData['lender_id'];
+					}else{
+						$user_id = $kycData['borrower_id'];
+					} */
+                    $user_details = array('user_type'=>$lender_borrower_details['user_type'],'user_id'=>$lender_borrower_details['user_id']);
+                  //pr($user_details);exit();					
+				  $response = array('aadhar_kyc' => $aadhar_response,'pan_kyc' => $pan_response, 'bank_kyc' => $bank_response,'kyc_user_details' => $user_details);
+				
+			}else{
+				$response = array('status'=>0,'msg'=>'User Not found');
+			}
+			
+			$response_arr = array('status'=>1,'response'=>$response);
+			return $response_arr;
+	}
+	/*
+ Old Function 19-03-24
 	public function kyc_status(){
 		$postData = $this->input->post();
 		$response = array();
@@ -605,7 +713,6 @@ public function bank_kyc() {
 					$lender_borrower_details = $this->get_lender_borrower_details($postData);
 					
                     $user_details = array('user_type'=>$lender_borrower_details['user_type'],'user_id'=>$lender_borrower_details['user_id']);
-//pr($user_details);exit();					
 				  $response = array('aadhar_kyc' => $aadhar_response,'pan_kyc' => $pan_response, 'bank_kyc' => $bank_response,'kyc_user_details' => $user_details);
 				
 			}else{
@@ -614,7 +721,7 @@ public function bank_kyc() {
 			
 			$response_arr = array('status'=>1,'response'=>$response);
 			return $response_arr;
-	} 
+	}  */
 	public function get_lender_borrower_details($postData){
 		//pr($postData);exit;
 		
@@ -647,8 +754,8 @@ public function bank_kyc() {
 		         $query = $this ->db
 					   -> select('*')
 					   -> where('mobile', $postData['mobile'])
-					   -> or_where('pan', $postData['pan'])
-					   -> or_where('email', $postData['email'])
+					  /*  -> or_where('pan', $postData['pan'])
+					   -> or_where('email', $postData['email']) */
 					   -> get($table);
 					   //echo $this->db->last_query();exit;
 					   //echo $this->db->affected_rows();exit;
@@ -681,8 +788,8 @@ public function bank_kyc() {
                          $query = $this ->db
 					   -> select('*')
 					   -> where('mobile', $postData['mobile'])
-					   -> or_where('pan', $postData['pan'])
-					   -> or_where('email', $postData['email'])
+					  /*  -> or_where('pan', $postData['pan'])
+					   -> or_where('email', $postData['email']) */
 					   -> get($tbl);
 					   //echo $tblInsert;exit;
 //echo $this->db->last_query();exit;					   
@@ -691,6 +798,7 @@ public function bank_kyc() {
 						$userData = (array)$query->row();
 						
 						$insertionData = array(
+						'vendor_id' => $userData['vendor_id'],
 						'name' => $userData['name'],
 						'email' => $userData['email'],
 						'mobile' => $userData['mobile'],

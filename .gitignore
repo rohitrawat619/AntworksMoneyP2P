@@ -55,3 +55,7 @@ application/modules/surgeModuleP2P/unused/*
 application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-9.php
 application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-10.php
 application/modules/LendSocial/models/credit_line_model_@old_2024-Oct-09.php
+application/modules/kycapi/models/backup/Bank_Model - Copy.php
+application/modules/kycapi/models/backup/Bank_Model - Copy.php
+application/modules/kycapi/models/backup/Bank_Model-19-01-24.php
+application/modules/kycapi/models/Kyc_engine_model-06-02-24.php

@@ -115,15 +115,12 @@ class Kycapi extends REST_Controller
 			$postData = $this->input->post();
 			
 			$this->form_validation->set_rules('mobile','Mobile','required|trim|required|regex_match[/^[0-9]{10}$/]');
-			$this->form_validation->set_rules('pan','PAN','required|regex_match[/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/]');
-			$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required');
-			$this->form_validation->set_rules('user_type','User Type','required');
+		   $this->form_validation->set_rules('user_type','User Type','required');	//$this->form_validation->set_rules('pan','PAN','required|regex_match[/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/]');
+			//$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required');
+			
 			if ($this->form_validation->run() == TRUE) {
-				
 				 $response = $this->kyc_engine_model->kyc_status();
-				
-				
-				$this->set_response($response, REST_Controller::HTTP_OK);
+				 $this->set_response($response, REST_Controller::HTTP_OK);
 				return;
 			}else {
 				$errmsg = array("error_msg" => validation_errors());

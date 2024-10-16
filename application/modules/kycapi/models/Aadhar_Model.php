@@ -179,7 +179,7 @@ class Aadhar_Model extends CI_Model
 				   $data['data'] = array();
 				}else{
 				$arr_response = json_decode($response, true);
-				
+				//pr($arr_response);exit;
 					if($arr_response['code'] == 400 || $arr_response['code'] == 500 || $arr_response['code'] == 403){
 						$arr_response['status'] = 0;
 					    $arr_response['dataType'] = 'Live!';
@@ -189,7 +189,7 @@ class Aadhar_Model extends CI_Model
 			
 			
 					$post_name = $this->replace_space($this->input->post('fullname'));
-					$aadhar_name = $this->replace_space($arr_response['model']['name']);
+					$aadhar_name = $this->replace_space(isset($arr_response['model']['name'])?$arr_response['model']['name']:'');
 					$final = "{".$post_name."}{".$aadhar_name."}";
 					
 					
@@ -213,9 +213,9 @@ class Aadhar_Model extends CI_Model
 					$arr_response['dataType'] = 'Live';
 					
 						$array_update = array(
-						'aadhar_response_name' => $arr_response['model']['name']  ?? '',
-						'dob' => date('Y-m-d', strtotime($arr_response['model']['dob'])),
-						'address' => json_encode($arr_response['model']['address']),
+						'aadhar_response_name' => isset($arr_response['model']['name'])  ?? '',
+						'dob' => isset($arr_response['model']['dob'])?date('Y-m-d', strtotime($arr_response['model']['dob'])):'',
+						'address' => json_encode(isset($arr_response['model']['address'])?$arr_response['model']['address']:''),
 						'status_code' => $arr_response['code'],
 						'aadhar_response' => $response
 					);
