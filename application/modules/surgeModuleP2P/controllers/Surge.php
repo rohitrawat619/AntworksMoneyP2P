@@ -41,6 +41,8 @@ class Surge extends CI_Controller
       $lenderDiversificationStepUp = 5;
   }
 
+  $results = [];
+
   // Initialize variables to hold the last successful values
   $lastSuccessfulStepUp = 0;
   $lastSuccessfulLenderDiversificationFactor = 0;
@@ -59,23 +61,21 @@ class Surge extends CI_Controller
 
           // Check if stepUp falls within the loan amount range
           if ($loanAmount >= $minLoanAmount && $loanAmount <= $maxLoanAmount) {
-              // Update the last successful values
-              $lastSuccessfulStepUp = $stepUp;
-              $lastSuccessfulLenderDiversificationFactor = $lenderDiversificationFactor;
+              
+			$results[] = [
+				'step_up_value' => $stepUp,
+				'diversification_factor_value' => $lenderDiversificationFactor,
+				'minimum_loan_amount' => $loanAmount
+			];
+
           }
       }
   }
 
-  // Prepare the result as an array
-  $result = [
-      'step_up_value' => $lastSuccessfulStepUp,
-      'diversification_factor_value' => $lastSuccessfulLenderDiversificationFactor,
-      'minimum_loan_amount' => 4 * $lastSuccessfulStepUp
-  ];
 
   // Return the result as JSON
-  echo json_encode($result);
-
+  echo json_encode($results);
+  die();
 }
 }
 	

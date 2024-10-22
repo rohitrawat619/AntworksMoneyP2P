@@ -64,12 +64,14 @@
                     </div>
 					
 					
-					   <div class="col-md-6 form-group">
-                        <label for="diversification_factor_value">
-						Diversification Factor Value:</label><br>
-                        <input class="form-control" type="text" value="<?php echo $lists['diversification_factor_value']; ?>" readonly id="diversification_factor_value" 
-						name="diversification_factor_value" required>
-                    </div>
+					<div class="col-md-6 form-group">
+						<label for="diversification_factor">Diversification Factor:</label><br>
+						<select class="form-control" name="diversification_factor" id="diversification_factor" required>
+							<option value="">Select Diversification Factor</option>
+							<!-- Options will be dynamically added here -->
+						</select>
+					</div>
+
 					
 					
 					   <div class="col-md-6 form-group">
@@ -327,28 +329,36 @@ function getDivisibleValues() {
 </script>
 
 <script>
-function getDiversificationFactorValues(minInvestment){
-//const minInvestment = document.getElementById('Min_Inv_Amount').value
-$.ajax({
-                url: 'findValuesViaInvestmentFunction',
-                type: 'POST',
-                data: {
-                    minInvestment: minInvestment
-                },
-                success: function(response) {
-         //   console.log(response);
+function getDiversificationFactorValues(minInvestment) {
+    $.ajax({
+        url: 'findValuesViaInvestmentFunction',
+        type: 'POST',
+        data: {
+            minInvestment: minInvestment
+        },
+        success: function(response) {
             const data = JSON.parse(response);
-				console.log(data.step_up_value);
-				$("#step_up_value").val(data.step_up_value);
-				$("#diversification_factor_value").val(data.diversification_factor_value);
-				$("#minimum_loan_amount").val(data.minimum_loan_amount);
-                },
-                error: function(xhr, status, error) {
-                    // Handle errors here
-                    console.error('Error:', error);
-                }
-            });
+            $('#diversification_factor').empty().append('<option value="">Select Diversification Factor</option>');
+
+            // Iterate through the returned data to populate the select box
+            if (Array.isArray(data)) {
+                $.each(data, function(index, item) {
+                    $('#diversification_factor').append('<option value="' + item.diversification_factor_value + '">' + item.diversification_factor_value + '</option>');
+					
+                });
+				// $("#step_up_value").val(data.step_up_value);
+				// $("#diversification_factor_value").val(data.diversification_factor_value);
+				// $("#minimum_loan_amount").val(data.minimum_loan_amount);
+            } else {
+                console.error('Expected an array in the response');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
 }
+
 
 </script>
 
