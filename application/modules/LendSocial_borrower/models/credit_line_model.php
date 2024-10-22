@@ -6,6 +6,7 @@ public function __construct(){
     $this->authorization="Basic YW50QXBwXzIwMjM6QW50X1NlY3VyZSZAMSE2NQ==";
     $this->oath_token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMjA3MTk1Iiwic291cmNlIjoiQW50UGF5IiwibW9iaWxlIjoiNjM5NTEzMDc4NyIsImRldmljZV9pZCI6IlVsTlNNUzR5TURFd01UTXVNREF4IiwiYXBwX3ZlcnNpb24iOm51bGwsImdlbmVyYXRlZF90aW1lc3RhbXAiOiIyMDIzLTEyLTI5IDE0OjU0OjEwIiwiaXBfYWRkcmVzcyI6IjEyMi4xNzYuNTMuMTkyIn0.BZF3795oRwh3_Uhti4LVIrlvRX3hGZmYY5Qayd00JPw";
     $this->load->database();
+    $this->load->model('credit-line/Borroweraddmodel');
 }
 
 
@@ -684,6 +685,44 @@ public function viewLoanaggrement($borrower_id){
         }
 
         }
+      }
+
+
+      public function check_and_insert_user_steps_exist_with_partner($borrower_id){
+
+        $data = array(
+          'partner_id' => $this->session->userdata('partner_id'),
+          'borrower_id' => $borrower_id
+        );
+
+        $this->db->select('partner_id');
+        $query = $this->db->get_where('p2p_borrower_steps_credit_line',$data);
+        $query = $query->row_array();
+
+        if($this->db->affected_rows() > 0){
+          
+          return ;
+         }
+         else{
+
+          // check basic filter 
+          $borrower_details = $this->get_borrower_details($this->session->userdata('mobile'));
+          $check = $this->Borroweraddmodel->update_registration_credit_line();
+          pr($check);
+          
+          $insert_data = array(
+            'partner_id' => $this->session->userdata('partner_id'),
+            'borrower_id' => $borrower_id,
+            'experian_step' => 1,
+            'bank_account_step' => 1,
+            'aadhar_step' => 1
+        );
+
+          $this->db->insert('p2p_borrower_steps_credit_line',$insert_data);
+          
+         }
+        
+        
       }
 
 }

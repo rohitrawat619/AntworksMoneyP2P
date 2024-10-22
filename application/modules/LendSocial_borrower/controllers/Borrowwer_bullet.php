@@ -16,7 +16,7 @@ class Borrowwer_bullet extends CI_Controller{
 		
 		//$this->logo_path = "logo_path";
         $this->load->model('credit_line_model');
-		//$this->load->model('LendSocialmodel');
+		//$this->load->model('LendSocialmodel');s
 		//$this->mobile = 6395130787;
 		
 		$this->sessionVariableData = $this->session->userdata(); 
@@ -56,15 +56,21 @@ public function checkSessionMobileNo(){
     
 
 public function info(){
-  
+   $this->session->set_userdata('partner_id',1);
     $data=array();
 
-    
+  
   // details to fill
-  $this->setBorrowerId('100767');
+  $this->setBorrowerId('93086');
 
+  $check_and_insert_user_steps_exist_with_partner = $this->credit_line_model->check_and_insert_user_steps_exist_with_partner($this->getBorrowerId());
 
-    
+  if($check_and_insert_user_steps_exist_with_partner == false){
+    echo 'check false';die();
+  } 
+ 
+
+  pr($check_and_insert_user_steps_exist_with_partner);
     $get_user_details=$this->credit_line_model->get_borrower_details($this->mobile);
 
 		if($get_user_details['status']==0){
@@ -103,7 +109,7 @@ public function waiting(){
 }
 
 public function waiting_ajax(){
-
+  $this->setBorrowerId('100767');
   $loan_eligiblity_status=$this->credit_line_model->loan_eligiblity_status($this->getBorrowerId());
   print_r($loan_eligiblity_status);
   $this->setLoanId($loan_eligiblity_status['loan_id']);
