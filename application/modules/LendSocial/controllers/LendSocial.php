@@ -94,6 +94,29 @@ class LendSocial extends CI_Controller
 		}
 		
 		
+		
+				public function getLenderContractNote($inputData,$scheme_name,$total_amount){ // Dated: 2024-Oct-25
+				         //  echo "<pre>"; print_r($inputData);
+						$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
+						$product_type_id = "LendSocialDashboard"; $instance_id = "LenderContractNote";
+						$token = $inputData;
+						$token['INVESTMENT_AMOUNT'] = '₹ 50,00,000 (Rupees Fifty Lakhs Only)';
+						$token['LENDER_ID'] = $inputData['lender_id'];
+						$token['LENDER_NAME'] = $inputData['name'];
+						$token['DATE_OF_LENDING'] = date('Y-m-d');
+						$token['LENDING_AMOUNT'] = $total_amount;
+						$token['SCHEME_NAME'] = $scheme_name;
+			
+					$pattern = '[%s]';
+				foreach ($token as $key => $val) {
+				$varMap[sprintf($pattern, $key)] = $val;
+				}
+				
+				$result = $this->LendSocialCommunicationModel->get_notification($product_type_id, $instance_id);
+				$msg = strtr($result->email_content, $varMap);
+				return $msg; //($result->email_content);
+	}
+		
 			public function getLenderInvestmentAgrement(){ // Dated: 2024-oct-02
 						$this->load->model('surgeModuleP2P/LendSocialCommunicationModel');
 						$product_type_id = "LendSocialDashboard"; $instance_id = "LenderInvestmentAgreement";
@@ -264,7 +287,7 @@ class LendSocial extends CI_Controller
 
 
 							//print_r($this->sessionVariableData);
-							if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+							if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet" || $this->sessionVariableData['lenderSocialProductType']=="borrowerEmi" ){
 							$data['sub_logo_path'] = $this->borrower_logo_path;
 							}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
 							$data['sub_logo_path'] = $this->lender_logo_path;
@@ -284,7 +307,7 @@ class LendSocial extends CI_Controller
 					public function otp(){
 				
 			
-			if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+			if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet" || $this->sessionVariableData['lenderSocialProductType']=="borrowerEmi"){
 				$data['sub_logo_path'] = $this->borrower_logo_path;
 			}else if($this->sessionVariableData['lenderSocialProductType']=="lender"){
 				$data['sub_logo_path'] = $this->lender_logo_path;
@@ -323,9 +346,10 @@ class LendSocial extends CI_Controller
 							
 									//	echo"<pre>";
 								//	print_r($this->sessionVariableData); die();
-									if($this->sessionVariableData['lenderSocialProductType']=="borrowerEmi"){
-										echo"<h2>EMI Option Coming Soon";
-									}else if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+									if($this->sessionVariableData['lenderSocialProductType']=="borrowerEmi" ||
+									$this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
+									//	echo"<h2>EMI Option Coming Soon";
+									//}else if($this->sessionVariableData['lenderSocialProductType']=="borrowerBullet"){
 										
 										 $get_user_details=$this->credit_line_model->get_borrower_details($this->sessionData["mobile"]);
 	//	echo"<pre>";
@@ -626,11 +650,14 @@ class LendSocial extends CI_Controller
 		//	echo"<pre>";
 		 //	print_r($this->session->userdata());
 			$investment_no =  decrypt_string(base64_decode($this->input->get("q")));
+			$scheme_name =  decrypt_string(base64_decode($this->input->get("s")));
 			
 			$this->load->view('template-LendSocial/header',$data);
-			$data['lists']['investmentRequestList'] = $this->LendSocialmodel->get_borrower_proposed_list($this->sessionData['lender_id'],$investment_no);
+			$investmentRequestListResp = $this->LendSocialmodel->get_borrower_proposed_list($this->sessionData['lender_id'],$investment_no);
+			$data['lists']['investmentRequestList'] = $investmentRequestListResp; 
 			$data['lists']['investmentNo'] = $investment_no;
 			$data['lists']['sessionData'] = $this->sessionData;
+			$data['lists']['lenderContractNote'] = $this->getLenderContractNote($this->sessionData,$scheme_name,$investmentRequestListResp[0]->total_amount);
 			$this->load->view('investmentRequestList',$data);
 		//	$this->load->view('template-LendSocial/footer',$data);
 		}
@@ -651,6 +678,7 @@ class LendSocial extends CI_Controller
 			$data = $this->sessionData;
 			$data['batch_id'] = $requestPayload['batch_id'];
 			$data['requestPayloadParm'] = $requestPayload['requestPayloadParm'];
+			// echo"<pre>"; print_r($data); die();
 			$response = $this->LendSocialmodel->e_sign_borrower_proposed_list_send_otp($data);
 					
 				 echo $response; die(); 
@@ -1124,10 +1152,11 @@ class LendSocial extends CI_Controller
 				}
 		
 		public function get_registration_fee_status(){
+			
 			$this->checkSessionMobileNo();
 			$userType = $this->sessionVariableData['lenderSocialProductType'];
 			
-			if($userType=="borrowerBullet"){ // 
+			if($userType=="borrowerBullet" || $userType=="borrowerEmi"){ // 
 				$transactionType = "borrowerRegistrationFee";
 				$user_id = $this->sessionData['borrower_id'];
 				$feeStatusFieldName  = "borrower_fee_paid_status";
@@ -1171,6 +1200,8 @@ class LendSocial extends CI_Controller
 				redirect(base_url('LendSocial/').'lenderDashboard');
 				}else if($userType=="borrowerBullet"){
 				redirect(base_url('LendSocial/').'Borrowwer_bullet/info');
+				}else if($userType=="borrowerEmi"){
+					redirect(base_url('LendSocial/').'Borrower_emi/info');
 				}
 
 				}else{

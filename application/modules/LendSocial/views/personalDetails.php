@@ -310,6 +310,67 @@ $pan_status = "";
 								<span class="validation error-validation" id="net_monthly_income"></span>
 							</div>
 						</div>
+						
+						<!-----------Added New Fields Starting Here----------->
+						
+						<div class="col-md-6 col-xs-12">
+						<label for="loan_purpose" >Loan Purpose</label>
+						<div class="form-group">
+						<select class="form-control" name=loan_purpose"" id="loan_purpose">
+						<?php
+						/* Define an array of options */
+						$options = ['' => 'Loan Purpose','30' => '1 Month','60' => '2 Months','90' => '3 Months'];
+						foreach ($options as $value => $label): 
+
+						if($value== $lists['sessionData']['loan_purpose']){
+						$selected = "selected";
+						}else{
+						$selected = "";
+						}
+						?>
+
+						<option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
+						<?php endforeach; ?>
+						</select>
+						<span class="validation error-validation" id="loan_purpose"></span>
+						</div>
+						</div>
+						
+						<div class="col-md-6 col-xs-12">
+								 <label for="loanAmount" >Loan Amount</label>
+							<div class="form-group">
+							<input class="form-control" <?php echo $loanAmount; ?> type="text" name="loanAmount" placeholder="Loan Amount" id="net_monthly_income" value="<?php echo $lists['sessionData']['net_monthly_income']; ?>" >
+								<span class="validation error-validation" id="loanAmount"></span>
+							</div>
+						</div>
+						
+						
+						<div class="col-md-6 col-xs-12">
+						<label for="loan_tenture" >Loan Tenture</label>
+						<div class="form-group">
+						<select class="form-control" name="" id="loan_tenture">
+						<?php
+						// Define an array of options
+						$options = ['' => 'Loan Tenture','30' => '1 Month','60' => '2 Months','90' => '3 Months'];
+						foreach ($options as $value => $label): 
+
+						if($value== $lists['sessionData']['loan_tenture']){
+						$selected = "selected";
+						}else{
+						$selected = "";
+						}
+						?>
+
+						<option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
+						<?php endforeach; ?>
+						</select>
+						<span class="validation error-validation" id="loan_tenture"></span>
+						</div>
+						</div>
+						
+						<!---------Added New Fields Ending Here--------------------->
+						
+						
 								<!-------------ending of borrower company detail--------------->
 						
 							<input  type="hidden" name="mobile"  id="mobile" value="<?php echo $lists['sessionData']['mobile']; ?>" >

@@ -173,7 +173,7 @@ public function e_sign(){
   $view_loan_agreement=$this->credit_line_model->viewLoanaggrement($this->getBorrowerId());
 	//echo "<pre>";print_r($view_loan_agreement);die();
 	
-	$data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1)); // dated: 2024-june-06
+	// $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1)); // dated: 2024-june-06
 	
   $data['view_loan_agreement']=$view_loan_agreement;
  // $data['credit_line_sanction_details']=$credit_line_sanction_details;
@@ -234,6 +234,7 @@ public function dashboard(){
   $loan_details=$this->credit_line_model->loan_details($this->getBorrowerId());
   $borrower_occupation_and_profession_arr = $borrower_occupation_and_profession_id;
   $borrower_occupation_and_profession_arr['partner_id'] = $this->getPartnerId();
+ // echo json_encode($borrower_occupation_and_profession_arr);
    $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans($borrower_occupation_and_profession_arr);
  // echo "<pre>";print_r($data['partner_loan_plans']); die();
   //  $data['partner_loan_plans']=$this->credit_line_model->get_loan_plans(array('partner_id'=>$this->getPartnerId(),'status'=>1));//get_loan_plans();

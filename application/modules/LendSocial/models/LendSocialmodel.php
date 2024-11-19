@@ -60,19 +60,25 @@ class LendSocialmodel extends CI_Model
 				
 				}
 	
-		public function get_borrower_proposed_list($lender_id,$investment_no)
-	{
-		$this->db->select('a.*, a.id as borrower_proposed_list_id ,b.name as borrower_name');
-		$this->db->from('borrower_proposed_list a');
-		$this->db->join("p2p_borrowers_list b","a.borrower_id = b.borrower_id","LEFT");
-		$this->db->where("investment_no", $investment_no);
-		$this->db->where("lender_id",$lender_id);
-		$this->db->where("processing_status",0);
-		//$this->db->limit(40);	
-		$query = $this->db->get();
+	public function get_borrower_proposed_list($lender_id, $investment_no)
+{
+    $this->db->select('a.*, a.id AS borrower_proposed_list_id, b.name AS borrower_name,
+                       (SELECT SUM(amount) FROM borrower_proposed_list 
+                        WHERE investment_no = ' . $this->db->escape($investment_no) . ' 
+                          AND lender_id = ' . $this->db->escape($lender_id) . ' 
+                          AND processing_status = 0) AS total_amount', false);
+    $this->db->from('borrower_proposed_list a');
+    $this->db->join('p2p_borrowers_list b', 'a.borrower_id = b.borrower_id', 'LEFT');
+    $this->db->where('a.investment_no', $investment_no);
+    $this->db->where('a.lender_id', $lender_id);
+    $this->db->where('a.processing_status', 0);
+    //$this->db->limit(40);	
+    
+    $query = $this->db->get();
 
-		return $query->result();  
-	}
+    return $query->result();  
+}
+
 	
 	public function e_sign_lender_agreement_send_otp($lenderInfo)
     {

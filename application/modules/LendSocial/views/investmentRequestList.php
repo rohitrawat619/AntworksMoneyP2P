@@ -8,7 +8,7 @@
     </div>
 <?php endif; ?>
 <div class="col-md-12 col-xs-12">
-    <div class="surge-list"> <a href='lenderDashboard'> Home</a>
+    <div class="surge-list" style="background-color:#4369da0d;" > <a href='lenderDashboard'> Home</a>
         <div class="col-md-12 col-xs-12">
             <h2 class="dash-hd">Loan Request List (<?php echo htmlspecialchars($lists['investmentNo']); ?>)</h2>
         </div>
@@ -16,21 +16,36 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+					<!----
                     <th>S No.</th>
                     <th>Borrower ID</th>
                     <th>Name</th>
                     <th>Amount</th>
                     <th>Request Date</th>
+					<th>Status</th> 
+					 <th>S No.</th> ---->
+                    <th>Name of Borrower</th>
+                    <th>Amount</th>
+                    <th>Interest Rate</th>
+                    <th>Credit score</th>
+                    <th>Lender Assistance fees </th>
+					<!-----
+                    <th>Request Date</th>
 					<th>Status</th>
+					
                     <?php if(count($lists['investmentRequestList']) > 0) { ?>
                         <th>
                             <label for="selectAll">Select All<br> 
-                                <input type="checkbox" id="selectAll" value="" checked onclick="toggleCheckboxes(this);" >
+                                <input type="checkbox" id="selectAll" value="" checked  readonly >
+								
+								<!----
+								 <input type="checkbox" id="selectAll" value="" checked  readonly onclick="toggleCheckboxes(this);" >
+								---->
                             </label>
                         </th>
                     <?php } else { ?>
                         <th></th> 
-                    <?php } ?>
+                    <?php } ?> 
                 </tr>
             </thead>
             <tbody>
@@ -65,21 +80,30 @@
 		
 					echo "<input type='hidden' id='requestPayload' value='".$requestPayload."'>";
 					?>
-                    <tr>
+                    <tr> <!----
                         <td><?php echo ($i + 1); ?></td>
-                        <td><?php echo  $borrower_id; ?></td>
+                        <td><?php echo  $borrower_id; ?></td> ---->
                         <td><?php echo (toSentenceCaseHelper($borrower_name)); ?></td>
                         <td><?php echo ($lists['investmentRequestList'][$i]->amount); ?></td>
-                        <td><?php echo timeAgoHelper(strtotime($request_date)); ?></td>
-						<td><?php echo toSentenceCaseHelper($request_status); ?></td>
+                        <td><?php echo ($lists['investmentRequestList'][$i]->interest); ?></td>
+                        <td><?php echo ($lists['investmentRequestList'][$i]->credit_score); ?></td>
+                        <td><?php echo ($lists['investmentRequestList'][$i]->lender_assistance_fees); ?></td>
+                      <!---  <td><?php echo timeAgoHelper(strtotime($request_date)); ?></td>
+						<td><?php echo toSentenceCaseHelper($request_status); ?></td> --->
                         <?php if(count($lists['investmentRequestList']) > 0) { ?>
-                            <td><input value="<?php echo $borrower_proposed_list_id; ?>" checked type="checkbox" class="item-checkbox"></td>
+                            <td><input value="<?php echo $borrower_proposed_list_id; ?>" checked type="checkbox"  onclick="return false;" ></td>
                         <?php } ?>
                     </tr>
-                <?php } ?>
-				<tr>
-				 <td colspan="3" class="text-center">Total Amount</td>
+					
+                <?php } /* ?>
+				<tr> 
+				 <td colspan="1" class="text-center">Total Amount</td>
 				<td colspan="1" class="text-center"> <?php echo $amountFinal; ?> </td> </tr>
+				<tr>
+				<?php */
+					echo '<tr>'.$lists['lenderContractNote'];
+				?> <br>
+				</tr>
                 <tr>
                     <td colspan="7" class="text-center">
                         <input type="button" onclick="confirmAndGetSelectedValues();" class="btn btn-success mr-2" value="Approve">
@@ -117,7 +141,7 @@ function toggleCheckboxes(source) {
         
         if (checkboxes.length == 0) {
             alert("Please select at least one record.");
-        } else {
+        } else { 
             var confirmed = window.confirm('Are you sure you want to proceed?');
 
             if (confirmed) {
@@ -171,7 +195,7 @@ var base64String = btoa(jsonString);
                     }
                 }); /****************ending of ajax here********/
             }
-        }
+       }
     }
 </script>
 
