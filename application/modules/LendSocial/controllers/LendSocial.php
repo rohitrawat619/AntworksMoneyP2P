@@ -725,6 +725,7 @@ class LendSocial extends CI_Controller
 
 			$data['states'] = $this->LendSocialmodel->get_state();
 			$data['qualification'] = $this->LendSocialmodel->highest_qualification();
+			$data['getLoantypeweb'] = $this->LendSocialmodel->getLoantypeweb();
 			//echo "<pre>";print_r($data);die();
 			$data['logo_path'] = $this->partnerInfo['logo_path'];
 			$data['sub_logo_path'] = $this->lender_logo_path;
@@ -871,6 +872,17 @@ class LendSocial extends CI_Controller
 					$r_city = $getUserDetailResp['r_city'];
 					$r_state = $getUserDetailResp['r_state'];
 					$net_monthly_income = $getUserDetailResp['net_monthly_income'];
+
+					if (!empty($getUserDetailResp['loan_purpose'])) {
+						$loan_purpose = $getUserDetailResp['loan_purpose'];
+						$loan_amount = $getUserDetailResp['loan_amount'];
+						$loan_tenure = $getUserDetailResp['loan_tenure'];
+					} else {
+						$loan_purpose = null;
+						$loan_amount = null;
+						$loan_tenure = null;
+					}
+					
 					//  $user_type = $getUserDetailResp['user_type'];
 					
 					//  $company_type,$company_name,$company_code,$user_type
@@ -888,7 +900,7 @@ class LendSocial extends CI_Controller
 						
 						
 							
-							$allInOneKycStatus =	json_decode($this->LendSocialmodel->allInOneKyc($phone,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id),true); //dated:2023-dec-21
+							$allInOneKycStatus =	json_decode($this->LendSocialmodel->allInOneKyc($phone,$fullname,$email,$pan,$aadhaar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id,$loan_purpose,$loan_amount,$loan_tenure),true); //dated:2023-dec-21
 							//echo $allInOneKycStatus;
 							//echo$phone; echo"--";
 							 //	echo"<pre>";	print_r($allInOneKycStatus); die();

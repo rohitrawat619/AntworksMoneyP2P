@@ -312,24 +312,28 @@ $pan_status = "";
 						</div>
 						
 						<!-----------Added New Fields Starting Here----------->
+
+						<?php if($_SESSION['lenderSocialProductType'] == 'borrowerBullet'  || $_SESSION['lenderSocialProductType'] == 'borrowerEmi') { ?>
 						
 						<div class="col-md-6 col-xs-12">
 						<label for="loan_purpose" >Loan Purpose</label>
 						<div class="form-group">
-						<select class="form-control" name=loan_purpose"" id="loan_purpose">
+						<select class="form-control" name="loan_purpose" id="loan_purpose" required>
+						<option value="">Select the loan purpose</option>
 						<?php
 						/* Define an array of options */
-						$options = ['' => 'Loan Purpose','30' => '1 Month','60' => '2 Months','90' => '3 Months'];
-						foreach ($options as $value => $label): 
+						
+						foreach ($getLoantypeweb as $loan):
+							
+							if($value== $lists['sessionData']['loan_purpose']){
+								$selected = "selected";
+								}else{
+								$selected = "";
+								}
 
-						if($value== $lists['sessionData']['loan_purpose']){
-						$selected = "selected";
-						}else{
-						$selected = "";
-						}
 						?>
 
-						<option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
+						<option <?php echo $selected; ?> value="<?php echo $loan['p2p_product_id']; ?>"><?php echo $loan['loan_purpose']; ?></option>
 						<?php endforeach; ?>
 						</select>
 						<span class="validation error-validation" id="loan_purpose"></span>
@@ -339,34 +343,40 @@ $pan_status = "";
 						<div class="col-md-6 col-xs-12">
 								 <label for="loanAmount" >Loan Amount</label>
 							<div class="form-group">
-							<input class="form-control" <?php echo $loanAmount; ?> type="text" name="loanAmount" placeholder="Loan Amount" id="net_monthly_income" value="<?php echo $lists['sessionData']['net_monthly_income']; ?>" >
+							<input class="form-control" <?php echo $loanAmount; ?> type="text" name="loanAmount" placeholder="Loan Amount" id="net_monthly_income" value="<?php echo $lists['sessionData']['net_monthly_income']; ?>" required>
 								<span class="validation error-validation" id="loanAmount"></span>
 							</div>
 						</div>
 						
 						
-						<div class="col-md-6 col-xs-12">
-						<label for="loan_tenture" >Loan Tenture</label>
+											<div class="col-md-6 col-xs-12">
+						<label for="loan_tenure">Loan Tenure</label>
 						<div class="form-group">
-						<select class="form-control" name="" id="loan_tenture">
-						<?php
-						// Define an array of options
-						$options = ['' => 'Loan Tenture','30' => '1 Month','60' => '2 Months','90' => '3 Months'];
-						foreach ($options as $value => $label): 
+							<select class="form-control" name="loan_tenure" id="loan_tenure" required>
+								<?php
+								// Define an array of options with a placeholder
+								$options = ['' => 'Loan Tenure'];
 
-						if($value== $lists['sessionData']['loan_tenture']){
-						$selected = "selected";
-						}else{
-						$selected = "";
-						}
-						?>
+								// Loop to generate options from 1 to 36 months
+								for ($i = 1; $i <= 36; $i++) {
+									$monthValue = $i * 30; // Calculate month as days (30 days per month)
+									$options[$monthValue] = $i . ' Month' . ($i > 1 ? 's' : ''); // Singular or plural month label
+								}
 
-						<option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
-						<?php endforeach; ?>
-						</select>
-						<span class="validation error-validation" id="loan_tenture"></span>
+								// Loop through the options and create the <option> elements
+								foreach ($options as $value => $label): 
+									// Check if the current option should be selected
+									$selected = ($value == $lists['sessionData']['loan_tenure']) ? 'selected' : '';
+								?>
+									<option <?php echo $selected; ?> value="<?php echo $value; ?>"><?php echo $label; ?></option>
+								<?php endforeach; ?>
+							</select>
+							<span class="validation error-validation" id="loan_tenure"></span>
 						</div>
-						</div>
+					</div>
+					
+
+					<?php } ?>
 						
 						<!---------Added New Fields Ending Here--------------------->
 						

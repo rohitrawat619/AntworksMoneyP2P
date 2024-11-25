@@ -584,6 +584,16 @@ class LendSocialmodel extends CI_Model
 
 							);	
 
+							$loan_purpose = $this->input->post('loan_purpose');
+							$loan_amount = $this->input->post('loanAmount');
+							$loan_tenure = $this->input->post('loan_tenure');
+
+							if (!empty($loan_purpose) && !empty($loan_amount) && !empty($loan_tenure)) {
+								$arr_user_detail['loan_purpose'] = $loan_purpose;
+								$arr_user_detail['loan_amount'] = $loan_amount;
+								$arr_user_detail['loan_tenure'] = $loan_tenure;
+							}
+
 							$arr_user_detail['r_address'] = $this->input->post('r_address');
 							$stateData = explode(",",$this->input->post('r_state'));
 							$arr_user_detail['r_state'] = $stateData[0]; //$this->input->post('r_state');
@@ -651,6 +661,11 @@ class LendSocialmodel extends CI_Model
 							$resp['mobile'] =  $this->input->post('mobile');
 							return $resp;
 							}
+							}
+
+							public function getLoantypeweb()
+							{
+								return $loan_types = $this->db->order_by('p2p_product_id,loan_name', 'desc')->get_where('p2p_loan_type', array('status' => 1, 'p2p_product_id !='=>1))->result_array();
 							}
 
 	
@@ -790,7 +805,7 @@ curl_setopt_array($curl, array(
 
 
 /******************starting of allInOneKyc here*************/
-		public function allInOneKyc($mobile,$fullname,$email,$pan,$aadhar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id){  
+		public function allInOneKyc($mobile,$fullname,$email,$pan,$aadhar,$account_no,$bank_name,$ifsc_code,$company_type,$company_name,$company_code,$user_type,$dob,$gender,$highest_qualification,$r_pincode,$net_monthly_income,$r_city,$r_state,$vendor_id,$loan_purpose,$loan_amount,$loan_tenure){  
 						
 		
 			$curl = curl_init();
@@ -829,7 +844,10 @@ curl_setopt_array($curl, array(
 					"user_type": "'.$user_type.'",
 					"vendor_id": "'.$vendor_id.'",
 					"source": "LendSocialWebApp",
-					"product": "Lend Social"
+					"product": "Lend Social",
+					"loan_purpose": "'.$loan_purpose.'",
+					"loan_amount": "'.$loan_amount.'",
+					"loan_tenure": "'.$loan_tenure.'",
 					}',
 
 
