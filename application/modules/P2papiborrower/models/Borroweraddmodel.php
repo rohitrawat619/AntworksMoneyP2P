@@ -37,6 +37,7 @@ class Borroweraddmodel extends CI_Model{
               }
       
     }
+    
 
    public function updateBorrowerappdetails($borrowerId)
     {
@@ -81,13 +82,13 @@ class Borroweraddmodel extends CI_Model{
 
     }
 
-   public function add_loan_details($borrowerId)
+   public function add_loan_details()
       {
             $plnr = $this->Borrowermodel->create_plnr_no();
             
         
         $loan_details = array(
-                              'borrower_id'=>$borrowerId,
+                              'borrower_id'=>$this->input->post('borrower_id'),
                               'p2p_product_id'=>$this->input->post('p2p_product_id'),
                               'loan_amount'=>$this->input->post('loan_amount'),
                               'tenor_months'=>$this->input->post('tenor_months'),

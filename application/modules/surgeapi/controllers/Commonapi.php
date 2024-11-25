@@ -32,6 +32,7 @@ class Commonapi extends REST_Controller{
                         $otp = 898767;//rand(100000,999999);
                         $arr["mobile"]=$this->input->post('mobile');
                         $arr["otp"]=$otp;
+						$arr["source"]="commonApi";
                         $query = $this->db->insert('p2p_otp_details_table',$arr);
                         $msg = "Your One Time Password (OTP) for Antworks P2P Mobile number Verification is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS P2P";
                         $message = rawurlencode($msg);

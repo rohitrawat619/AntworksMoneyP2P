@@ -9,6 +9,41 @@ class Brating extends CI_Model
         $this->load->database();
     }
 
+		/******************start of get experian score**********************/
+				public function getCreditScoreAPI($mobileNo,$fname,$lname,$creditScoreRequestType,$user_id,$experian_source){ // 'creditScoreRequestType' => free/paid
+		
+
+         $curl = curl_init();
+$postData = array('mobileNo' => $mobileNo,'fname' => $fname,'lname' => $lname,
+'creditScoreRequestType' => $creditScoreRequestType,'user_id' => $user_id,
+'experian_source' => $experian_source);
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://www.antworksmoney.com/app/ScoreApi/ScoreApi/',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => json_encode($postData),
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/json',
+    'client_id: antworkCurlApi',
+    'secret: testing@1234#',
+    'Cookie: 2021_csrf_cookie_app=daec94b6512ad03805cbf36ef820f201; ci_session_2021_app=himvumjpj01cpipt8ic63ljr3gg7iqo9'
+  ),
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+
+		return $response;
+} /************end of get experian score**************/
+
+
     public function borrowerrating($proposal_id)
     {
         error_reporting(0);

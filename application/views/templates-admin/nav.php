@@ -94,6 +94,22 @@
 			</li>
             <li><a href="<?=base_url();?>p2padmin/p2pborrower/downloadBorrowers"><span class="fa fa-address-book"></span> Download Users</a></li>
             <li><a href="<?=base_url();?>p2padmin/changepassword"><span class="fa fa-sign-out"></span> Change Password</a></li>
+			
+			<li class="treeview">
+				<a href="#">
+					<i class="fa fa-laptop"></i>
+					<span>KYC Module</span>
+					<span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+				</a>
+				<ul class="treeview-menu">
+					<li class="profile3"><a href="<?=base_url().'kyc_module';?>">KYC Product List</a></li>
+					<li class="profile3"><a href="<?=base_url().'kyc_module/kyc_client_list';?>">KYC Client List</a></li>
+					
+				</ul>
+			</li>
+			
             <li><a href="<?=base_url();?>login/Logoutadmin/"><span class="fa fa-sign-out"></span> Logout</a></li>
         </ul>
     </section>

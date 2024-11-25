@@ -82,6 +82,7 @@ class Login extends CI_Controller{
     {
         $this->load->database();
 		 $mobile = sanitize_input_data($_POST['mobile']);
+		 $ip_address = $_SERVER['REMOTE_ADDR'];
 		// echo $mobile;
         if(!empty($_POST['mobile'])){
 
@@ -118,6 +119,8 @@ class Login extends CI_Controller{
                 else{
                     $arr["mobile"]=$number;
                     $arr["otp"]=$otp;
+                    $arr["source"]='sendLoginOtp';
+                    $arr["ip_address"]=$ip_address;
                     $query = $this->db-> insert('p2p_otp_details_table',$arr);
                 }
 
@@ -125,12 +128,14 @@ class Login extends CI_Controller{
             else{
                 $arr["mobile"]=$number;
                 $arr["otp"]=$otp;
+				$arr["source"]='sendLoginOtp2';
+				 $arr["ip_address"]=$ip_address;
                 $query = $this->db-> insert('p2p_otp_details_table',$arr);
             }
 
 
 
-            $msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
+            //$msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
             $msg = "$otp is your Antworks Account verification code - ANTWORKS";
 //            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
             $message = rawurlencode($msg);
@@ -145,8 +150,9 @@ class Login extends CI_Controller{
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
             curl_close($ch);
+			$resp = json_decode($response,true);
             // Create session for verifying number
-
+			//	print_r($resp['status']); exit;
             echo "OTP Send Successfully"; exit;
             }
         }
@@ -307,16 +313,16 @@ class Login extends CI_Controller{
 					
 					if($result->role_id == 10)
 					{
-						redirect(base_url().'surgeModule/surge/dashboard');
+						redirect(base_url().'surgeModuleP2P/surge/dashboard');
 					}
 					
 					if($result->role_id == 11)
 					{
-						redirect(base_url().'surgeModule/surge/dashboard');
+						redirect(base_url().'surgeModuleP2P/surge/dashboard');
 					}
 					if($result->role_id == 12)
 					{
-						redirect(base_url().'surgeModule/surge/dashboard');
+						redirect(base_url().'surgeModuleP2P/surge/dashboard');
 					}
 
                 }

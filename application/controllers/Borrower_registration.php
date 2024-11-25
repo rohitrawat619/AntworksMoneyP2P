@@ -215,14 +215,24 @@ class Borrower_registration extends CI_Controller{
     }
 
     public function sendOTP()
-    {
+    {		
+	
         $this->load->database();
+		 $mobile = sanitize_input_data($_POST['mobile']);
+		// echo $mobile;
+		$ip_address = $_SERVER['REMOTE_ADDR'];
+		$sourceOfSms =  $_POST['source']; 
+		if($sourceOfSms==""){
+			http_response_code(500);
+			return false;
+		}
         if(!empty($_POST['mobile'])){
 
-            $sql = "SELECT mobile FROM p2p_lender_list WHERE mobile = '".$_POST['mobile']."'
+            $sql = "SELECT mobile FROM p2p_lender_list WHERE mobile = ".$mobile."
                     UNION
-                    SELECT mobile FROM p2p_borrowers_list WHERE mobile = '".$_POST['mobile']."'";
+                    SELECT mobile FROM p2p_borrowers_list WHERE mobile = ".$mobile."";
             $this->db->query($sql);
+			//echo $this->db->last_query();
             if($this->db->affected_rows()>0)
             {
                 echo 3; exit; //Already re
@@ -232,7 +242,8 @@ class Borrower_registration extends CI_Controller{
 
 
             $arr=array();
-            $number = $_POST['mobile'];
+            $number = str_replace("'","",sanitize_input_data($_POST['mobile']));
+			//echo $number."--";
             $otp = rand(100000,999999);
 			$otp = '876420';
             $this->db->select('*');
@@ -250,6 +261,8 @@ class Borrower_registration extends CI_Controller{
                 else{
                     $arr["mobile"]=$number;
                     $arr["otp"]=$otp;
+					$arr["source"]= $sourceOfSms.'sendOTP';
+					$arr["ip_address"]= $ip_address;
                     $query = $this->db-> insert('p2p_otp_details_table',$arr);
                 }
 
@@ -257,12 +270,14 @@ class Borrower_registration extends CI_Controller{
             else{
                 $arr["mobile"]=$number;
                 $arr["otp"]=$otp;
+				$arr["source"]= $sourceOfSms.'sendOTP2';
+				$arr["ip_address"]= $ip_address;
                 $query = $this->db-> insert('p2p_otp_details_table',$arr);
             }
 
+				//echo $this->db->last_query(); die();
 
-
-            $msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
+            //$msg = "Your One Time Password (OTP) for Antworks Money Verify Mobile is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKS MONEY";
             $msg = "$otp is your Antworks Account verification code - ANTWORKS";
 //            $msg = "Hi (Test Name lenght 10) Your OTP for registering to Antworks Money Credit Doctor service is $otp DO NOT SHARE THIS WITH ANYBODY - ANTWORKSMONEY.COM";
             $message = rawurlencode($msg);
@@ -271,12 +286,13 @@ class Borrower_registration extends CI_Controller{
             $data = array('username' => $this->username, 'hash' => $this->hash_api, 'numbers' => $number, "sender" => $this->sender, "message" => $message);
 
             // Send the POST request with cURL
-            $ch = curl_init('https://api.textlocal.in/send/');
+         /*  comment on 2024-march-03 dheeraj dutta */
+		 $ch = curl_init('https://api.textlocal.in/send/');
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
-            curl_close($ch);
+            curl_close($ch); 
             // Create session for verifying number
 
             echo 1; exit;
@@ -289,7 +305,7 @@ class Borrower_registration extends CI_Controller{
     }
 
     public function verify_mobile()
-    {
+    {			 http_response_code(401);
         if (!empty($_POST['mobile']) && !empty($_POST['otp'])) {
             $number = $_POST['mobile'];
             $otp = $_POST['otp'];
@@ -308,6 +324,7 @@ class Borrower_registration extends CI_Controller{
                 if($otp == $result->otp)
                 {
                     if ($result->MINUTE <= 10) {
+						 http_response_code(200);
                         $data['response'] = "verify";
                         $this->db->where('otp', $this->input->post('otp'));
                         $this->db->where('mobile', $this->input->post('mobile'));

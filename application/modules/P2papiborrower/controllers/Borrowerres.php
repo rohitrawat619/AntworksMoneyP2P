@@ -10,6 +10,7 @@ class Borrowerres extends REST_Controller
 		$this->load->library('form_validation');
 		$this->load->helper(array('form', 'url'));
 		$this->load->model(array('Borrowermodel', 'Borroweraddmodel'));
+		$this->load->model('Borroweractivitymodel');
 		$this->load->database();
 	}
 
@@ -170,6 +171,286 @@ class Borrowerres extends REST_Controller
 			$this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
 
 		}
+		public function addLoanProposal_post(){
+
+						
+						$_POST = json_decode(file_get_contents('php://input'), true);
+						if ($this->input->post('p2p_product_id') == 2)
+						{
+                            $this->form_validation->set_rules('p2p_product_id', 'Product ID', 'trim|required');
+                            $this->form_validation->set_rules('product_name', 'Product Name', 'trim|required');
+                            $this->form_validation->set_rules('invoice_value', 'Invoice Value', 'trim|required');
+                            $this->form_validation->set_rules('mode_of_purchase', 'Mode of purchase', 'trim|required');
+                            $this->form_validation->set_rules('loan_amount', 'Loan Aamount', 'trim|required');
+                            $this->form_validation->set_rules('tenor_months', 'Tenor Months', 'trim|required');
+                            if ($this->form_validation->run() == TRUE)
+                            {
+                                $response = $this->Borroweraddmodel->add_consumer_loan_details($borrowerId);
+
+                                if ($response)
+                                {
+                                    $msg = array(
+                                        "status" => 1,
+                                        "proposal_id"=>$response,
+                                        "msg" => "Loan Proposal Listed Successfully",
+                                    );
+                                    $this->set_response($msg, REST_Controller::HTTP_OK);
+                                    return;
+                                }
+                                else
+                                {
+                                    $msg = array(
+                                        "status" => 0,
+                                        "msg" => "Something went wrong",
+                                    );
+                                    $this->set_response($msg, REST_Controller::HTTP_OK);
+                                    return;
+                                }
+							}
+                            else
+                            {
+                                $errmsg = array("error_msg" => validation_errors());
+                                $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                                return;
+                            }
+						}
+						else{
+							$this->form_validation->set_rules('borrower_id', 'Borrower ID', 'trim|required');
+                            $this->form_validation->set_rules('p2p_product_id', 'Product ID', 'trim|required');
+                            $this->form_validation->set_rules('loan_amount', 'Loan Amount', 'trim|required');
+                            $this->form_validation->set_rules('tenor_months', 'Tenor Months', 'trim|required');
+                            $this->form_validation->set_rules('loan_description', 'Purpose of Loan', 'trim|required');
+
+                            if ($this->form_validation->run() == TRUE)
+                            {
+
+                                $response = $this->Borroweraddmodel->add_loan_details();
+
+                                if ($response)
+                                {
+                                    $msg = array(
+                                        "status" => 1,
+                                        "proposal_id"=>$response,
+                                        "msg" => "Loan Proposal Listed Successfully.",
+                                    );
+                                    $this->set_response($msg, REST_Controller::HTTP_OK);
+                                    return;
+                                }
+                                else
+                                {
+                                    $msg = array(
+                                        "status" => 0,
+                                        "msg" => "Something went wrong",
+                                    );
+                                    $this->set_response($msg, REST_Controller::HTTP_OK);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                $errmsg = array("error_msg" => validation_errors());
+                                $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                                return;
+                            }
+						}
+
+					
+		}
+
+
+
+		public function viewLoanAgreement_post()
+{
+    $_POST = json_decode(file_get_contents('php://input'), true);
+    $this->form_validation->set_rules('bid_registration_id', 'Bid Registration ID', 'trim|required');
+
+    if ($this->form_validation->run() == true) {
+        $this->load->model('loanaggrement/Loanaggrementmodel');
+        $result = $this->Loanaggrementmodel->loanaGGrement();
+		
+        $loan_amount = $result['APPROVERD_LOAN_AMOUNT'];
+        $loanAmountInWords = $this->Loanaggrementmodel->convert_number_to_words($loan_amount);
+        $loanInterestRate = $result['LOAN_Interest_rate'];
+        $loanTenor = $result['TENORMONTHS'];
+        $loanTime = $loanTenor / 12;
+        $loanIR = $loanInterestRate;
+        $numerator = $loan_amount * pow((1 + $loanIR / (12 * 100)), $loanTime * 12);
+        $denominator = 100 * 12 * (pow((1 + $loanIR / (12 * 100)), $loanTime * 12) - 1) / $loanIR;
+		
+        $emi = ($numerator / $denominator);
+		
+        $table = "";
+        $emiBalance = 0;
+		$emiSn = [];
+		$emiInterest = [];
+		$emiPrincipal = [];
+		$emiBalance = [];
+
+        for ($i = 1; $i <= $loanTenor; $i++) {
+            if ($i == 1) {
+                // Initial month
+                $emiSn[$i] = "Month " . $i;
+                $emiInterest[$i] = ($loan_amount * $loanInterestRate / 1200);
+                $emiPrincipal[$i] = $emi - $emiInterest[$i];
+                $emiBalance[$i] = $loan_amount - $emiPrincipal[$i];
+            } else if ($i < 37) {
+                // Months 2 to 36
+                $emiSn[$i] = "Month " . $i;
+                $emiInterest[$i] = ($emiBalance[$i - 1] * $loanInterestRate / 1200);
+                $emiPrincipal[$i] = $emi - $emiInterest[$i];
+                $emiBalance[$i] = $emiBalance[$i - 1] - $emiPrincipal[$i];
+            } else if ($i >= 37) {
+                break; // Stop calculation for months after 36
+            }
+
+            // Date calculation based on current day
+            $day = date('j');
+            if ($day >= 8) {
+                $date = date('07/F/Y', strtotime('+' . $i . ' month'));
+            } else {
+                $date = ($i == 1) ? date('07/F/Y') : date('07/F/Y', strtotime('+' . ($i - 1) . ' month'));
+            }
+
+            // Constructing table rows
+            $table .= "<tr><td>" . $emiSn[$i] . "</td><td>" . round($emi) . "</td><td>" . $date . "</td><td>" . round($emiInterest[$i]) . "</td><td>" . round($emiPrincipal[$i]) . "</td><td>" . round($emiBalance[$i]) . "</td></tr>";
+        }
+
+        // Prepare data for the loan agreement
+		$data['emi']=$emi;
+        $data['result'] = $result;
+        $data['table'] = $table;
+        $data['loan_amount'] = $loan_amount;
+        $data['loan_amount_inword'] = $loanAmountInWords;
+        $data['html'] = "";
+        $data['portal_name'] = 'www.antworksp2p.com';
+        $data['today'] = date("d-m-Y");
+        $data['agreement_date_time_stamp'] = date('d/m/Y H:i:s', time()); // Timestamp
+        $data['agreement_date'] = date("d-m-Y"); // Date
+
+        // Load the view for the loan agreement
+        $agreementResult = $this->load->view('loan-aggrement-borrower', $data, true);
+        $msg = array(
+            'status' => 1,
+            'agreement' => $agreementResult,
+        );
+        $msg = array("msg" => $msg);
+        $this->set_response($msg, REST_Controller::HTTP_OK);
+        return;
+    } else {
+        // Validation errors handling
+        $errMsg = array("error_msg" => validation_errors());
+        $this->set_response($errMsg, REST_Controller::HTTP_OK);
+        return;
+    }
+
+    // Return unauthorized status if validation fails
+    $this->set_response("Unauthorized", REST_Controller::HTTP_UNAUTHORIZED);
+}
+
+
+
+		public function myloanStatement_post()
+    {
+        // $headers = $this->input->request_headers();
+        // if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization']))
+        // {
+            // $decodedToken = AUTHORIZATION::validateToken($headers['Authorization']);
+            // if ($decodedToken != false)
+            // {
+            //     $borrowerId = $decodedToken->borrower_id;
+            //     if($borrowerId)
+            //     {
+				$borrowerId=14;
+                    // $_POST = json_decode(file_get_contents('php://input'), true);
+                    // $this->form_validation->set_rules('loan_no', 'Loan NO', 'trim|required');
+                    // if ($this->form_validation->run() == TRUE)
+                    // {
+						
+                        $response = $this->Borroweractivitymodel->get_loanStatement($borrowerId);
+
+                        if($response)
+                        {
+                            $this->set_response($response, REST_Controller::HTTP_OK);
+                            return;
+                        }
+                        else{
+                            $msg = array(
+                                'status'=>0,
+                                'MyloanStatement'=>'Not found'
+                            );
+                            $this->set_response($msg, REST_Controller::HTTP_OK);
+                            return;
+                        }
+                    // }
+                    // else{
+                    //     $errmsg = array("error_msg" => validation_errors());
+                    //     $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                    //     return;
+                    // }
+
+
+            //     }
+            // }
+        // }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+    }
+
+
+
+		public function emiPayment_post()
+    {
+        // $headers = $this->input->request_headers();
+        // if (array_key_exists('Authorization', $headers) && !empty($headers['Authorization']))
+        // {
+        //     $decodedToken = AUTHORIZATION::validateToken($headers['Authorization']);
+        //     if ($decodedToken != false)
+        //     {
+        //         $borrowerId = $decodedToken->borrower_id;
+        //         if($borrowerId)
+        //         {
+			// $this->load->model('Borroweractivitymodel');
+			
+			$borrowerId=14;
+                    $_POST = json_decode(file_get_contents('php://input'), true);
+                    $this->form_validation->set_rules('emi_id', 'EMI ID', 'trim|required');
+                    $this->form_validation->set_rules('bid_registration_id', 'Bid Registration ID', 'trim|required');
+                    if ($this->form_validation->run() == TRUE)
+                    {
+						
+						
+                        $response = $this->Borroweractivitymodel->getEmidetailstopay($borrowerId);
+					
+                        if($response)
+                        {
+							
+                            $msg = array(
+                                'status'=>1,
+                                'myloanDetails'=>$response
+                            );
+                            $this->set_response($msg, REST_Controller::HTTP_OK);
+                            return;
+                        }
+                        else{
+                            $msg = array(
+                                'status'=>0,
+                                'myloanDetails'=>'Not found'
+                            );
+                            $this->set_response($msg, REST_Controller::HTTP_OK);
+                            return;
+                        }
+                    }
+                    else{
+                        $errmsg = array("error_msg" => validation_errors());
+                        $this->set_response($errmsg, REST_Controller::HTTP_OK);
+                        return;
+                    }
+
+
+        //         }
+        //     }
+        // }
+        $this->set_response("Unauthorised", REST_Controller::HTTP_UNAUTHORIZED);
+    }
 
 	 public function genderUpdate_post()
 		{

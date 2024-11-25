@@ -7,6 +7,7 @@ class disbursementModel extends CI_Model
         $this->load->database();
 		//$this->cldb = $this->load->database('new_p2p_sandbox', TRUE);
       $this->cldb = $this->load->database('credit-line', TRUE);
+	  $this->partner_id = $this->session->userdata('partner_id');
     }
 
 
@@ -16,7 +17,7 @@ class disbursementModel extends CI_Model
     $this->cldb->select('COUNT(*) as count');
     $this->cldb->from('p2p_loan_list as a');
     $this->cldb->join('p2p_borrowers_list as b', 'a.borrower_id = b.id', 'LEFT');
-
+		if($this->partner_id!=0){$this->cldb->where('b.vendor_id',$this->partner_id);}
     
     if (!empty($status)) {
         $this->cldb->where_in("a.status", $status);
@@ -37,6 +38,7 @@ class disbursementModel extends CI_Model
     $this->cldb->from('p2p_loan_list as a');
     $this->cldb->join('p2p_borrowers_list as b', 'a.borrower_id = b.id', 'LEFT');
     $this->cldb->where_in("a.disbursement_request", $disburseRequest);
+	if($this->partner_id!=0){$this->cldb->where('b.vendor_id',$this->partner_id);}
     // Check if the values array is not empty
     if (!empty($status)) {
         $this->cldb->where_in("a.status", $status);
@@ -98,9 +100,9 @@ class disbursementModel extends CI_Model
 					
 					$this->cldb->select('
 					a.approved_loan_amount, 
-			"'.ANTWORKS_BANK_AC.'" as Debited_Account_No,
+			CONCAT("`","'.ANTWORKS_BANK_AC.'")  as Debited_Account_No,
 			 c.ifsc_code as IFSC_CODE,
-			 c.account_no as Benificiary_AC_No,
+			 CONCAT("`",c.account_no) as Benificiary_AC_No,
 			 b.name as Benificiary_Name,
 			 "" as Sender_nd_Receiver_Information,
 					"Antworks P2P" as Sender_Name

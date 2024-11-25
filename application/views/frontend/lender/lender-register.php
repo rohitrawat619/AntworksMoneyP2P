@@ -77,6 +77,7 @@
                                         <button class="btn btn-primary" name="resend_otp" id="resend_otp" onclick="sendOtp()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                                         <span class="validation error-validation" id="error_resend_otp"></span>
                                     </div>
+									<div class="countdown"></div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-6" id="verify_otp_main" style="display: none">
@@ -387,6 +388,7 @@
                                 <input type="hidden" name="max_tenor" value="<?php echo $this->input->post('max_tenor') ?>">
                                 <input type="hidden" name="max_interest_rate" value="<?php echo $this->input->post('max_interest_rate') ?>">
                                 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>">
+								<input type="hidden" name="source" id="source" value="lenderRegistration">
                                 <button type="submit" class="btn btn-submit">Submit</button>
                             </div>
                         </fieldset>

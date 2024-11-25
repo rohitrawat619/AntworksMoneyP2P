@@ -83,7 +83,7 @@
 			<?php if($this->uri->segment(1) == 'personal-loan'){?>
 			<p class="text-center">Registered Address: UL03, EF3 Mall, Sector-20A, Faridabad, Haryana 121007, India</p>
 			<?php } ?>
-			<p>Copyrights © Antworks P2P Financing 2019-<?= date('Y') + 1; ?> All Rights Reserved.</p>
+			<p>Copyrights © Antworks P2P Financing 2019-<?= date('Y'); ?> All Rights Reserved.</p>
 		</div>
 		<!-- /.copyright pull-left -->
 		<div class="social pull-right">

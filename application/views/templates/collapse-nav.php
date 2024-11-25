@@ -25,7 +25,8 @@ Mathura Road, Faridabad,121001, Haryana</p>
 					<i class="fa fa-phone"></i>
 				</div><!-- /.icon-box -->
 				<div class="text-box">
-					<p>8882750000</p>
+					<p>0124- 6526008</p>
+
 				</div><!-- /.text-box -->
 			</li>
 			<li>

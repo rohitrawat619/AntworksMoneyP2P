@@ -10,6 +10,9 @@ else
 }
  ?>
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
  
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -22,7 +25,12 @@ else
 
 <script src="<?=base_url('assets-p2padmin\dist\js/xlsx.full.min.js')?>"></script>
 
-<div class="row">
+
+<section class="content">
+<div class="box">
+<div class="box-body">
+
+    <div class="row">
 <div class="col-md-12">
 <div class="box-body table-responsive no-padding">
     <h2 style="text-align:center;">Investment List</h2>
@@ -47,11 +55,17 @@ else
 
     <div class="table-responsive">
         
-    <div class="table-responsive">
-        <div class="filter-container" style="margin: 30px auto -30px auto; width: 300px; position: relative; z-index: 9;">
-           <center><label for="date-filter">Date:</label>
-            <input type="date" id="dateFilter"></center>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="row">
+        <div class="col-md-6">
+            <b>To:</b> <input type="text" id="min" name="min" class="form-control">
         </div>
+        <div class="col-md-6">
+            <b>From:</b> <input type="text" id="max" name="max" class="form-control">
+        </div>
+        </div>
+    </div>
     <table id="investlist" class="table table-hover" style="margin-top: 40px;">
         <thead>
         <tr>
@@ -59,8 +73,8 @@ else
             <th>S.no.</th>
             <th>Created Date</th>
             <th>Lender Id</th>
-            <th>Investment No</th>
             <th>Lender Name</th>
+            <th>Investment No</th>
             <th>Mobile</th>
             <th>Amount</th>
             <th>Basic Rate</th>
@@ -86,10 +100,10 @@ else
         
          
             <td ><?php echo $i; ?></td>
-            <td ><?php echo $row1['created_date']; ?></td>
+            <td ><?php echo date('Y-m-d', strtotime($row1['created_date'])); ?></td>
             <td><?php echo $row1['lender_id']; ?></td>
-            <td><?php echo $row1['investment_No']; ?></td>
             <td><?php echo $row1['name']; ?></td>
+            <td><?php echo $row1['investment_No']; ?></td>
             <td><?php echo $row1['mobile']; ?></td>
             <td>₹<?php echo $row1['amount']; ?></td>
             <td><?php echo $row1['basic_rate']; ?></td>
@@ -126,9 +140,15 @@ else
   </div>
 </div>
 
+
+</div>
+</div>
+</section>
+
+
 <script>
 $(document).ready(function() {
-    $('#investlist').DataTable();
+  //  $('#investlist').DataTable();
 
  
     $('#downloadExcelBtn').on('click', function() {
@@ -173,5 +193,58 @@ $(document).ready(function() {
         }
     });
 });
+
+
+// $(document).ready(function() {
+       // $('#investlist').DataTable();
+     var table = $('#investlist').DataTable({
+           initComplete: function() {
+                var api = this.api();
+                $('#min, #max').on('change', function() {
+                    api.draw();
+                });
+            },
+           
+        });
+
+    
+        $('#min').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function() {
+                table.draw();
+            },
+        });
+        $('#max').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function() {
+                table.draw();
+            },
+        });
+
+      
+       
+       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var date = data[1]; 
+
+            if ((min === "" && max === "") ||
+                (min === "" && date <= max) ||
+                (min <= date && max === "") ||
+                (min <= date && date <= max)
+            ) {
+                return true;
+            }
+
+            return false;
+        });
+
+    
+
 
 </script>

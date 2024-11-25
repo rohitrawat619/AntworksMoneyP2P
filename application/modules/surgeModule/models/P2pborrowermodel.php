@@ -7,7 +7,8 @@ class P2pborrowermodel extends CI_Model
         parent::__construct();
 	//	$this->money=$this->load->database('money', true);
         $this->cldb = $this->load->database('credit-line', TRUE);
-        
+        $this->partner_id = $this->session->userdata('partner_id');
+		//  echo $this->partner_id;
     }
 
     public function getBorrowersteps($borrower_id)
@@ -120,7 +121,10 @@ class P2pborrowermodel extends CI_Model
 
     public function get_count_borrowers()
 {
-    return $this->cldb->count_all('p2p_borrowers_list');
+			$this->cldb->from('p2p_borrowers_list');
+			$this->cldb->where('vendor_id',$this->partner_id);
+		$result = $this->cldb->count_all_results();
+		return result;
 
 }
 
@@ -140,6 +144,7 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
         $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         // echo $this->cldb->last_query();die();
@@ -166,7 +171,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where_in('BS.step_1', array('2', '3'));
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}       
+	   $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('bl.id', 'desc');
         $query = $this->cldb->get();
         
@@ -193,7 +199,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_2', 3);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	  $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -219,7 +226,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_3', 2);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	   $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -245,7 +253,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_4', 2);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+			if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	  $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -271,7 +280,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_1', 2);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	   $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -297,7 +307,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_6', 2);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	   $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -323,7 +334,8 @@ class P2pborrowermodel extends CI_Model
         $this->cldb->where('BS.step_7', 2);
         $this->cldb->from('p2p_borrowers_list AS BL');
         $this->cldb->join('p2p_borrower_steps AS BS', 'ON BS.borrower_id = BL.id', 'left');
-        $this->cldb->limit($pageLimit, $setLimit);
+		if($this->partner_id!=0){$this->cldb->where('BL.vendor_id',$this->partner_id);}  
+	   $this->cldb->limit($pageLimit, $setLimit);
         $this->cldb->order_by('id', 'desc');
         $query = $this->cldb->get();
         if ($this->cldb->affected_rows() > 0) {
@@ -550,7 +562,7 @@ class P2pborrowermodel extends CI_Model
         }
     }
 
- /*    public function getExperian_details($borrower_id)
+     public function getExperian_details($borrower_id)
     {
         $this->cldb->select('experian_score, experian_response');
         $this->cldb->from('ant_borrower_rating');
@@ -562,7 +574,7 @@ class P2pborrowermodel extends CI_Model
         } else {
             return false;
         }
-    } */
+    } 
 	
 	/*********dated: 2024-jan-17********
     public function getExperian_details($mobile)

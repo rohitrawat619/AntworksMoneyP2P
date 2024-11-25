@@ -15,7 +15,7 @@
 		?>
 		
 		<form class="form form-material" 
-			  action="<?php echo base_url(); ?>surgeModule/surge/<?php echo $path; ?>/" method="POST"  enctype="multipart/form-data" > 
+			  action="<?php echo base_url(); ?>surgeModule/surge/<?php echo $path; ?>/" method="POST"  onsubmit="return validateMobileNumber() && validateEmail()" enctype="multipart/form-data" > 
 			<div class="col-md-12" >
 				<h2>Add Partners</h2>
 			
@@ -27,46 +27,46 @@
 
     <div class="col-md-6 form-group">
         <label for="Company_Name">Company Name:</label><br>
-        <input  class="form-control" class="form-control"type="text" required value="<?php echo $lists['Company_Name']; ?>"  id="Company_Name" name="Company_Name" placeholder="Enter Company Name">
+        <input  class="form-control" class="form-control"type="text" onkeypress="allowNonNumericInput(event);" required value="<?php echo $lists['Company_Name']; ?>"  id="Company_Name" name="Company_Name" placeholder="Enter Company Name">
 		<br><br>
     </div>
 
     <div class="col-md-6 form-group">
         <label for="Address">Address:</label><br>
-        <textarea  class="form-control" class="form-control"type="text" id="Address" name="Address" placeholder="Enter Address"><?php echo $lists['Address']; ?></textarea><br><br>
+        <textarea  class="form-control" class="form-control"type="text" required id="Address" name="Address" placeholder="Enter Address"><?php echo $lists['Address']; ?></textarea><br><br>
     </div>
 
     <div class="col-md-3 form-group">
         <label for="Phone">Phone:</label><br>
-        <input  class="form-control"type="text" id="Phone" required value="<?php echo $lists['Phone']; ?>" name="Phone" placeholder="Enter Phone"><br><br>
+        <input  class="form-control"type="text" id="phone" onkeypress="allowNumericInput(event);" required value="<?php echo $lists['Phone']; ?>" name="Phone" placeholder="Enter Phone"><br><br>
     </div>
 
     <div class="col-md-3 form-group">
         <label for="Email">Email:</label><br>
-        <input  class="form-control"type="text" id="Email" required value="<?php echo $lists['Email']; ?>" name="Email" placeholder="Enter Email"><br><br>
+        <input  class="form-control"type="text" id="email" required value="<?php echo $lists['Email']; ?>" name="Email" placeholder="Enter Email"><br><br>
     </div>
 
-    <div class="col-md-6 form-group">
+    <div class="col-md-6 form-group hideContent">
         <label for="key">Key:</label><br>
         <input  class="form-control"type="text" value="<?php echo $lists['key']; ?>" id="key" name="key" placeholder="Enter Key"><br><br>
     </div>
 
-    <div class="col-md-3 form-group">
+    <div class="col-md-3 form-group hideContent">
         <label for="level">Level:</label><br>
         <input  class="form-control"type="text" value="<?php echo $lists['level']; ?>" id="level" name="level" placeholder="Enter Level"><br><br>
     </div>
 
-    <div class="col-md-3 form-group">
+    <div class="col-md-3 form-group hideContent ">
         <label for="ignore_limits">Ignore Limits:</label><br>
         <input  class="form-control"type="text" value="<?php echo $lists['ignore_limits']; ?>" id="ignore_limits" name="ignore_limits" placeholder="Enter Ignore Limits"><br><br>
     </div>
 
-    <div class="col-md-3 form-group">
+    <div class="col-md-3 form-group hideContent">
         <label for="is_private_key">Is Private Key:</label><br>
         <input  class="form-control"type="text" value="<?php echo $lists['is_private_key']; ?>" id="is_private_key" name="is_private_key" placeholder="Enter Private Key"><br><br>
     </div>
 
-    <div class="col-md-3 form-group">
+    <div class="col-md-3 form-group hideContent ">
         <label for="ip_addresses">IP Addresses:</label><br>
         <input  class="form-control"type="text" id="ip_addresses" value="<?php echo $lists['ip_addresses']; ?>" name="ip_addresses" placeholder="Enter IP Addresses"><br><br>
     </div>
@@ -81,19 +81,18 @@
 		
 		<div class="col-md-3 form-group">
         <label for="color">Header Color: </label><br>
-        <input  class="form-control"type="text" required id="color" style="background-color:<?php echo $lists['color']; ?>;" value="<?php echo $lists['color']; ?>" name="color" placeholder="Color"><br><br>
+        <input  class="form-control"type="color" required id="color" style="background-color:<?php echo $lists['color']; ?>;" value="<?php echo $lists['color']; ?>" name="color" placeholder="Color"><br><br>
     </div>
 	
 	<div class="col-md-3 form-group">
         <label for="background_color">Button Color:</label><br>
-        <input  class="form-control"type="text" required id="background_color" style="background-color:<?php echo $lists['background_color']; ?>;" value="<?php echo $lists['background_color']; ?>" name="background_color" placeholder="Background Color"><br><br>
+        <input  class="form-control"type="color" required id="background_color" style="background-color:<?php echo $lists['background_color']; ?>;" value="<?php echo $lists['background_color']; ?>" name="background_color" placeholder="Background Color"><br><br>
     </div>
 	
 	<div class="col-md-3 form-group">
-        <label for="font_family">Font Family:</label><br>
-        <input  class="form-control"type="text" required id="font_family" 
-				style="font-family:<?php echo $lists['font_family']; ?>;"
-		value="<?php echo $lists['font_family']; ?>" name="font_family" placeholder="Font Family"><br><br>
+        <label for="font_family" id="previewFontFamily" >Font Family:</label><br>
+		<select id="fontFamilyDropdown"  name="font_family" >
+		</select>
     </div>
 	
 		
@@ -103,7 +102,7 @@
 					<div class="col-md-4 form-group"> 
 					<?php if($role=="10"){ //10:super admin ?>
         <label for="partner_type">Partners Type:</label><br>
-        <select  class="form-control"type="text" required id="partner_type"  name="partner_type" >
+        <select  class="form-control"type="text" required id="partner_type" onchange="onPartnerTypeChange(this.value)"  name="partner_type" >
 				<option>Select Partner Type</option>
 				<option  value="borrower" <?php echo (($lists['partner_type'] == "borrower") ? 'selected' : ''); ?>>Borrower</option>
 				<option  value="lender" <?php echo (($lists['partner_type'] == "lender") ? 'selected' : ''); ?>>Lender</option>
@@ -111,7 +110,7 @@
 		</select>		<?php } ?>
 						</div>			
 	
-		<div class="col-md-4 form-group">
+		<div class="col-md-4 form-group" id="disbursmentMethodDiv">
         <label for="lender_product_name">Disbursment Method:</label><br>
         <select  class="form-control"type="text" required id="disbursment_method"  name="disbursment_method" >
 				<option>Select Disbursment Method</option>
@@ -254,4 +253,111 @@
     }
 </script>
 
+<script>
+function onPartnerTypeChange(value){
+	 // alert(value);
+	if(value=="lender" || value==""){
+	$("#disbursmentMethodDiv").hide();
+	}else{
+	$("#disbursmentMethodDiv").show();
+	}
+}
+$(document).ready(function() {
+	onPartnerTypeChange("<?php echo $lists['partner_type']; ?>");
 
+
+});
+</script>
+
+<script>
+// List of font families you want to include in the dropdown
+const fontFamilies = [
+'Select Font Family,""',
+    'Arial, sans-serif',
+    'Times New Roman, serif',
+    'Courier New, monospace',
+    'Verdana, sans-serif',
+    // Add more font families as needed
+];
+
+// Get the dropdown element
+const dropdown = document.getElementById('fontFamilyDropdown');
+
+// Populate the dropdown with font family options
+fontFamilies.forEach(fontFamily => {
+    const option = document.createElement('option');
+    option.value = fontFamily;
+    option.text = fontFamily.split(',')[0]; // Display only the first font in the list
+    dropdown.add(option);
+	
+});
+// Set a default font to be pre-selected (e.g., 'Arial, sans-serif')
+const defaultFont = "<?php echo $lists['font_family']; ?>";
+dropdown.value = defaultFont;
+
+// Function to apply selected font family to a sample text
+function applyFontFamily() {
+    const selectedFont = dropdown.value;
+    document.getElementById('previewFontFamily').style.fontFamily = selectedFont;
+}
+
+// Add an event listener to update the sample text when the selection changes
+dropdown.addEventListener('change', applyFontFamily);
+</script>
+
+
+
+
+<script>
+ function allowNumericInput(event) {
+            const inputChar = String.fromCharCode(event.keyCode);
+			//alert(inputChar);
+            // Allow only numeric input (0-9) and some control keys
+            if (!/^\d$/.test(inputChar) && ![8, 9, 13, 27, 37, 39].includes(event.keyCode)) {
+                event.preventDefault();
+            }
+        }
+		
+		 function allowNonNumericInput(event) {
+            const inputChar = String.fromCharCode(event.keyCode);
+
+            // Allow all characters except numeric values and some control keys
+            if (!/^[^0-9]$/.test(inputChar) && ![8, 9, 13, 27, 37, 39].includes(event.keyCode)) {
+                event.preventDefault();
+            }
+			
+			
+        }
+
+
+function validateEmail() {
+    var email = document.getElementById("email").value;
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (regex.test(email)) {
+        return true;
+    } else {
+        alert("Invalid Email Address"); 
+		return false;
+    }
+}
+
+function validateMobileNumber() {
+    var mobileNumber = document.getElementById("phone").value;
+    var regex = /^[0-9]{10}$/; // 
+
+    if (regex.test(mobileNumber)) { 
+		return true;// alert("Valid Mobile Number");
+    } else {
+        alert("Invalid Mobile Number");
+		return false;
+    }
+}
+</script>
+
+
+<style>
+.hideContent{
+	display:none
+}
+</style>

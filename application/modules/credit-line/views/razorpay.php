@@ -35,12 +35,12 @@ $lender_id = $borrower_details['borrower_id'];
  function pay_now(){
         
                 var options = {
-            "key": "rzp_test_YL7LZ4LtCobrH7",
+            "key": "<?=$api_key?>",
             "amount": "<?=($amount*100) ?>",
             "currency": "INR",
-            "name": "Antworks Capital LLP",
-            "description": "Payment Description",
-            "image": "https://www.antworksmoney.com/assets/img/logo128.png",
+            "name": "Antworks P2P Financing",
+            "description": "Regitration Fees",
+            "image": "<?php echo base_url(); ?>assets/img/p2p-logo.png",
             
             "handler": function(response) {
                 if (response.razorpay_payment_id != '') {
@@ -75,7 +75,9 @@ $lender_id = $borrower_details['borrower_id'];
                     var rzp1 = new Razorpay(options);
                     rzp1.open();
                }
-        
+               $(document).ready(function() {
+                 pay_now();
+                });        
 
 </script>
 
@@ -89,7 +91,7 @@ $lender_id = $borrower_details['borrower_id'];
                </span>
             </div>        
 
-            <form>
+<form>
     <input type="button" class="razorpay-payment-button" name="btn" id="btn" value="Pay Now" onclick="pay_now()">
 </form>
 

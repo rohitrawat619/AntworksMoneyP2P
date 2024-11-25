@@ -83,6 +83,55 @@ if(!function_exists('getNotificationHtml'))
 		echo '</div>';
 	}
 }
+if(!function_exists('create_lender_id'))
+{
+   function create_lender_id()
+    {
+		$ci = & get_instance();
+		$ci->load->database();
+        $ci->db->select("lender_id");
+        $ci->db->from('p2p_lender_list');
+        $ci->db->order_by('lender_id', 'DESC');
+        $ci->db->limit(1);
+        $query = $ci->db->get();
+        $row = (array)$query->row();
+        if($ci->db->affected_rows()>0)
+        {
+            $lid = $row['lender_id'];
+            $lid++;
+           return $lender_id = $lid;
+        }
+        else
+        {
+           return $lender_id = "LR10000001";
+        }
+    }
+}
+if(!function_exists('create_borrower_id'))
+{
+	 function create_borrower_id()
+		{
+			$ci = & get_instance();
+		    $ci->load->database();
+			
+			$ci->db->select("id");
+			$ci->db->order_by('id', 'DESC');
+			$ci->db->limit(1);
+			$query = $ci->db->get('p2p_borrowers_list');
+			$row = (array)$query->row();
+			if($ci->db->affected_rows()>0)
+			{
+				$borrwer_last_register_id = $row['id'];
+				$bid = 10000000 + $borrwer_last_register_id + 1;
+				return $borrower_id  = "BR".$bid;
+
+			}
+			else
+			{
+				return $borrower_id = "BR10000001";
+			}
+		}
+}
 
 if(!function_exists('pr'))
 {
@@ -92,3 +141,19 @@ if(!function_exists('pr'))
         print_r($request); exit;
     }
 }
+#For credit-line 18-01-24
+if(!function_exists('generateAnt_Order')){
+    function generateAnt_Order($data){
+        $ci = & get_instance();
+        $last_transactionNo = $ci->db->select('transaction_no')->order_by('id', 'desc')->limit(1)->get_where('p2p_order_list')->row()->transaction_no;
+        $last_6_digit = substr($last_transactionNo, -6);
+        $last_6_digit = str_pad($last_6_digit + 1, 6, 0, STR_PAD_LEFT);
+        $txn = 'ANT'. date('ymd'). $last_6_digit;
+        $data['transaction_no'] = $txn;
+        $data['status'] = $data['status'] ?? 'initialize';
+        $data['ip_address'] = $ci->input->ip_address();
+        $ci->db->insert('p2p_order_list', $data);
+        return $txn;
+    }
+}
+

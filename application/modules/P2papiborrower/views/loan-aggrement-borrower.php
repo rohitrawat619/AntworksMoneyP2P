@@ -411,7 +411,7 @@
                 </li>
             </ul>
             <div class='table-responsive'>
-                <table class='table table-bordered'>
+                <table class='table table-bordered' border="1">
                     <tr>
                         <th>Installment Number</th>
                         <th>Monthly Instalment Amount</th>

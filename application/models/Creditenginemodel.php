@@ -59,9 +59,23 @@ class Creditenginemodel extends CI_Model{
             if($this->db->affected_rows()>0)
             {
             $result = (array)$query->row();
-//            echo "<pre>";
-//            print_r($result); exit;
-			$file_content = file_get_contents(FCPATH.'/'.$result['experian_response_file']);
+				
+				
+			//dated: 2024-jan-31	$file_content = file_get_contents(FCPATH.'/'.$result['experian_response_file']);
+			/********start*dated:2024-jan-31***************/
+				$str = $result['experian_response_file'];
+				$pattern = "/public_html/i";
+				$patternStatus = preg_match($pattern, $str);
+
+				if($patternStatus){
+					$newPath = $result['experian_response_file'];
+				}else{
+					
+					$newPath = FCPATH.'/'.$result['experian_response_file'];
+				}
+			$file_content = file_get_contents($newPath);
+			/**********end *****************/
+			
             if($result['flag'] == 1)
 			{
 				$xmL1 = str_replace('<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><ns2:processResponse xmlns:ns2="urn:cbv2"><ns2:out>', '', $file_content);

@@ -15,6 +15,9 @@ else
 <?php
 ?>
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -29,6 +32,11 @@ else
 
 <script src="<?=base_url('assets-p2padmin\dist\js/xlsx.full.min.js')?>"></script>
 
+
+<section class="content">
+<div class="box">
+<div class="box-body">
+
 <div class="row">
 <div class="col-md-12">
 <div class="box-body table-responsive no-padding">
@@ -41,11 +49,17 @@ else
     </div>
 
     <div class="table-responsive">
-    <div class="table-responsive">
-        <div class="filter-container" style="margin: 30px auto -30px auto; width: 300px; position: relative; z-index: 9;">
-           <center><label for="date-filter">Date:</label>
-            <input type="date" id="dateFilter"></center>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="row">
+        <div class="col-md-6">
+            <b>To:</b> <input type="text" id="min" name="min" class="form-control">
         </div>
+        <div class="col-md-6">
+            <b>From:</b> <input type="text" id="max" name="max" class="form-control">
+        </div>
+        </div>
+    </div>
     <table id="investlist" class="table table-hover" style="margin-top: 40px;">
         <thead>
         <tr>
@@ -53,6 +67,8 @@ else
             <th>S.no.</th>
             <th>Created Date</th>
             <th>Lender Id</th>
+            <th>Lender Name</th>
+            <th>Account Number</th>
             <th>Investment No</th>
             <th>Mobile</th>
             <th>Amount</th>
@@ -77,8 +93,10 @@ else
        
         <td><input type="checkbox" name="checkbox[]" value="<?php echo $row1['reinvestment_id']; ?>" /></td>
             <td><?php echo $i; ?></td>
-            <td><?php echo $row1['created_date']; ?></td>
+            <td><?php echo date('Y-m-d', strtotime($row1['created_date'])); ?></td>
             <td><?php echo $row1['lender_id']; ?></td>
+            <td><?php echo $row1['name']; ?></td>
+            <td><?php echo $row1['account_no']; ?></td>
             <td><?php echo $row1['investment_No']; ?></td>
             <td><?php echo $row1['mobile']; ?></td>
             <td>₹<?php echo $row1['amount']; ?></td>
@@ -117,6 +135,12 @@ else
     </div>
   </div>
 </div>
+
+
+</div>
+</div>
+</section>
+
 
 <script>
 $(document).ready(function() {
@@ -208,22 +232,25 @@ $(document).ready(function() {
 
     document.getElementById("gbfileBtn").addEventListener("click", function() {
         if (!buttonsGenerated) {
-            var manualRedemptionBtn = document.createElement("button");
+
+          /*  var manualRedemptionBtn = document.createElement("a");
+          //  var manualRedemptionBtn = document.createElement("button");
             manualRedemptionBtn.textContent = "Manual Redemption List";
-            manualRedemptionBtn.classList.add("btn", "btn-success");
-            manualRedemptionBtn.addEventListener("click", function() {
+            manualRedemptionBtn.href = "Surgeadmin/export_redemption/";
+            manualRedemptionBtn.classList.add("btn", "btn-success"); 
+            manualRedemptionBtn.addEventListener("click", function(event) {
                 exportDataToExcel();
-            });
+            }); 
 
             var cmsRedemptionBtn = document.createElement("button");
             cmsRedemptionBtn.textContent = "CMS Redemption List";
             cmsRedemptionBtn.classList.add("btn", "btn-danger");
             cmsRedemptionBtn.addEventListener("click", function() {
                 alert("CMS Redemption List button clicked!");
-            });
+            });*/
 
-            containerDiv.appendChild(manualRedemptionBtn);
-            containerDiv.appendChild(cmsRedemptionBtn);
+          //  containerDiv.appendChild(manualRedemptionBtn);
+         //   containerDiv.appendChild(cmsRedemptionBtn);
 
             buttonsGenerated = true;
         } else {
@@ -232,55 +259,8 @@ $(document).ready(function() {
         }
     });
 
-    function exportDataToExcel() {
-        var csv = [];
-        var headerRow = [
-            "Amount", "Debit Account No", "IFSC Code",
-            "Beneficiary A/C No", "Beneficiary Name", "Location",
-            "Sender", "Receiver"
-        ];
-        
-        // Add header row
-        csv.push(headerRow.join(","));
+    });
 
-        // Gather data from p2p reinvestment table
-        var p2p_lender_reinvestment = document.getElementById("investlist");
-        var reinvestmentRows = p2p_lender_reinvestment.getElementsByTagName("tr");
-        console.log(reinvestmentRows);
-        gatherTableData(reinvestmentRows, csv);
-      
-        // Gather data from p2p yes transaction table
-        var p2p_yes_transactions = document.getElementById("investlist");
-        var transactionRows = p2p_yes_transactions.getElementsByTagName("tr");
-        gatherTableData(transactionRows, csv);
-
-      
-
-        var csvBlob = new Blob([csv.join("\n")], { type: "text/csv" });
-        var link = document.createElement("a");
-        link.href = window.URL.createObjectURL(csvBlob);
-        link.download = "manual_redemption.csv";
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-      
-    }
-   
-    function gatherTableData(rows, csv) {
-        for (var i = 0; i < rows.length; i++) {
-            var cols = rows[i].querySelectorAll("td");
-            var rowData = [];
-            for (var j = 0; j < cols.length; j++) {
-                rowData.push(cols[j].textContent.trim());
-            }
-            csv.push(rowData.join("p2p_lender_reinvestment","p2p_yes_transactions"));
-
-            
-        }
-    }
-});
 
 
 
@@ -302,10 +282,30 @@ $(document).ready(function() {
                   url: "<?php echo base_url('Surgeadmin/update_redemption_status'); ?>",
                   method: "POST",
                   data: {
-                      reinvestment_id: selectedIDs
+                      reinvestment_id: selectedIDs,
+                     
                   },
                   success: function (response) {
+                    if(response!=""){
+                        var containerDiv = document.querySelector(".btn-container");
+          
+                        var manualRedemptionBtn = document.createElement("a");
+          //  var manualRedemptionBtn = document.createElement("button");
+            manualRedemptionBtn.textContent = "Manual Redemption List";
+            manualRedemptionBtn.href = "Surgeadmin/export_redemption/?q="+response;
+            manualRedemptionBtn.setAttribute('target', '_blank');
+            manualRedemptionBtn.classList.add("btn", "btn-primary");
+            containerDiv.appendChild(manualRedemptionBtn);
 
+            var cmsRedemptionBtn = document.createElement("a");
+            cmsRedemptionBtn.textContent = "Cms Redemption List";
+            cmsRedemptionBtn.href = "Surgeadmin/export_cms_redemption/?q="+response;
+            cmsRedemptionBtn.setAttribute('target', '_blank');
+            cmsRedemptionBtn.classList.add("btn", "btn-info");
+            containerDiv.appendChild(cmsRedemptionBtn);
+
+                    }
+                              //  alert(response); 
                       selectedRows.closest("tr").remove();
 
                       
@@ -319,6 +319,56 @@ $(document).ready(function() {
           }
       });
 
+
+
+// $(document).ready(function() {
+       // $('#investlist').DataTable();
+     var table = $('#investlist').DataTable({
+           initComplete: function() {
+                var api = this.api();
+                $('#min, #max').on('change', function() {
+                    api.draw();
+                });
+            },
+           
+        });
+
+    
+        $('#min').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function() {
+                table.draw();
+            },
+        });
+        $('#max').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function() {
+                table.draw();
+            },
+        });
+
+      
+       
+       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+      
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var date = data[1]; 
+
+            if ((min === "" && max === "") ||
+                (min === "" && date <= max) ||
+                (min <= date && max === "") ||
+                (min <= date && date <= max)
+            ) {
+                return true;
+            }
+
+            return false;
+        });
 
 </script>
 

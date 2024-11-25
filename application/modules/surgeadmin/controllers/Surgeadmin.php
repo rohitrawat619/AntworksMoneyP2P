@@ -10,6 +10,7 @@ class Surgeadmin extends CI_Controller
 		$this->load->model('Investmodel');
 		$this->load->library('form_validation');
 		$this->load->helper('custom');
+		
 	}
 
 	public function index()
@@ -52,19 +53,19 @@ class Surgeadmin extends CI_Controller
 
 					$this->session->set_userdata('session_data', $session_data);
 					if ($role == 'admin') {
-						redirect(base_url('Surgeadmin/teamdashboard'));
+						redirect(base_url('surgeadmin/teamdashboard'));
 					} elseif ($role == 'partner') {
-						redirect(base_url('Surgeadmin/partnerdashboard'));
+						redirect(base_url('surgeadmin/partnerdashboard'));
 					} else {
-						redirect(base_url('Surgeadmin/userdashboard'));
+						redirect(base_url('surgeadmin/userdashboard'));
 					}
 				} else {
 					$this->session->set_flashdata('error', 'Email or Password is Wrong');
-					redirect(base_url('Surgeadmin/login'));
+					redirect(base_url('surgeadmin/login'));
 				}
 			} else {
 				$this->session->set_flashdata('error', 'Fill all the required fields');
-				redirect(base_url('Surgeadmin/login'));
+				redirect(base_url('surgeadmin/login'));
 			}
 		}
 	}
@@ -102,7 +103,7 @@ class Surgeadmin extends CI_Controller
 			$data = $this->Investmodel->insert_partner();
 			$this->session->set_flashdata('flashmsg', 'Partner registerd successfully </div>');
 
-			redirect(base_url('Surgeadmin/allpartner'));
+			redirect(base_url('surgeadmin/allpartner'));
 		} {
 			$this->register_partner();
 		}
@@ -153,12 +154,12 @@ class Surgeadmin extends CI_Controller
 			if (!$this->Investmodel->isSchemeNameExists($schemeName)) {
 				$data = $this->Investmodel->insert_scheme();
 				$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Scheme registered successfully</div>');
-				redirect(base_url('Surgeadmin/allschemes'));
+				redirect(base_url('surgeadmin/allschemes'));
 				
 			} else {
 				
 				$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Scheme name already exists</div>');
-				redirect(base_url('Surgeadmin/vend_addscheme'));
+				redirect(base_url('surgeadmin/vend_addscheme'));
 			}
 		} else {
 			$this->vend_addscheme();
@@ -198,7 +199,7 @@ class Surgeadmin extends CI_Controller
 			$data = $this->Investmodel->insert_repersentive();
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive registerd successfully </div>');
 
-			redirect(base_url('Surgeadmin/allrepersentative'));
+			redirect(base_url('surgeadmin/allrepersentative'));
 		} {
 			$this->add_representative();
 		}
@@ -251,14 +252,14 @@ class Surgeadmin extends CI_Controller
 
 					$this->session->set_userdata('venloginsession', $session_data);
 
-					redirect(base_url('Surgeadmin/vendordashboard'));
+					redirect(base_url('surgeadmin/vendordashboard'));
 				} else {
 					$this->session->set_flashdata('error', 'Email or Password is Wrong');
-					redirect(base_url('Surgeadmin/vendor_login'));
+					redirect(base_url('surgeadmin/vendor_login'));
 				}
 			} else {
 				$this->session->set_flashdata('error', 'Fill all the required fields');
-				redirect(base_url('Surgeadmin/vendor_login'));
+				redirect(base_url('surgeadmin/vendor_login'));
 			}
 		}
 	}
@@ -415,7 +416,7 @@ public function redemption_pending()
 	       
 		$this->Investmodel->redemptionapproved($id, $st);
 		$this->session->set_flashdata('flashmsg', '<div class="alert alert-warning text-center">Pending for redemption </div>');
-		redirect(base_url() . 'Surgeadmin/redemption_pending/');
+		redirect(base_url() . 'surgeadmin/redemptionlist_request/');
 	}
 
 	
@@ -425,7 +426,7 @@ public function redemption_pending()
 	       
 		$this->Investmodel->disburseapproved($id, $st);
 		$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Disbursment Successfully  </div>');
-		redirect(base_url() . 'Surgeadmin/redeem/');
+		redirect(base_url() . 'surgeadmin/redeem/');
 	}
 
 	/*public function pendingapproved($id, $st)
@@ -433,17 +434,86 @@ public function redemption_pending()
 	       
 		$this->Investmodel->pendingapproved($id, $st);
 		$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Disbursment Is In Pending  </div>');
-		redirect(base_url() . 'Surgeadmin/dipending/');
+		redirect(base_url() . 'surgeadmin/dipending/');
 	}*/
 
 
 	public function update_redemption_status() {  
-			
+		
 		$reinvestment_id = $this->input->post('reinvestment_id');
 		$updatedRows = $this->Investmodel->updateRedemptionStatus($reinvestment_id);
-	   echo json_encode($updatedRows);
+			if(count($updatedRows)==0){
+				$redemption_date =	"aaaa";
+			}else{
+				$redemption_date =	$updatedRows[0]['redemption_date'];
+			}
+	   echo base64_encode($redemption_date); exit;
 	   }
 
+
+	   public function export_redemption()
+	   {
+       $redemption_date = $this->input->get('q');
+	  // echo base64_decode($redemption_date); die();
+	   $r = $this->Investmodel->export_redemption(base64_decode($redemption_date));
+     // echo"<pre>
+// print_r ($r); exit;
+        header("Content-type: text/csv");
+		// header("Content-type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=Manual Redemption" . date("Y-m-d H-i-s") . ".csv");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+		$file = fopen('php://output', 'w');
+        
+		$header = 'Name,City,Amount,Account No,Debited Account No,Ifsc Code' . "\r\n"; 
+		//	echo $header;
+            fwrite($file, $header);  
+
+			$debitedAccountNo = '0004102000040071';
+
+			foreach ($r as $dataFetch) {
+				$row = $dataFetch['name'] . ","  . $dataFetch['city'] . "," . $dataFetch['amount'] . "," . $dataFetch['account_number'] . "," . $debitedAccountNo . "," . $dataFetch['ifsc_code'] . "\r\n";
+				fwrite($file, $row);
+			}
+				//exit;
+				fclose($file);
+			} 
+			
+			
+
+			public function export_cms_redemption()
+
+			{
+                
+				//echo date("Y-m-d_H:i:s"); exit;
+				$redemption_date = $this->input->get('q');
+				$r = $this->Investmodel->export_cms_redemption(base64_decode($redemption_date));
+
+				header("Content-type: text/csv");
+				// header("Content-type: application/octet-stream");
+				header("Content-Disposition: attachment; filename=Cms Redemption" . date("Y-m-d H-i-s") . ".csv");
+				header("Pragma: no-cache");
+				header("Expires: 0");
+		
+				$file = fopen('php://output', 'w');
+				
+				$header = 'Name,Amount,Account No,Client code,Transfer Type,Debited Account No,Ifsc Code,Remark' . "\r\n"; 
+				//	echo $header;
+					fwrite($file, $header);  
+		
+					$debitedAccountNo = '0004102000040071';
+		            $client_code = 'Antworks P2P';
+					$transfer_type = 'NEFT';
+
+					foreach ($r as $dataFetch) {
+						$row = $dataFetch['name'] . "," . $dataFetch['amount'] . "," . $dataFetch['account_number'] . "," . $client_code  . "," . $transfer_type . "," . $debitedAccountNo . "," . $dataFetch['ifsc_code'] . "," . $dataFetch['investment_No'] . "\r\n";
+						fwrite($file, $row);
+					}
+						//exit;
+						fclose($file);
+					} 
+			
 
 	
 	public function decline($id, $st)
@@ -451,7 +521,7 @@ public function redemption_pending()
 	       
 		$this->Investmodel->decline($id, $st);
 		$this->session->set_flashdata('flashmsg', '<div class="alert alert-danger text-center">Declined Successfylly </div>');
-		redirect(base_url() . 'Surgeadmin/redemptionlist/');
+		redirect(base_url() . 'surgeadmin/redemptionlist/');
 	}
 
 	public function statusupdate($id, $status)
@@ -460,7 +530,7 @@ public function redemption_pending()
 		$st = ($status == 0 ? 1 : 0);
 		$this->Investmodel->statusupdate($id, $st);
 		$this->session->set_flashdata('flashmsg', '<div class="alert alert-warning text-center">Status Updated Successfylly </div>');
-		redirect(base_url() . 'Surgeadmin/allschemes/');
+		redirect(base_url() . 'surgeadmin/allschemes/');
 	}
 
 	public function updatescheme()
@@ -494,11 +564,11 @@ public function redemption_pending()
 		if ($result) {
 
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Scheme Updated Successfully </div>');
-			redirect(base_url() . 'Surgeadmin/allschemes/');
+			redirect(base_url() . 'surgeadmin/allschemes/');
 		} else {
 
 			$this->session->set_flashdata('flashmsg', 'Scheme Not Updated Successfylly');
-			redirect(base_url() . 'Surgeadmin/allschemes/');
+			redirect(base_url() . 'surgeadmin/allschemes/');
 		}
 	}
 
@@ -544,19 +614,19 @@ public function redemption_pending()
 		if ($result) {
 			
 			$this->session->set_flashdata('flashmsg', 'Partner updated successfully');
-			redirect(base_url() . 'Surgeadmin/allpartner/');
+			redirect(base_url() . 'surgeadmin/allpartner/');
 		} else {
 			
 			$this->session->set_flashdata('flashmsg', 'Partner not updated successfully');
-			redirect(base_url() . 'Surgeadmin/allpartner/');
+			redirect(base_url() . 'surgeadmin/allpartner/');
 		}
 	}
 	public	function logout()
 	{
 		session_destroy();
-		redirect(base_url('Surgeadmin/login'));
+		redirect(base_url('surgeadmin/login'));
 	}
-
+		/* dated: 1-dec-2023
 	public function deletevender($VID)
 	{
 
@@ -571,7 +641,7 @@ public function redemption_pending()
 			$this->session->set_flashdata('error', 'Partner not deleted successfully');
 		}
 
-		redirect(base_url('Surgeadmin/allpartner'));
+		redirect(base_url('surgeadmin/allpartner'));
 	}
 
 	public function deleterepersent($rid)
@@ -585,9 +655,9 @@ public function redemption_pending()
 			$this->session->set_flashdata('flashmsg', 'Repersantative not deleted successfully');
 		}
 
-		redirect(base_url('Surgeadmin/allrepersentative'));
+		redirect(base_url('surgeadmin/allrepersentative'));
 	}
-
+			
 	public function deletescheme($id)
 	{
 
@@ -600,8 +670,8 @@ public function redemption_pending()
 			$this->session->set_flashdata('flashmsg', 'Scheme not deleted successfully');
 		}
 
-		redirect(base_url('Surgeadmin/allschemes'));
-	}
+		redirect(base_url('surgeadmin/allschemes'));
+	}		*/
 
 	
 
@@ -643,11 +713,75 @@ public function redemption_pending()
 		if ($result) {
 
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive Updated Successfully </div>');
-			redirect(base_url() . 'Surgeadmin/allrepersentative/');
+			redirect(base_url() . 'surgeadmin/allrepersentative/');
 		} else {
 
 			$this->session->set_flashdata('flashmsg', '<div class="alert alert-success text-center">Repersentive Updated Successfully </div>');
-			redirect(base_url() . 'Surgeadmin/allrepersentative/');
+			redirect(base_url() . 'surgeadmin/allrepersentative/');
 		}
+	}
+	public function add_investment_from_admin()
+	{
+		$this->load->model('Investmodel');
+		
+		$data['schemes'] = $this->Investmodel->scheme_get();
+		$data['pageTitle'] = "Add Investment from Admin";
+		$data['pageName'] = "Add Investment from Admin";
+		$this->load->view('templates/teamheader');
+		$this->load->view('add_investment_admin', $data);
+		$this->load->view('templates/footer');
+	}
+	public function action_add_investment_from_admin()
+	{
+	      $this->load->model('Investmodel');
+			$this->form_validation->set_rules('scheme', 'Scheme', 'trim|required');
+			$this->form_validation->set_rules('ant_txn_id', 'Ant_txn_id', 'trim|required');
+			$this->form_validation->set_rules('mobile', 'mobile', 'trim|required');
+			$this->form_validation->set_rules('amount', 'amount', 'trim|required');
+			if ($this->form_validation->run() == TRUE) {
+				$result = $this->Investmodel->get_user_investment();
+				
+				if (empty($result)) {
+					$lender_details = $this->Investmodel->get_lender_details();
+					
+				    $investment_no = $this->Investmodel->create_investment_no();
+					$schemeData = $this->Investmodel->updateschemes($this->input->post('scheme'));
+					$data = array(
+									'investment_No' => $investment_no,
+									'lender_id' => $lender_details['lender_id'],
+									'mobile' => $this->input->post('mobile'),
+									'scheme_id' => $this->input->post('scheme'),
+									'amount' => $this->input->post('amount'),
+									'basic_rate' => $schemeData['Interest_Rate'],
+									'hike_rate' => $schemeData['hike_rate'],
+									'pre_mat_rate' => $schemeData['Pre_Mat_Rate'],
+									'ant_txn_id' => $this->input->post('ant_txn_id'),
+									'source' => 'surge',
+									'add_by' => 'Backend',
+									'created_date' => date('Y-m-d',strtotime($this->input->post('created_date'))),
+								);	
+//pr($data);exit;								
+					$this->cldb->insert('p2p_lender_reinvestment', $data);
+					$succmsg = "Data Add successfully";
+					
+				} else {
+					//$this->db->where('id ', $id);
+					//$result = $this->db->update('p2p_lender_reinvestment', $data);
+					$succmsg = "Data Already Added";
+				}
+				if ($succmsg) {
+					$this->session->set_flashdata('notification', array('error' => 0, 'message' => $succmsg));
+					redirect(base_url() . 'surgeadmin/add_investment_from_admin');
+				} else {
+					$errmsg = "Something went wrong";
+					$this->session->set_flashdata('notification', array('error' => 1, 'message' => $errmsg));
+					redirect(base_url() . 'surgeadmin/add_investment_from_admin');
+				}
+			} else {
+				$errmsg = validation_errors();
+				$this->session->set_flashdata('notification', array('error' => 1, 'message' => $errmsg));
+				redirect(base_url() . 'surgeadmin/add_investment_from_admin');
+			}
+		
 	}
 }

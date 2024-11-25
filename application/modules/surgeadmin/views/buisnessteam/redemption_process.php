@@ -29,7 +29,6 @@ else
 
 <script src="<?=base_url('assets-p2padmin\dist\js/xlsx.full.min.js')?>"></script>
 
-
 <section class="content">
 <div class="box">
 <div class="box-body">
@@ -65,8 +64,8 @@ else
         <th>S.no.</th>
             <th>Created Date</th>
             <th>Lender Id</th>
-            <th>Investment No</th>
             <th>Lender Name</th>
+            <th>Investment No</th>
             <th>Mobile</th>
             <th>Amount</th>
             <th>Basic Rate</th>
@@ -90,10 +89,10 @@ else
         
           
         <td><?php echo $i; ?></td>
-            <td><?php echo $row1['created_date']; ?></td>
+            <td><?php echo date('Y-m-d', strtotime($row1['created_date'])); ?></td>
             <td><?php echo $row1['lender_id']; ?></td>
-            <td><?php echo $row1['investment_No']; ?></td>
             <td><?php echo $row1['name']; ?></td>
+            <td><?php echo $row1['investment_No']; ?></td>
             <td><?php echo $row1['mobile']; ?></td>
             <td>₹<?php echo $row1['amount']; ?></td>
             <td><?php echo $row1['basic_rate']; ?></td>
@@ -123,9 +122,9 @@ else
         else { echo "Sorry There are no Redemption in process list yet!"; } ?>
         </tbody>    
         </table>
-        <div style="margin-left:650px;">
+       <!-- <div style="margin-left:650px;">
         <button id="downloadExcelBtn" class="btn btn-success"><i class="fa fa-download"></i>Manual Disbursment sheet</button>
-        <button id="downloadCSVBtn" class="btn btn-primary"><i class="fa fa-download"></i> Cms Disbursment Sheet</button>
+        <button id="downloadCSVBtn" class="btn btn-primary"><i class="fa fa-download"></i> Cms Disbursment Sheet</button> -->
        </div> 
     </div>
   </div>

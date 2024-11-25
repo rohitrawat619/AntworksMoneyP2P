@@ -26,8 +26,8 @@ class Surge extends CI_Controller
 	
 	
 	public function dashboard(){	
-			echo "Partner: ".$this->partner_id;
-		print_r($this->session->userdata('role'));
+		//	echo "Partner: ".$this->partner_id;
+		//  print_r($this->session->userdata('role'));
 			$data['lists']['partnersData'] = $this->Surgemodel->getPartnersList(100,0,"");
 			$data['lists']['schemeList'] = $this->Surgemodel->getSchemeList(100, 0,"");
 			$data['lists']['dashboardData']['TodayInvestment'] = $this->Surgemodel->getDashboardDataCount("p2p_lender_reinvestment",array("redemption_status"=>0, 'Date(created_date)'=>date("Y-m-d")),"");
@@ -95,7 +95,10 @@ class Surge extends CI_Controller
 		public function add_partner(){
 			 
 			$addPartnerResp = $this->Surgemodel->add_partner();
+			
+			if($addPartnerResp['status']==1){
 			$partners_id = $addPartnerResp['insert_id'];
+			
 			if($partners_id!=""){
 			$uploadImageResp = $this->upload_image($partners_id);
 			$addThemeResp = $this->Surgemodel->add_theme($partners_id,$uploadImageResp['full_path']);
@@ -110,6 +113,10 @@ class Surge extends CI_Controller
 						$this->session->set_flashdata('notification', array('error' => 1, 'message' => $addThemeResp['msg']));
 							redirect(base_url() . 'surgeModule/surge/add_partners_form');
 					}
+			}else{
+							$this->session->set_flashdata('notification', array('error' => 1, 'message' => $addPartnerResp['msg']));
+							redirect(base_url() . 'surgeModule/surge/add_partners_form');
+			}
 			echo json_encode($addPartnerResp);
 		}
 		
@@ -317,7 +324,7 @@ class Surge extends CI_Controller
 		
 					if($updateUserResp['status']==1){
 						$this->session->set_flashdata('notification', array('error' => 0, 'message' => $updateUserResp['msg']));
-							redirect(base_url() . 'surgeModule/surge/add_user_form?id='.$user_id);
+							redirect(base_url() . 'surgeModule/surge/user_list?id='.$user_id);
 					}else{
 						$this->session->set_flashdata('notification', array('error' => 1, 'message' => $updateUserResp['msg']));
 							redirect(base_url() . 'surgeModule/surge/add_user_form?id='.$user_id);

@@ -210,5 +210,45 @@ class Requestmodel extends CI_Model
 			return false;
 		}
 	}
+ # below function use for credit Line 18-01-24 
+ public function verifiedRazorpaypayment_bill()
+	{
+		
+		$this->db->get_where('p2p_order_list', array('payment_id' => $this->input->post('razorpay_payment_id')));
+		if ($this->db->affected_rows() > 0) {
+			return true;
+		}
+		//$keys = $this->db->get_where('ant_bill_recharge_razorpay_keys', array('status' => 1))->row();
+          $result_keys = $this->getRazorpayRepaymentkeys();
+			$keys = (json_decode($result_keys, true));
+			if($keys['razorpay_Testkey']['status'] == 1)
+			{
+				$api_key = $keys['razorpay_Testkey']['key'];
+				$api_secret = $keys['razorpay_Testkey']['secret_key'];
+
+			}
+			if ($keys['razorpay_razorpay_Livekey']['status'] == 1){
+
+				$api_key = $keys['razorpay_razorpay_Livekey']['key'];
+				$api_secret = $keys['razorpay_razorpay_Livekey']['secret_key'];
+
+			}
+			
+		$hasing_value = $this->input->post('razorpay_order_id') . "|" . $this->input->post('razorpay_payment_id');
+		$generated_signature = hash_hmac('SHA256', $hasing_value, $api_secret);
+		//$generated_signature = hash_hmac('SHA256', $hasing_value, 'Lt3R6fR1a9VVCr3BdS1sPxz1');
+	   
+		//$generated_signature1 = "starrax";
+		if ($generated_signature == $this->input->post('razorpay_signature')) {
+		//if ($generated_signature1 == "starrax") {
+			$this->db->where('order_id', $this->input->post('razorpay_order_id'));
+			$this->db->set('payment_id', $this->input->post('razorpay_payment_id'));
+			$this->db->set('status', 'success');
+			$this->db->update('p2p_order_list');
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 ?>

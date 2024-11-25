@@ -11,12 +11,14 @@ $account_status = "";
 	<div class="row">
 		<div class="col-md-2"></div>
 		<div class="col-md-8">
-			<div class="surge-plans">
+		
+		<!--------end of surgeDiv------->
+			<div class="surge-plans" id="surgePlansDiv">
 				<div class="row text-center">
-					<img src="<?php echo $logo_path; ?>" class="surgelogo">
+					<img src="<?php echo $sub_logo_path; ?>" class="surgelogo">
 					<h2>Account Details</h2>
 				</div>
-				<form role="form" action="verifyKYC" method="post" class="f1"  onsubmit="return userFunctionvalidate()">
+				<form role="form" action="verifyKYC" method="post" class="f1"  onsubmit="return verifyKycStatusDiv();">
 					<div class="f1-steps">
 						<div class="f1-progress">
 							<div class="f1-progress-line" data-now-value="99.33333" data-number-of-steps="3" style="width: 99.33333%;"></div>
@@ -35,13 +37,14 @@ $account_status = "";
 					<div>
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
+							 <label for="company_name" >Account Number</label>
 								<input type="text" class="form-control" placeholder="Account No" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['account_number']; ?>" name="account_number" id="account_number" rows="3" autocomplete="off">
 								<span class="validation error-validation" id="error_address1"></span>
 							</div>
 						</div>
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
-
+									 <label for="company_name" >Re enter Account Number</label>
 								<input type="text" class="form-control" placeholder="Confirm Account No" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['account_number']; ?>"  id="account_number_confirm" rows="3" autocomplete="off">
 								<span class="validation error-validation" id="error_account_number"></span>
 							</div>
@@ -49,15 +52,15 @@ $account_status = "";
 						
 						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
-
+								 <label for="ifsc_code" >IFSC Code</label>
 								<input class="form-control" type="text" placeholder="IFSC Code" name="ifsc_code" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['ifsc_code']; ?>" id="ifsc_code" onkeypress="return isNumberKey(event)" >
 								<span class="validation error-validation" id="error_pincode"></span>
 							</div>
 						</div>
 						
-						<div class="col-md-6 col-xs-12">
+						<div class="col-md-6 col-xs-12" style="display:none;">
 							<div class="form-group">
-
+									 <label for="bank_name" >Bank Name</label>
 								<input class="form-control" type="text" placeholder="Bank Name" name="bank_name" <?php echo$account_status; ?> value="<?php echo $lists['sessionData']['bank_name']; ?>" id="bank_name" onkeypress="return isNumberKey(event)" >
 								<span class="validation error-validation" id="error_bank_name"></span>
 							</div>
@@ -79,12 +82,52 @@ $account_status = "";
 				</form>
 				
 			</div>
+					<!--------end of surgeDiv------->
+			<!----------start of loader---------->
+			<div class="">
+		
+		
+			<div class="surge-plans" id="loaderDiv">
+				
+				
+				
+		
+
+					<div>
+						
+						<div class="col-md-12 col-xs-12 text-center">
+							<div class="form-group">
+								<img src="<?php echo "../document/surge/img/hourglass.gif"; ?>" class="surgelogo">
+							</div>
+							
+							<div class="text-center">
+					<h2 style="margin:0;">Please Wait...</h2>
+				</div>
+						</div>
+						
+						
+						
+						
+						
+						
+					</div> 
+				</div>
+					
+			
+		</div>
+				<!---------------endo of loader----------->
 		</div>
 	</div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+function verifyKycStatusDiv(){
+		$("#surgePlansDiv").hide();
+		$("#loaderDiv").show();
+		
+	}
 $(document).ready(function() {
+		$("#loaderDiv").hide();
 	$("#submitBtn").hide();
 	validateAccountNumbers();
     $('#account_number, #account_number_confirm').on('input', function() {
@@ -106,3 +149,15 @@ $(document).ready(function() {
     }
 });
 </script>
+
+<script>
+        function autoCapitalize(inputId) {
+            $('#' + inputId).on('keyup', function() {
+                $(this).val($(this).val().toUpperCase());
+            });
+        }
+        
+       
+        autoCapitalize('ifsc_code');
+		
+    </script>

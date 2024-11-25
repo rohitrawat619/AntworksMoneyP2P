@@ -31,3 +31,32 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/results/
 *.bak
 *.zip
+application/modules/LendSocial/views/credit_line/e_sign_@@.php
+application/modules/LendSocial/views/credit_line/e_sign_@old-2024-june-11.php
+application/modules/LendSocial/views/investmentAmountPreview - Copy.php
+application/modules/LendSocial/views/investmentAmountPreview.php
+application/modules/LendSocial/views/investmentAmountPreview.php
+application/modules/LendSocial/views/investmentAmount_@old2024-june-12.php
+application/modules/LendSocial/views/investmentAmountPreview_@old2024-rr.php
+application/modules/surgeModuleP2P/views_@old_2024-may-21/*
+application/modules/LendSocial/controllers/Borrowwer_bullet - Copy.php
+application/modules/LendSocial/views/credit_line/dashboard_@old_2024-june-13.php
+application/modules/surgeapi/controllers/Investapip2p_@old_2024-june-06.php
+application/modules/surgeapi/controllers/Investapip2p_@old_2024-may-05.php
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024_june_14.php
+application/modules/LendSocial/views/credit_line/e_sign_@old_2024-june-14.php
+application/modules/surgeModuleP2P/models/Surgemodel_2024-august-19.php
+application/modules/surgeModuleP2P/models/LendSocialCommunicationModel_2024-august-19.php
+application/helpers/backup/dc_helper-04-12-23.php
+application/modules/credit-line/models/Borrowerinfomodel_@old2024-june-06.php
+application/modules/credit-line/models/Borrowerinfomodel_@old_2024-june-10.php
+application/modules/LendSocial/controllers/LendSocial__@old_2024-august_22.php
+application/modules/surgeModuleP2P/unused/*
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-9.php
+application/modules/LendSocial/controllers/Borrowwer_bullet_@old_2024-Oct-10.php
+application/modules/LendSocial/models/credit_line_model_@old_2024-Oct-09.php
+application/modules/kycapi/models/backup/Bank_Model - Copy.php
+application/modules/kycapi/models/backup/Bank_Model - Copy.php
+application/modules/kycapi/models/backup/Bank_Model-19-01-24.php
+application/modules/kycapi/models/Kyc_engine_model-06-02-24.php
+application/modules/LendSocial/views/investmentRequestList_@old_2024-Oct-29.php

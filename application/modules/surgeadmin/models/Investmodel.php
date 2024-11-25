@@ -76,8 +76,9 @@ class Investmodel extends CI_Model
 {
 		$this->cldb->select('PLR.created_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.investment_No, PLR.redemption_status');
 		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+		$this->cldb->order_by("created_date", "DESC");
 	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
-	    $this->cldb->where_in('redemption_status' , 1);
+	    $this->cldb->where_in('redemption_status' , array(1, 5));
 		$res = $this->cldb->get();
 
 		
@@ -90,6 +91,7 @@ class Investmodel extends CI_Model
    { 
 		$this->cldb->select('PLR.created_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.investment_No, PLR.redemption_status');
 		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+		$this->cldb->order_by("created_date", "DESC");
 	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
 	    $this->cldb->where_in('redemption_status' , 2);
 		$res = $this->cldb->get();
@@ -105,6 +107,7 @@ class Investmodel extends CI_Model
 {
 		$this->cldb->select('PLR.created_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.investment_No, PLR.redemption_status');
 		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+		$this->cldb->order_by("created_date", "DESC");
 	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
 	    $this->cldb->where_in('redemption_status' , 4);
 		$res = $this->cldb->get();
@@ -117,15 +120,17 @@ class Investmodel extends CI_Model
 	public function dipending_gets()
                                                                                  
 {
-		$this->cldb->select('PLR.created_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.investment_No, PLR.redemption_status');
+		$this->cldb->select('PLR.created_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLBS.account_no, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.investment_No, PLR.redemption_status');
 		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+		$this->cldb->order_by("created_date", "DESC");
 	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
+		$this->cldb->join('p2p_lender_bank_res AS PLBS', 'PLBS.lender_id = PLL.user_id', 'INNER');
 	    $this->cldb->where_in('redemption_status' , 5);
 		$res = $this->cldb->get();
 
 		
 		return $result = $res->result_array();  
-	}
+	} 
 
 
 	public function investment_gets()
@@ -133,6 +138,7 @@ class Investmodel extends CI_Model
 {
 		$this->cldb->select('PLR.created_date, PLR.lender_id, PLL.name, PLL.mobile, PLR.amount, PLR.basic_rate, PLR.pre_mat_rate, PLR.source, PLR.total_current_value, PLR.total_no_of_days, PLR.redemption_date, PLR.pre_mat_rate, PLR.investment_No, PLR.redemption_status');
 		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+		$this->cldb->order_by("created_date", "DESC");
 	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
 	    $this->cldb->where_in('redemption_status' , array(0, 1, 2, 4, 5));
 		$res = $this->cldb->get();
@@ -141,15 +147,48 @@ class Investmodel extends CI_Model
 		return $result = $res->result_array();  
 	}
 
+   public function export_redemption($redemption_date)
+   {
+	$this->cldb->select('PLR.amount, PLR.redemption_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLAI.account_number, PLAI.ifsc_code, PLA.city');
+		$this->cldb->from('p2p_lender_reinvestment AS PLR');
+	    $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
+		$this->cldb->join('p2p_lender_account_info AS PLAI', 'PLAI.lender_id = PLL.user_id', 'INNER');
+	    $this->cldb->join('p2p_lender_address AS PLA', 'PLA.lender_id = PLL.user_id', 'INNER');
+	    $this->cldb->where('redemption_date', $redemption_date);
+		$res = $this->cldb->get();
+		//$query = $this->cldb->get('p2p_lender_reinvestment');
+		return $result = $res->result_array();  
+
+   }
+
+
+   public function export_cms_redemption($redemption_date)
+   {
+   $this->cldb->select('PLR.amount, PLR.redemption_date, PLR.reinvestment_id, PLR.lender_id, PLL.name, PLAI.account_number, PLAI.ifsc_code, PLR.investment_No');
+   $this->cldb->from('p2p_lender_reinvestment AS PLR');
+   $this->cldb->join('p2p_lender_list AS PLL', 'PLL.lender_id = PLR.lender_id', 'INNER');
+   $this->cldb->join('p2p_lender_account_info AS PLAI', 'PLAI.lender_id = PLL.user_id', 'INNER');
+   $this->cldb->where('redemption_date', $redemption_date);
+   $res = $this->cldb->get();
+   return $result = $res->result_array();
+   }
+
 
 	public function updateRedemptionStatus($reinvestment_id) {                                         
-      
+      $date = date('Y-m-d H:i:s');
         $this->cldb->where_in('reinvestment_id', $reinvestment_id);
-        $this->cldb->update('p2p_lender_reinvestment', array('redemption_status' => '2'));
-       
+        $this->cldb->update('p2p_lender_reinvestment', array('redemption_status' => '2', 'redemption_date'=> $date));
+		
+		$this->cldb->where_in('reinvestment_id', $reinvestment_id);
+		$this->cldb->where('redemption_status', 2);
         $query = $this->cldb->get('p2p_lender_reinvestment');
+
+
         return $query->result_array();
     }
+
+
+
 
 
 
@@ -401,5 +440,44 @@ $this->cldb->update('invest_hike_logs', $data);
 		$this->cldb->insert('invest_vendors', $data);
 
 		return true;
+	}
+	public function create_investment_no()
+    {
+        $this->cldb->select("investment_No");
+        $this->cldb->from('p2p_lender_reinvestment');
+        $this->cldb->order_by('investment_No', 'DESC');
+        $this->cldb->where('source', 'surge');
+        $this->cldb->limit(1);
+        $query = $this->cldb->get();
+        $row = (array)$query->row();
+        if($this->cldb->affected_rows()>0)
+        {
+            $lid = $row['investment_No'];
+            $lid++;
+           return $investment_No = $lid;
+        }
+        else
+        {
+           return $investment_No = "INV10000001";
+        }
+    }
+	public function get_user_investment()
+	{
+		$query = $this->cldb->get_where('p2p_lender_reinvestment', array('ant_txn_id' => $this->input->post('ant_txn_id'), 'mobile' => $this->input->post('mobile')));
+			if ($this->cldb->affected_rows() > 0) {
+				return $result = (array)$query->row();
+			}else{
+				return array();
+			}
+	}
+	public function get_lender_details()
+	{
+		$query = $this->cldb->get_where('p2p_lender_list', array('mobile' => $this->input->post('mobile')));
+		
+			if ($this->cldb->affected_rows() > 0) {
+				return $result = (array)$query->row();
+			}else{
+				return array();
+			}
 	}
 }

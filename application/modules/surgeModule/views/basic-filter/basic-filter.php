@@ -16,7 +16,7 @@
 
         <div class="box-body">
             <div class="row">
-                <form method="post" action="<?= base_url('p2padmin/basicfilter/action') ?>"
+                <form method="post" action="<?= base_url('surgeModule/borrower/action') ?>"
                       enctype="multipart/form-data">
                     <div class="col-md-6 form-group">
                         <level>Minimum AGE</level>
@@ -74,7 +74,7 @@
                         <level>CAT LIST</level>
                         <a href="<?= base_url('sample-files/p2p_list_company.csv') ?>">Download Sample CAT List
                             File.</a> &nbsp;
-                        <a href="<?=base_url('p2padmin/basicfilter/company_list')?>" target="_blank">View CAT List ?</a>
+                        <a href="<?=base_url('surgeModule/borrower/company_list')?>" target="_blank">View CAT List ?</a>
                         <input type="file" name="cat_list" class="form-control">
 
                         <?php
@@ -92,7 +92,7 @@
                         <level>Negative Pincode</level>
                         <a href="<?= base_url('sample-files/negative_pincode_list.csv') ?>"> Download Sample File
                             Pincode. </a> &nbsp;
-                        <a href="<?=base_url('p2padmin/basicfilter/negative_pincode_list')?>" target="_blank"> View Pincode </a>
+                        <a href="<?=base_url('surgeModule/borrower/negative_pincode_list')?>" target="_blank"> View Pincode </a>
                         <input type="file" name="negative_pincode" class="form-control">
                     </div>
                     <!--<div class="col-md-6 form-group">

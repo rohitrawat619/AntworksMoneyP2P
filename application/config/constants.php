@@ -93,3 +93,12 @@ defined('PAN_API_URL')      OR define('PAN_API_URL', 'https://svcdemo.digitap.wo
 defined('GENERATE_ESIGN_URL')      OR define('GENERATE_ESIGN_URL', 'https://api.digitap.ai/ent/v1/generate-esign');//PAN_API_URL
 defined('GET_E_SIGN_DOC')      OR define('GET_E_SIGN_DOC', 'https://api.digitap.ai/ent/v1/get-esign-doc');//PAN_API_URL
 defined('E_SIGN_PROCESS')      OR define('E_SIGN_PROCESS', 'https://sdk.digitap.ai/e-sign/templateesignprocess.html?docId=');//PAN_API_URL
+defined('SMS_GATEWAY_USERNAME')      OR define('SMS_GATEWAY_USERNAME', 'shantanu@antworksmoney.com');//
+defined('SMS_GATEWAY_HASH_API')      OR define('SMS_GATEWAY_HASH_API', 'b3a4f30ed009f72aa58fcad1e58ddd49b8b7fd44f5a82bc2b93da9325174d68f');//
+defined('SMS_GATEWAY_SENDER')      OR define('SMS_GATEWAY_SENDER', 'ANTFIN');//
+defined('ANTWORKS_BANK_AC')      OR define('ANTWORKS_BANK_AC', '0004102000040071');// dated: 15-nov-2023 using this for generate bank file in surge module
+
+defined('NACH_EXPIRE_AT')      OR define('NACH_EXPIRE_AT', strtotime('+1 year'));
+defined('NACH_AMOUNT')      OR define('NACH_AMOUNT', '100000');
+defined('RAZORPAY_NACH_KEY')      OR define('RAZORPAY_NACH_KEY', 'rzp_live_PeZTIp1sCphoZd');
+defined('API_EXPIRE_TIME')      OR define('API_EXPIRE_TIME', strtotime('+60 seconds'));// DATED 08/08/2024 using this for nach apis

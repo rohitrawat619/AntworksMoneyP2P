@@ -197,7 +197,7 @@
                                     //										
                                     if ($experian_details['experian_score'] > 300) { ?>
                                         <td>
-                                            <a href="<?php echo base_url() . 'p2padmin/p2pborrower/view_experian_response/' . $list['b_borrower_id']; ?>"> <?php echo $experian_details['experian_score'] ?></a>
+                                            <a href="<?php echo base_url() . 'surgeModule/borrower/view_experian_response/' . $list['b_borrower_id']; ?>"> <?php echo $experian_details['experian_score'] ?></a>
                                         </td>
                                         <?php
                                     } else {
@@ -245,7 +245,7 @@
             <?php if ($steps['step_1'] == 2){ ?>
             <div class="col-md-12">
                 <div class="col-md-12">
-                    <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>"
+                    <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>"
                           enctype="multipart/form-data">
                         <div class="col-md-4 form-group">
                             <input type="file" name="borrower_pan" id="borrower_pan" class="form-control" required>
@@ -266,7 +266,7 @@
                 <?php if ($steps['step_8'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_8">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -277,7 +277,7 @@
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_8">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -292,7 +292,7 @@
                 <?php if ($steps['step_2'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="text" name="remarks" class="form-control" placeholder="Remarks"
                                            required>
@@ -307,7 +307,7 @@
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_2">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -322,7 +322,7 @@
                 <?php if ($steps['step_3'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_3">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -333,7 +333,7 @@
                         </div>
                         <div class="col-md-12">-OR-</div>
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="text" name="remarks" class="form-control" placeholder="Remarks"
                                            required>
@@ -352,7 +352,7 @@
                 <?php if ($steps['step_4'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_4">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -367,7 +367,7 @@
                 <?php if ($steps['step_5'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_5">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">
@@ -382,7 +382,7 @@
                 <?php if ($steps['step_6'] == 2) { ?>
                     <div class="col-md-12">
                         <div class="col-md-12">
-                            <form method="post" action="<?= base_url('p2padmin/p2pborrower/action_update_steps') ?>">
+                            <form method="post" action="<?= base_url('surgeModule/borrower/action_update_steps') ?>">
                                 <div class="col-md-4 form-group">
                                     <input type="hidden" name="step" value="step_6">
                                     <input type="hidden" name="borrower_id" value="<?= $list['borrower_id']; ?>">

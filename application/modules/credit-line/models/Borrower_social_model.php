@@ -6,6 +6,8 @@ class Borrower_social_model extends CI_Model
         parent::__construct();
         $this->load->database();
 		$this->cldb = $this->load->database('credit-line', TRUE);
+        $this->app = $this->load->database('app', TRUE);
+        $this->money = $this->load->database('money', TRUE);
       
     }
 
@@ -21,7 +23,6 @@ class Borrower_social_model extends CI_Model
 		bl.name as borrower_name')
 		->join('p2p_borrowers_list bl', 'bl.id = SL.borrower_id', 'left')
 		->get_where('p2p_borrower_social_loan SL', array('SL.mobile' => $mobile));
-		//echo $this->cldb->last_query();exit;
         if ($this->cldb->affected_rows() > 0) {
             $result = $query->row_array();
             $_SESSION['borrower_id'] = $result['borrower_id'];
@@ -53,15 +54,16 @@ class Borrower_social_model extends CI_Model
         $data = array(
             'borrower_id' => $borrower_id,
             'amount' => $submit_amount,
-			'created_date'=> date('Y-m-d H:i:s'),
+            'created_date' => date('Y-m-d h:i:s')
         ); 
-        $this->db->insert('p2p_lender_list', $data);
-        
-        if ($this->db->affected_rows() > 0) {
+          $this->db->insert('p2p_lender_list', $data);
+            // return $this->db->last_query();
+         if ($this->db->affected_rows() > 0) {
             return array('status' => 1, 'msg' => 'Record inserted successfully');
-        } else {
+        } 
+        else {
             return array('status' => 0, 'msg' => 'Failed to insert record');
-        }
+         }
     }
     
     }
@@ -81,24 +83,29 @@ class Borrower_social_model extends CI_Model
     
     public function borrower_detail_update($borrower_id, $name, $dob, $email, $mobile, $pan, $account, $ifsc)
     {
+        
+        
         $data = array(
             'name' => $this->input->post('name'),
             'dob' => $this->input->post('dob'),
             'email' => $this->input->post('email'),
             'mobile' => $this->input->post('mobile'),
             'pan' => $this->input->post('pan'),
-			'modified_date'=> date('Y-m-d H:i:s')
+            'modified_date' => date('Y-m-d h:i:s')
             
         );
         $this->db->where('borrower_id', $borrower_id);
         $this->db->update('p2p_lender_list', $data);
 
+        $query = $this->db->get_where('p2p_lender_account_info', array('lender_id' => $borrower_id))->row_array();
+        // echo "<pre>";
+        // print_r($query);die();
+        // if($query['lender_id'])
         $this->db->insert('p2p_lender_account_info', array(
             'lender_id' => $borrower_id,
             'account_number' => $this->input->post('account'),
             'ifsc_code' => $this->input->post('ifsc'),
-			'created_date'=> date('Y-m-d H:i:s')
-			)
+            'created_date' => date('Y-m-d h:i:s'))
         );
         if ($this->db->affected_rows() > 0) {
             return array('status' => 1, 'msg' => 'Record updated successfully');
@@ -191,5 +198,43 @@ class Borrower_social_model extends CI_Model
     }
 
 
+    public function getProfilepicture($mobile)
+    {
+        $query = $this->app->get_where('app_user_profile_pic', array('mobile' => $mobile));
+        // print_r($query);
+        // die();
+        // echo $query['profile_pic'];
+        // die();
+        if ($this->db->affected_rows() > 0) {
+            $profile_pic = $query->row();
+            //print_r($profile_pic);exit;
+			if($profile_pic == ""){
+			return array(
+                'pic' => 'www.antworksp2p.com/assets/img/social_profile/borrower-pic.png'
+            );	
+			}
+			else{
+            $profile_pic_data=$profile_pic->profile_pic;
+          
+            return array(
+                'pic' => 'www.antworksmoney.com/apiserver/profile_images/' . $profile_pic_data
+            );
+        }
+		}
+		
+		
+        
+    }
+
+    public function get_score($mob){
+        $this->money->where('mobile',$mob);
+        $get_score = $this->money->get('all_experian_data')->row_array();
+        return $get_score;
+    }
+
+    public function getRazorpayRegistrationkeys()
+    {
+        return $this->db->select('option_value')->get_where('p2p_admin_options', array('option_name'=>'razorpay_registration_api_keys', 'status'=>1))->row()->option_value;
+    }
 }
 ?>

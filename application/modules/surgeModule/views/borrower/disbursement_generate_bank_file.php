@@ -55,7 +55,7 @@
                     ?>
                                <tr   onclick="toggleCheckbox('<?php echo $list['id']; ?>')" >
                                     <td><?php echo $i++; ?></td>
-                                    <td><?php echo date('Y-m-d', strtotime($list['date_created'])); ?></td>
+                                    <td><?php echo $list['date_created']; ?></td>
 									<td><input type="checkbox" id="<?php echo $list['id']; ?>"></td>
                                     <td><?php echo $list['borrower_id']; ?></td>
                                     <td><?php echo $list['name']; ?></td>

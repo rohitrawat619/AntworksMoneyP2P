@@ -49,7 +49,7 @@ else
             <th>Address</th>
             <th>phone</th>
             <th>email</th>
-            <th>Action</th>
+            <th></th>
             <th></th>
         </tr>
   </thead>
@@ -69,8 +69,8 @@ else
             
 
        
-<td><a class="btn btn-success" href="<?= base_url(); ?>Surgeadmin/editvendor/<?= $row1['VID']; ?>" > Edit</a></td>
-<td><a class="btn btn-danger" href="<?= base_url(); ?>Surgeadmin/deletevender/<?=$row1['VID']; ?>" class="btn btn-danger" onclick="return confirm('Are You Sure Want To Delete This')">Delete</a></td>
+<td><!----<a class="btn btn-success" href="<?= base_url(); ?>Surgeadmin/editvendor/<?= $row1['VID']; ?>" > Edit</a>----></td>
+<td></td>
 
 
            </tr> 

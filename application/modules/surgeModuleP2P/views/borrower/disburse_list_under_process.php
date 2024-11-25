@@ -1,0 +1,174 @@
+<!-- Main content -->
+
+<style type="text/css">
+    strong {
+        background: #fafafa;
+        color: #666;
+        margin-left: 0;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        text-decoration: none;
+        border: 1px solid #ddd;
+    }
+
+    .myform-inline {
+        margin-top: 3px;
+    }
+
+    .myform-inline .form-group input {
+        max-width: 136px;
+    }
+</style>
+
+<section class="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <?= getNotificationHtml(); ?>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+            <table id="example" class="table table-bordered table-hover box">
+                <thead>
+				 <h4>Available Bal Rs.<?php echo $available_balance ?></h4>
+                    <tr>
+                        <th>S.no.</th>
+                        <th>Created Date</th>
+                        <th>Borrower Id</th>
+                        <th>Borrower Name</th>
+                        <th>Loan No</th>
+                        <th>Mobile</th>
+                        <th>Amount</th>
+                        <th>Basic Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (@lists) {
+                        $i = 1;
+                        foreach ($lists as $list) {
+                            if ($list['status'] == 3) {
+                    ?>
+                                <tr>
+                                    <td><?php echo $i++; ?></td>
+                                    <td><?php echo $list['date_created']; ?></td>
+                                    <td><?php echo $list['borrower_id']; ?></td>
+                                    <td><?php echo $list['name']; ?></td>
+                                    <td><?php echo $list['loan_no']; ?></td>
+                                    <td><?php echo $list['mobile']; ?></td>
+                                    <td>₹<?php echo $list['approved_loan_amount']; ?></td>
+                                    <td><?php echo $list['approved_interest']; ?></td>
+                                    <td>
+                                <button class="btn btn-success btn-sm" onclick="approveLoan(<?php echo $list['id']; ?>)">Approve</button>
+                                <button class="btn btn-danger btn-sm" onclick="rejectLoan(<?php echo $list['id']; ?>)">Reject</button>
+                            </td>
+                                </tr>
+                    <?php
+                            }
+                        }
+                    } else {
+                    ?>
+                        <tr>
+                            <td colspan="8">No records found</td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <nav aria-label="Page navigation">
+                <ul class="setPaginate pull-right pagination">
+                    <li><?php echo @$links; ?></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+
+<script>
+    $(function() {
+        $('input[name="created_at"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "paging": false,
+            "searching": false,
+            "showNEntries": false,
+        });
+    });
+</script>
+
+<script>
+    function approveLoan(loanId) {
+        var status=4;
+        var confirmation=confirm("Do you  want to disburse ? ");
+        if(confirmation){
+        $.ajax({
+            url: 'update_disburse_status', 
+            method: 'POST',
+            data: { ids: loanId ,status:status},
+            success: function(response) {
+                console.log(response);
+                var resp=JSON.parse(response);
+                alert(resp.message);
+                location.reload(true);
+                // Add logic to handle success response
+            },
+            error: function(error) {
+                console.error('Error approving loan:', error);
+                // Add logic to handle error response
+            }
+        });
+    }
+}
+    function rejectLoan(loanId) {
+        var status=5;
+        var confirmation=confirm("Do you want to reject ? ");
+		getAvailableBalance();
+        if(confirmation){
+        $.ajax({
+            url: 'update_disburse_status', 
+            method: 'POST',
+            data: { ids: loanId ,status:status },
+            success: function(response) {
+				   var resp=JSON.parse(response);
+                alert(resp.message);
+                location.reload(true);
+                console.log('Loan Rejected:', loanId);
+                // Add logic to handle success response
+            },
+            error: function(error) {
+                console.error('Error rejecting loan:', error);
+                // Add logic to handle error response
+            }
+        });
+    }
+} 
+</script>
+<script>
+ function getAvailableBalance(){
+	  if(<?=$available_balance?>>=amount){
+			return true;
+	  }else{
+      alert("Not sufficient funds");
+		return false;
+    }
+	 
+</script>

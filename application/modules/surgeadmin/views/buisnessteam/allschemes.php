@@ -51,7 +51,7 @@ else
             <th>Auto Redeem</th>
             <th>Invest Type</th>
             <th>Status</th>
-            <th>Action</th>     
+            <th></th>     
             <th></th>   
             <th></th>    
         </tr>
@@ -81,8 +81,8 @@ else
             <td><?php echo $row1['Interest_Type']; ?></td>
             
  <td><a class="btn btn-<?= $row1['status'] == 0 ? 'warning' : 'success'; ?>" href="<?= base_url(); ?>Surgeadmin/statusupdate/<?= $row1['id']; ?>/<?= $row1['status']; ?>"> <?= $row1['status'] == 0 ? 'Inactive' : 'Active'; ?></a></td>
- <td><a class="btn btn-primary" href="<?= base_url(); ?>Surgeadmin/editschemes/<?= $row1['id']; ?>"> Edit</a></td>
- <td><a class="btn btn-danger" href="<?= base_url(); ?>Surgeadmin/deletescheme/<?=$row1['id']; ?>" class="btn btn-danger" onclick="return confirm('Are You Sure Want To Delete This?')">Delete</a></td> 
+ <td><!----<a class="btn btn-primary" href="<?= base_url(); ?>Surgeadmin/editschemes/<?= $row1['id']; ?>"> Edit</a>---></td>
+ <td>-</td> 
 <td><a class="btn btn-info" href="<?= base_url(); ?>Surgeadmin/schemelogs/<?=$row1['id']; ?>">logs</a></td>
 
         </tr>
