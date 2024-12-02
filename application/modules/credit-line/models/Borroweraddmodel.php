@@ -765,7 +765,7 @@ class Borroweraddmodel extends CI_Model
             $this->db->update('p2p_borrower_steps_credit_line');
         }
 
-        if ($response_array[1]['CreditCategory'] == 'Amber') {
+        if ($response_array[1]['CreditCategory'] == 'Amber' || $response_array[1]['CreditCategory'] == 'Credit_Amber') {
             $this->db->where('borrower_id', $borrowerId);
             $this->db->set('step_2', 2);
             $this->db->update('p2p_borrower_steps_credit_line');
@@ -831,13 +831,17 @@ class Borroweraddmodel extends CI_Model
             return false;
         }
     }
+	
+
+				
+				
 	public function loan_eligibility_status()
     {
        $ektaraSecondResp = $this->ektara_second_api($this->input->post('borrower_id'));
 	   if($ektaraSecondResp==false){
 		   return $response = ['status' => 0, 'loan_id' => '', 'msg' => 'Internal Server Error, Please Try Again Later.',];
 	   }
-        $where = "(CreditCategory = 'Green' or CreditCategory = 'Amber')";
+        $where = "(CreditCategory = 'Green' or CreditCategory = 'Amber' or CreditCategory = 'Credit_Amber')";
         $this->db->where($where)->order_by('id', 'desc')->limit(1)->get_where('ektara_response', array('borrower_id' => $this->input->post('borrower_id')));
 	//	echo $this->db->last_query();exit;
         if ($this->db->affected_rows() > 0) {
@@ -854,16 +858,36 @@ class Borroweraddmodel extends CI_Model
 						return $response = ['status' => 1, 'loan_id' => $loan_data->id, 'loan_amount' => $loan_data->approved_loan_amount, 'msg' => 'Loan ID Already exist',];
 					}else{
 						
+						$loanamount = '2500';$loantenure = '2';
+				$getLoanNeedData = $this->db->get_where('master_user', array('borrower_id' => $this->input->post('borrower_id')))->row();
+				if($this->db->affected_rows()>0){
+					if(!empty($getLoanNeedData->loan_amount)){
+					$loanamount = $getLoanNeedData->loan_amount;
+					}
+					if(!empty($getLoanNeedData->loan_tenure)){
+					$loantenure = $getLoanNeedData->loan_tenure;
+					}
+				}
+				
+				$schemeInterest = 36;
+				if($this->input->post('partner_id')){
+					$getSchemeData = $this->getPartnerSchemeData($this->input->post('partner_id'));
+					if($this->db->affected_rows()>0){
+					$schemeInterest = $getSchemeData['Interest_Rate'];
+					}
+				}
+				
+						
 						//$loan_no=$this->credit_line_generate_loan_no();  
 
 						// insert data in p2p_bidding_proposal_details start
 						
 						$proposal_submit_array = array(
                     'borrowers_id'=> $this->input->post('borrower_id'),
-                    'bid_loan_amount'=>2500,
-                    'loan_amount'=>2500,
-                    'accepted_tenor'=>36,
-                    'interest_rate'=>36,
+                    'bid_loan_amount'=>$loanamount,
+                    'loan_amount'=>$loanamount,
+                    'accepted_tenor'=>$loantenure,
+                    'interest_rate'=>$schemeInterest,
                     'proposal_added_date'=>date("Y-m-d H:i:s"),
 					'source'=>'lsBrSkip' // lsBrElig->lendsocialBorrowerEligiblity or lsBrSkip->lendsocialBorrowerSkipStep
 
@@ -871,26 +895,27 @@ class Borroweraddmodel extends CI_Model
 
  
 
-                $proposal_submit = $this->cldb->insert('p2p_bidding_proposal_details',$proposal_submit_array); // created at 19/04/2024
+                $proposal_submit = $this->db->insert('p2p_bidding_proposal_details',$proposal_submit_array); // created at 19/04/2024
+
 						
 						// insert data in p2p_bidding_proposal_details ends
-						$bid_registration_id = $this->cldb->insert_id();
+						$bid_registration_id = $this->db->insert_id();
 						$loan_no_plus =  10000000000 + $bid_registration_id;
 						$loan_no = 'LN' . $loan_no_plus;
-						$this->cldb->where('bid_registration_id',$bid_registration_id);
-						$this->cldb->update("p2p_bidding_proposal_details",array('loan_no'=>$loan_no));
+						$this->db->where('bid_registration_id',$bid_registration_id);
+						$this->db->update("p2p_bidding_proposal_details",array('loan_no'=>$loan_no));
 						
-						$this->cldb->insert('p2p_loan_list', array(
+						$this->db->insert('p2p_loan_list', array(
 							'borrower_id' => $this->input->post('borrower_id'),
 							'loan_no' => $loan_no,
 							'lender_id' => $this->input->post('partner_id'),
-							'approved_loan_amount' => '2500',
-							'approved_interest' => '2',
-							'approved_tenor' => '1',
+							'approved_loan_amount' => $loanamount,
+							'approved_interest' => $schemeInterest,
+							'approved_tenor' => $loantenure,
 							'loan_processing_charges' => '0',
 							'disburse_amount' => '0',
 						));
-						$loan_id = $this->cldb->insert_id();
+						$loan_id = $this->db->insert_id();
 						
 						$loanData = $this->db->get_where('p2p_loan_list', array('id' => $loan_id))->row();
 						return $response = ['status' => 1, 'loan_id' => $loan_id, 'loan_amount' => $loanData->approved_loan_amount, 'msg' => 'This should only take few seconds.',];
@@ -904,6 +929,23 @@ class Borroweraddmodel extends CI_Model
 			return $response = ['status' => 0, 'loan_id' => '', 'msg' => 'Sorry you are not eligible for loan.',];
         }
     }
+	
+	public function getPartnerSchemeData($partner_id){
+					
+	$data = array(
+		'Vendor_ID' => $partner_id
+	);
+	
+	$this->db->select('Interest_Rate');
+	$this->db->from('invest_scheme_details');
+	$this->db->where($data);
+	$this->db->order_by('id', 'desc');
+	
+	
+	return $this->db->get()->row_array();
+}
+
+
 	 public function credit_line_sanction_details()
     {
         $query = $this->db->get_where('p2p_loan_list', array(

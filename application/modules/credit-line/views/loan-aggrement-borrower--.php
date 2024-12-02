@@ -4,21 +4,15 @@
             <div class='col-md-12'>
                 <div class='row'>
                     <div class='welcome'>
-                        <p class='text-center'>Loan Account Number:______________________________ <?=  $result['loan_no'] ?> </p>
+                        <p class='text-right'>LAN: <?=  $result['loan_no'] ?></p>
                         <div class='text-center'>
-					    	<p>Loan Type: Personal Loan/Business Loan</p>
-                            <p>Sanctioned Loan amount (in rupees): Rs.<?=  $loan_amount ?></p>
-                            <p>Loan Term (Months): <?=  $result['TENORMONTHS'] ?></p>
-                            <p>Installment Details</p>
-                            <p>Interest Rate: <?=  $result['LOAN_Interest_rate'] ?>% p.a. (fixed)</p>
-                            <p>Fee Charges</p>
-                            <p>Processing Fees: </p>
-                            <p>Any Other Fee: </p>
-							<p>Annual Percentage Rate (APR) (%): <?=  $result['LOAN_Interest_rate'] ?></p>
-							<p>Details of Contingent Charges (in ₹ or %, as applicable) </p>
-							<p>Penal charges (in case of delayed payment):  </p>
-							<p>Any Other Fee: </p>
-							
+                            <p>Between</p>
+                            <p><?=  $result['BORROWERNAME'] ?></p>
+                            <p>['The Borrower']</p>
+                            <p>and</p>
+                            <p><?=  $result['LENDER_fNAME'] ?></p>
+                            <p>['Lender']</p>
+                            <p>and</p>
                             <h2 class='agrmnt-hd'>ANTWORKS P2P FINANCING PRIVATE LIMITED</h2>
                             <p>['Antworks']</p>
 							<p>Loan Proposal Form dated ___________ No. ______________</p>

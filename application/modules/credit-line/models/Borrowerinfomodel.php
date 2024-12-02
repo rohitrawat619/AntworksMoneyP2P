@@ -28,9 +28,9 @@ class Borrowerinfomodel extends CI_Model
 				
 			if($result['disbursed_flag']==1){
 				$available_limit = '0';
-				$use_limit = '2550';
+			$use_limit = $result['approved_loan_amount'];
 			}else{
-				$available_limit = '2500';
+				$available_limit = $result['approved_loan_amount'];
 				$use_limit = '0';
 			}
 				$query2 = $this->db->select('status as payment_status')->order_by('id', 'desc')->get_where('p2p_order_list', array('loan_id' => $result['id'],'borrower_id' => $result['borrower_id']));

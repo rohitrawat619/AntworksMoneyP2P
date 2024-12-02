@@ -1,27 +1,23 @@
+<style>
+.single-service-page .single-service-tab-box2 .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {color: #fff; background: #000;}
+</style>
 <div id='loanagreements'>
     <div class="inner-aggrement" id="inner-aggrement">
         <div>
             <div class='col-md-12'>
                 <div class='row'>
                     <div class='welcome'>
-                        <p class='text-center'>Loan Account Number:______________________________ <?=  $result['loan_no'] ?> </p>
+                        <p class='text-right'>LAN: <?=  $result['loan_no'] ?></p>
                         <div class='text-center'>
-					    	<p>Loan Type: Personal Loan/Business Loan</p>
-                            <p>Sanctioned Loan amount (in rupees): Rs.<?=  $loan_amount ?></p>
-                            <p>Loan Term (Months): <?=  $result['TENORMONTHS'] ?></p>
-                            <p>Installment Details</p>
-                            <p>Interest Rate: <?=  $result['LOAN_Interest_rate'] ?>% p.a. (fixed)</p>
-                            <p>Fee Charges</p>
-                            <p>Processing Fees: </p>
-                            <p>Any Other Fee: </p>
-							<p>Annual Percentage Rate (APR) (%): <?=  $result['LOAN_Interest_rate'] ?></p>
-							<p>Details of Contingent Charges (in ₹ or %, as applicable) </p>
-							<p>Penal charges (in case of delayed payment):  </p>
-							<p>Any Other Fee: </p>
-							
+                            <p>Between</p>
+                            <p><?=  $result['BORROWERNAME'] ?></p>
+                            <p>['The Borrower']</p>
+                            <p>and</p>
+                            <p><?=  $result['LENDER_fNAME'] ?></p>
+                            <p>['Lender']</p>
+                            <p>and</p>
                             <h2 class='agrmnt-hd'>ANTWORKS P2P FINANCING PRIVATE LIMITED</h2>
                             <p>['Antworks']</p>
-							<p>Loan Proposal Form dated ___________ No. ______________</p>
                         </div>
                     </div>
                 </div>
@@ -30,36 +26,35 @@
         <div class='col-md-12'>
         <div class='main-content'>
             <h3 class='agrmnt-hd text-center'>LOAN AGREEMENT</h3>
-            <p>THIS AGREEMENT for Loan dated vide Loan Agreement No ______________________ <?=  $agreement_date ?></p>
+            <p>THIS AGREEMENT for Loan dated <?=  $agreement_date ?></p>
             <p>BETWEEN</p>
 
-            <p>Mr. / Ms. <?=  $result['BORROWERNAME'] ?> Residing at <?=  $result['BORROWERR_Address'] ?> <?=  $result['BORROWERR_Address1'] ?> <?=  $result['BORROWERR_City'] ?> <?=  $result['BORROWERR_State'] ?> <?=  $result['BORROWERR_Pincode'] ?> having PAN  <?=  $result['BORROWERR_pan'] ?>, hereinafter referred to as 'the Borrower' and as more fully described in First Schedule hereunder (which expression shall unless it be repugnant to the context
-or meaning thereof be deemed to mean and include its successors and heirs) of the First Part</p>
+            <p>Mr. / Ms. <?=  $result['BORROWERNAME'] ?> Residing at <?=  $result['BORROWERR_Address'] ?> <?=  $result['BORROWERR_Address1'] ?> <?=  $result['BORROWERR_City'] ?> <?=  $result['BORROWERR_State'] ?> <?=  $result['BORROWERR_Pincode'] ?> having PAN  <?=  $result['BORROWERR_pan'] ?>, hereinafter referred to as 'the Borrower' and as more fully described in First Schedule hereunder(which expression shall unless it be repugnant to the context or meaning thereof be deemed to mean and include its successors and heirs) of the First Part</p>
 
             <p>AND</p>
 
-            <p>The Lenders participating in the loan, hereinafter referred to as 'the Lender' and as more fully described in First Schedule hereunder (which expression shall unless it be repugnant to the context or meaning thereof be deemed to mean and include its successors, assigns and heirs) of the Second Part</p>
+            <p>Mr. / Ms. <?=  $result['LENDER_fNAME']  ?>, hereinafter referred to as'the Lender' and as more fully described in First Schedule hereunder(which expression shall unless it be repugnant to the context or meaning thereof be deemed to mean and include its successors, assigns and heirs) of the Second Part</p>
 
             <p>AND</p>
 
             <p>ANTWORKS P2P Financing Private Limited, CIN U65999HR2017PTC071580 having its Registered Office at UL-03, Eros EF3 Mal, Sector-20 A, Mathura Road, Faridabad,121001, Haryana, having PAN AAQCA2578Q, hereinafter referred to as 'Antworks' (which expression shall unless it be repugnant to the context or meaning thereof be deemed to mean and include its successors and assigns) of the Third Part</p>
 
-            <p>WHEREAS Antworks runs an online portal under the name ‘www,lendsocial.money’ and ‘www.antworksp2p.com’ which is a 'Peer to Peer Lending Platform' as defined under Direction 4 (1) (v) of the Non Banking Financial Company – Peer to Peer</p>
-            <p>AND WHEREAS , subject to the provisions of the Non Banking Financial Company – Peer to Peer Lending Platform (Reserve Bank) Directions, 2017is an open to all platform wherein borrowers and lenders can freely choose each other based on their choice of parameters like profile of counter-party, tenure, rate of interest, repayment mode, quantum of loan etc. thereby creating a competitive atmosphere for the debt market.</p>
-            <p>AND WHEREAS the Borrower, being in need of money, have registered on Antworks P2P Platform  either directly or through one of the Business Correspondents of Antworks and had raised some request for a loan by filling up of necessary forms with the portal.</p>
-            <p>AND WHEREAS the Lender, having certain surplus funds was willing to deploy them as debt and accordingly registered himself with Antworks Lending Platform as a Lender.</p>
-            <p>AND WHEREAS the Lender and the Borrower coming to know their mutual requirements conducted their respective diligence and finally decided to grant and accept respectively a loan amounting to INR <?=  $loan_amount ?>.</p>
-            <p>AND WHEREAS Antworks will act as a facilitator in the entire process of Loan starting from the disbursement and ending with the recovery of the Loan. It is also clearly understood and agreed by both Borrower and Lender that Antworks is a party to this agreement without any obligation or liability to either Lender or Borrower or anyone claiming or acting through them.</p>
+            <p>WHEREAS Antworks runs an online portal <a href='<?= base_url() ?>'><?= $portal_name ?></a>  which is a 'Peer to Peer Lending Platform' as defined under Direction 4 (1) (v) of the Non Banking Financial Company – Peer to Peer Lending Platform (Reserve Bank) Directions, 2017</p>
+            <p>AND WHEREAS <a href='<?= base_url() ?>'><?= $portal_name ?></a>, subject to the provisions of the Non Banking Financial Company – Peer to Peer Lending Platform (Reserve Bank) Directions, 2017is an open to all platform wherein borrowers and lenders can freely choose each other based on their choice of parameters like profile of counter-party, tenure, rate of interest, repayment mode, quantum of loan etc. thereby creating a competitive atmosphere for the debt market.</p>
+            <p>AND WHEREAS the Borrower, being in need of money, have registered it in the portal <a href='<?= base_url() ?>'><?= $portal_name ?></a> and had raised some request for a loan by filling up of necessary forms with the portal.</p>
+            <p>AND WHEREAS the Lender, having certain surplus funds was willing to deploy them as debt and accordingly registered himself with <a href='<?= base_url() ?>'><?= $portal_name ?></a> as a lender.</p>
+            <p>AND WHEREAS the Lender and the Borrower coming to know their mutual requirements conducted their respective diligence and finally decided to grant and accept respectively a loan amounting to Rs <?=  $loan_amount ?>.</p>
+            <p>AND WHEREAS Antworks will act as a facilitator in the entire process of Loan starting from the disbursement and ending with the recovery of the Loan.It is also clearly understood and agreed by both Borrower and Lender that Antworks is a party to this agreement without any obligation or liability to either Lender or Borrower or anyone claiming or acting through them.</p>
             <p>NOW THEREFORE, in consideration of the mutual covenants as set forth below, and based on the various representations and warranties of the Parties as herein made the Parties hereby agree to enter into the present Agreement on the terms and conditions as set out herein.</p>
             <p><strong>1. Definitions</strong>:</p>
             <ol class='definations-list'>
 
                 <li><strong>Assistance Fee</strong> shall have the meaning as described in Clause 10 hereunder.</li>
                 <li><strong>Designated Date</strong> shall mean the date on which the EMI falls due as depicted in 3rd Schedule hereunder.</li>
-                <li><strong>Designated Loan Disbursement Escrow Account</strong> shall mean the Escrow Account opened with Yes Bank by whatever name called where the Lender would transfer the Principal Loan Amount for being disbursed to the Borrower at the instance of Antworks.</li>
-                <li><strong>Designated Loan Repayment Escrow Account</strong> shall mean the Escrow Account opened with Yes Bank by whatever name called where the Borrower shall deposit the EMI amount for being transferred to the Lender at their respective personal account at the instance of Antworks.</li>
-                <li><strong>EMI</strong> shall mean the amount to be paid by the Borrower for servicing / repayment of the Loan (ie. principal and interest) as more fully described in Clause 11,hereunder In case of loan with single Repayment EMI would means entire amount of principal along with interest.  EMI bounce charges: EMI Bounce Charges are change is levied in the event of failure of borrower to repay EMI on time.</li>
-                <li><strong>Escrow Bank</strong> shall be Yes Bank</li>
+                <li><strong>Designated Loan Disbursement Escrow Account</strong> shall mean the Escrow Account opened with IDBI Bank by whatever name called where the Lender would transfer the Principal Loan Amount for being disbursed to the Borrower at the instance of Antworks.</li>
+                <li><strong>Designated Loan Repayment Escrow Account</strong> shall mean the Escrow Account opened with IDBI Bank by whatever name called where the Borrower shall deposit the EMI amount for being transferred to the Lender at their respective personal account at the instance of Antworks.</li>
+                <li><strong>EMI</strong> shall mean the amount to be paid by the Borrower for servicing / repayment of the Loan (ie. principal and interest) as more fully described in Clause 11,hereunder</li>
+                <li><strong>Escrow Bank</strong> shall be IDBI Bank</li>
                 <li><strong>Loan Disbursement Date</strong> for the purpose of this Agreement shall mean the date on which the Principal Loan amount, as reduced by the Borrower's Assistance Fee payable to Antworks, is credited to the Bank Account of the Borrower.</li>
                 <li><strong>Loan Transaction</strong> for the purpose of this Agreement shall mean the amount of Loan granted by the Lender to the Borrower.</li>
                 <li><strong>'Peer to Peer Lending Platform'</strong> shall have the same meaning as defined under Direction 4 (1) (v) of the Non Banking Financial Company &ndash; Peer to Peer Lending Platform (Reserve Bank) Directions, 2017</li>
@@ -101,22 +96,20 @@ or meaning thereof be deemed to mean and include its successors and heirs) of th
 
             <p>A. <span class='def-sublist'>Borrower's Assistance Fee:</span></p>
             <ol class='definations-list'>
-                <li>For providing the Peer to Peer Lending Platform and providing incidental services like facilitating the loan process and the disbursements, Antworks shall be entitled to an Assistance Fees to be known as Borrower's Assistance Fees, at the rate  of <?=  $result['Partner_Borrower_Assistance_Fees'] ?> + GST payable by the Borrower availing the services.</li>
-                <li>The Borrower's Assistance Fee (payable by the Borrower) can be recovered by Antworks from the Principal Loan Amount during disbursement. The Borrower shall be liable to repay the Principal Loan Amount to the Lender and interest there upon. The Borrower conveys to the Trustee his unconditional consent in favour of Antworks to deduct the Borrower's Assistance Fee from the Principal Loan Amount and undertakes not to contest or initiate any legal proceedings for such deduction, under any circumstances.</li>
+                <li>For providing the Peer to Peer Lending Platform and providing incidental services like facilitating the loan process and the disbursements,Antworks shall be entitled to an Assistance Fees to be known as Borrower's Assistance Fees, at the rate as specified in the website <a href='<?= base_url() ?>'><?= $portal_name ?></a> payable by the Borrower availing the services.</li>
+                <li>The Borrower's Assistance Fee (payable by the Borrower) can be recovered by Antworks from the Principal Loan Amount during disbursement. The Borrower shall be liable to repay the Principal Loan Amount to the Lender and interest thereupon.The Borrower conveys to the Trustee his unconditional consent in favour of Antworks to deduct the Borrower's Assistance Fee from the Principal Loan Amount and undertakes not to contest or initiate any legal proceedings for such deduction, under any circumstances.</li>
             </ol>
             <p>B. <span class='def-sublist'>Lender's Assistance Fee:</span></p>
             <ol class='definations-list'>
-                <li>For providing the Peer to Peer Lending Platform and providing incidental services like monitoring the disbursements and repayments,Antworks shall be entitled to periodical Assistance Fees to be known as Lender's Assistance Fees, at the rate as specified in the Loan proposal form and also mentioned at Schedule 7 website www.antworksp2p.com payable by the Lender granting the loan . The Lender’s assistance fees payable by the Lender is <?=  $result['Partner_Lender_Assistance_Fees'] ?>%  fees +GST fees payable on principal loan amount at end of every 90 days from the date of loan disbursement till loan is paid fully repaid. In case loan is repaid before end of 90 days, the Lender assistance fees shall be paid for the proportionate period.</li>
-                <li>The Lender's Assistance Fee payable by the Lender shall be paid immediately as and when charged by Antworks by way of online transfer to the Bank account of Antworks
-The Lender's Assistance Fee (payable by the Lender) can be recovered by Antworks from the EMI amount or Escrow account from time to time as and when due. The Lender shall be
-construed to have received the entire EMI against the Loan regardless of the Lender's Assistance Fee collected by Antworks from the EMI. The Lender conveys to the Trustee his
-unconditional consent in favour of Antworks to deduct the Lender's Assistance Fee from the EMI Amount or the Escrow account and undertakes not to contest or initiate any legal
-proceedings for such deduction, under any circumstances.</li>
+                <li>For providing the Peer to Peer Lending Platform and providing incidental services like monitoring the disbursements and repayments,Antworks shall be entitled to periodical Assistance Fees to be known as Lender's Assistance Fees, at the rate as specified in the website <a href='<?= base_url() ?>'><?= $portal_name ?></a> payable by the Lender granting the loan .<br /> The Lender's Assistance Fee payable by the Lender shall be paid immediately as and when charged by Antworks (in line with the rate and schedule provided in the website <a href='<?= base_url() ?>'><?= $portal_name ?></a>) by way of online transfer to the Bank account of Antworks</li>
+                <li>The Lender's Assistance Fee (payable by the Lender)can be recovered by Antworks from the EMI amount or Escrow account from time to time as and when due. The Lender shall be construed to have received the entire EMI against the Loan regardless of the Lender's Assistance Fee collected by Antworks from the EMI. The Lender conveys to the Trustee his unconditional consent in favour of Antworks to deduct the Lender's Assistance Fee from the EMI Amount or the Escrow account and undertakes not to contest or initiate any legal proceedings for such deduction, under any circumstances.</li>
             </ol>
             <p><strong>11.	Payment of Interest and Repayment of Principal Loan Amount by way of EMI</strong></p>
             <ol class='definations-numlist'>
                 <li>The Borrower shall pay the interest along with the principal by way of predetermined monthly installment (EMI) to the Lender as per an Amortization Schedule, to be shared separately with the Parties herein and shall form an integral part of this Agreement, in the format depicted in the Third Schedule hereunder.</li>
-                <li>Antworks would inform the Trustee to instruct the Escrow Bank for transfer of EMI amount deposited by the Borrower in Designated Loan Repayment Escrow Account to the Lender’s Bank Account  by the immediately succeeding working day, after deducting therefrom the Lender' Assistance fee wherever applicable. </li>
+                <li>In case the repayment schedule is not intimated separately by Antworks, the 1st EMI shall be paid by the Borrower to the Lender on the 15th day of the month immediately subsequent to the month in which the loan has been first disbursed by the Lender to the Borrower
+                    and thereafter 15th day of each subsequent month till full repayment of the loan amount along with interest and charges/ fees.
+                </li>
                 <li>The Borrower shall pay the Applicable EMI by way of NACH/ eNACH or ECS/NetBanking/NEFT/ RTGS/IMPS/UPI or any other similar electronic funds transfer mechanism favoring the Designated Loan Repayment Escrow Account</li>
                 <li>Antworks would inform the Trustee to instruct the Escrow Bank for transfer of EMI amount deposited by the Borrower in Designated Loan Repayment Escrow Account to the Lender preferably by the immediately succeeding working day, after deducting therefrom the Lender' Assistance fee wherever applicable. The amount would be transferred to the Lender&rsquo;s sub-account in Escrow and the Lender is entitled to withdraw the amount as and when desired.</li>
                 <li>The payment of EMI through NACH/ eNACH or ECS/NetBanking/NEFT/ RTGS/IMPS/UPI or any other similar electronic funds transfer mechanism shall be prefixed (as per an Amortization Schedule as intimated by Antworks.</li>
@@ -162,7 +155,7 @@ proceedings for such deduction, under any circumstances.</li>
             <p><strong>17.	Consequences of Default </strong></p>
             <p>If the Borrower fails to cure any Event of Default the Lender, in addition to the rights available under normal course of law:</p>
             <ol class='definations-list'>
-                <li>may call upon the Borrower to pay immediately the entire outstanding Principal amount along with the unpaid Interest and Penal Interest (if any, accrued till the date of such payment) and EMI Bounce/ charges.</li>
+                <li>may call upon the Borrower to pay immediately the entire outstanding Principal amount along with the unpaid Interest and Penal Interest (if any, accrued till the date of such payment) and fees/ charges.</li>
                 <li>may enforce the DPN and /or ask Antworks to lodge the PDC, at his discretion;</li>
                 <li>may initiate proceedings under Chapter III of the Insolvency and Bankruptcy Code, 2016 and / or such other remedy by virtue of any other security, statute or rule of law, as may be applicable.</li>
                 <li>Take such other steps to recover its due amount from the Borrower, as is available under the law, including legal proceedings under applicable laws.</li>
@@ -171,22 +164,24 @@ proceedings for such deduction, under any circumstances.</li>
             <p><strong>18.	Role of Antworks</strong></p>
             <p>Antworks would perform the following roles against payment of fees for the respective services as disclosed in its website from time to time.</p>
             <ol class='definations-list'>
-                <li>Co-ordination among the parties for sharing of information and communication, as set out in this agreement and as provided in the website of Antworks from time to time. Antworks may carry out and the same shall be applicable to both Borrower and Lender from the date of intimation of such change. </li>
-                <li>Antworks may use one or more computer software programs (algorithm) for matching lenders with borrowers based on the lender's preferences on lending scheme, expected rate of interest, borrower profiles categories and risk diversification preferences. Antworks may at its option provide other services, as it may deem fit, for the purpose of grant of the loan by the Lender to the Borrower and repayment of the loan by the Borrower to the Lender. All the parties to the transaction provide their consent for Antworks to perform any such roles or to provide any such services as Antworks may deem fit. Borrower and Lender agree to pay fees to Antworks for the services (as availed by them) according to the rates as specified in the website of Antworks</li>
-                <li>Antworks may also provide the services of taking steps towards recovery of debt from the Borrower in case of default including coordinating and initiating proceedings including legal measures against the Borrower. The Lender hereby authorize the Antworks for such acts and deeds as may be necessary. The Lender hereby agrees to pay such fees as disclosed in the website of Antworks (<a href='<?= base_url() ?>'><?= $portal_name ?></a>) for the services, as also pay the fees of any consultant, agent or lawyer engaged by Antworks and reimburse the expenses incurred for the same purpose. The Borrower hereby provides no objection to the Antworks, including any consultant, agent or lawyer engaged by Antworks, to carry out all such deeds and acts as may be necessary for the purpose of the Loan.</li>
+                <li>Co-ordination among the parties for sharing of information and communication, as set out in this agreement and as provided in the website of Antworks from time to time. Antworks may carry out changes to the loan policy from time to time as provided in its website <a href='<?= base_url() ?>'><?= $portal_name ?></a> (including ‘How It Works’ section) and the same shall be applicable to both Borrower and Lender from the date of intimation of such change.</li>
+                <li>Antworks may at its option provide other services, as it may deem fit, for the purpose of grant of the loan by the Lender to the Borrower and repayment of the loan by the Borrower to the Lender.All the parties to the transaction provide their consent for Antworks to perform any such roles or to provide any such services as Antworks may deem fit. Borrower and Lender agree to pay fees to Antworks for the services (as availed by them) according to the rates as specified in the website of Antowrks ie. <a href='<?= base_url() ?>'><?= $portal_name ?></a>.</li>
+                <li>Antworks may also provide the services of taking steps towards recovery of debt from the Borrower in case of default including coordinating and initiating proceedings including legal measures against the Borrower. The Lender hereby authorize the Antworks for such acts and deeds as may be necessary. The Lender hereby agrees to pay such fees as disclosed in the website of Antworks (<a href='<?= base_url() ?>'><?= $portal_name ?></a>) for the services, as also pay the fees of any consultant, agent or lawyer engaged by Antworksand reimburse the expenses incurred for the same purpose. The Borrower hereby provides no objection to the Antworks,including any consultant, agent or lawyer engaged by Antowrks, to carry out all such deeds and acts as may be necessary for the purpose of the Loan.</li>
             </ol>
 
             <p><strong>19.	Borrower's Undertaking</strong></p>
             <p>The Borrower hereby undertakes as follows:</p>
             <ol class='definations-list'>
                 <li>That the Aggregate of the loan taken by the Borrower across all Peer to Peer Lending Platform is not more than INR 10,00,000/-.</li>
-                <li>That the Borrower  acknowledges that Antworks is a facilitator in the entire process and does not stand for any authenticity or guarantee in respect of the Leander or the Loan. The Borrower also acknowledges that Antworks has depended on the declaration of Borrower in preparing and listing the profile and Antworks  has the option of requisitioning further information on the Borrower, as may be required before approving the loan.</li>
+                <li>That the Borrower has got himself satisfied about the source of fund of the Lender through his own means and acknowledges that Antworks is a facilitator in the entire process and does not stand for any authenticity or guarantee in respect of the Leander or the Loan.
+                    The Lender also acknowledges that Antworks has depended on the declaration of Borrower in preparing and listing the profile and he has the option of requisitioning further information on the Borrower, as he may desire, before bidding / approving the loan.
+                </li>
                 <li>The personal data and all information furnished by him are true and correct at the time of submission.</li>
                 <li>Any change in his variable personal data like communication address etc. shall be intimated to the Lender and Antworks within 7 days from such change.</li>
-                <li>The Borrower shall, on an annual basis, furnish/ updated information as submitted to the Antworks website (<a href='<?= base_url() ?>'><?= $portal_name ?></a>), including Bank statements of all his Bank accounts, information on his income for the immediately preceding financial year, present monthly income, copy of latest Income Tax Return, other Borrowings and payment obligations etc.</li>
-                <li>The Borrower authorizes Antworks to carry out such Due Diligence on him as it may deem necessary including tracking his activities in any media/ forum or devise, accessing information about him as available with any information repository. Antworks is also authorized to engage any third party for the purpose of collecting/ collating and/ or verification of information on the Borrower.</li>
+                <li>The Borrower shall, on an annual basis, furnish/ updated information as submitted to the Antowrks website (<a href='<?= base_url() ?>'><?= $portal_name ?></a>), including Bank statements of all his Bank accounts, information on his income for the immediately preceding financial year, present monthly income, copy of latest Income Tax Return, other Borrowings and payment obligations etc.</li>
+                <li>The Borrower authorizes Antworks to carry out such Due Diligence on him as it may deem necessary including tracking his activities in any media/ forum or devise, accessing information about him as available with any information repository. Antowrks is also authorized to engage any third party for the purpose of collecting/ collating and/ or verification of information on the Borrower.</li>
                 <li>The Borrower authorizes Antworks to access/ requisition/ download/ obtain from any or all Credit Information Bureaus his personal information/ credit report and score from time to time. Antworksis also authorized to submit the relevant information on the present Loan (including repayment/ servicing track record) to the Credit Information Bureaus and also with any other relevant forum/ information bureau to notify the indebtedness of the Borrower.</li>
-                <li>The Borrower authorizes Antworks to share information about him with Lender registered in the portal of Antworks (<a href='<?= base_url() ?>'><?= $portal_name ?></a>) and representatives/ consultants/ lawyers/ agents/ others engaged by Antworks for the purpose of the Loan. The Borrower authorizes Antworks to share updated information about him from time to time with the present Lender as also prospective Lender who expresses their intention to takeover the loan from the present Lender through assignment (as described in Clause 27). The information shared with Lender/ prospective Lender may include information on the Borrower received/ obtained from third party sources whether or not verified by the Borrower</li>
+                <li>The Borrower authorizes Antworks to share information about him with Lender registered in the portal of Antworks (<a href='<?= base_url() ?>'><?= $portal_name ?></a>) and representatives/ consultants/ lawyers/ agents/ others engaged by Antworks for the purpose of the Loan. The Borrower authorizes Antowrks to share updated information about him from time to time with the present Lender as also prospective Lender who expresses their intention to takeover the loan from the present Lender through assignment (as described in Clause 27). The information shared with Lender/ prospective Lender may include information on the Borrower received/ obtained from third party sources whether or not verified by the Borrower</li>
                 <li>The Borrower shall not use the loan for any purpose other than the purpose mentioned in this agreement.</li>
                 <li>The Borrower shall not use the loan for any unlawful purpose or for any purpose that is immoral or unethical.</li>
                 <li>The Borrower shall not use the loan for speculative purpose or for the purpose of trading in the stock market.</li>
@@ -207,12 +202,13 @@ proceedings for such deduction, under any circumstances.</li>
             <p><strong>20.	Lender' Undertaking</strong></p>
             <p>The Lender hereby confirms and undertakes as follows:</p>
             <ol class='definations-list'>
-                <li>The Lender has got himself satisfied about the creditworthiness of the Borrower through his own means and acknowledges that Antworks is a facilitator in the entire process and does not stand for - guarantee in respect of the Borrower or the Loan</li>
+                <li>The Lender has got himself satisfied about the creditworthiness of the Borrower through his own means and acknowledges that Antworks is a facilitator in the entire process and does not stand for any authenticity or guarantee in respect of the Borrower or the Loan.</li>
                 <li>The Lender unconditionally acknowledges that Antworks has no role in the receipt of EMI or the recovery of the Loan and that he shall have to recover the money by his own effort and initiatives, which shall under no circumstances be against the laws of the Country or any of the States. </li>
                 <li>The personal data furnished by him are true and correct at the time of submission.</li>
                 <li>Any change in his variable personal data like communication address, shall be intimated to the Borrower and Antworks within 7 days from such change.</li>
                 <li>The Lender authorizes Antworks to share information about him with Borrowers registered in the portal of Antworks (<a href='<?= base_url() ?>'><?= $portal_name ?></a>) and representatives/ consultants/ lawyers/ agents/ others engaged by Antworks for the purpose of the Loan.</li>
-                <li>His total exposure to all borrower across all Peer to Peer Lending Platform is not more than INR 10,00,000 or INR 50,00,000/ in case of lender with net worth of more than INR 5000000 .</li>
+                <li>He has granted the Loan from his own legally generated fund and has not used any fund which does not belong to him or by raising loan from some other person or entity.</li>
+                <li>His total exposure to all borrower across all Peer to Peer Lending Platform is not more than INR 10,00,000/-.</li>
                 <li>The total amount of Loan given by him to the Borrower in all Peer to Peer Lending Platform including this Agreement does not exceed INR 50,000/-.</li>
                 <li>He shall forthwith, within 7 days of receiving full repayment of the loan (either on receipt of all the payments in line with the repayment schedule or through Foreclosure/ Termination as provided in this agreement), issue No Dues Certificate to the Borrower and the the PDCs and DPN would be returned to the Borrower.</li>
                 <li>He shall not hold Antworks(Antworks P2P Financing Private Limited),its associate organizations,its Board of Directors, its Directors, senior executives, representatives, consultants, legal and such other advisors responsible for any loss or damage that it might suffer for granting this Loan.He has granted this Loan by entering into this Agreement at his own will.</li>
@@ -243,10 +239,10 @@ proceedings for such deduction, under any circumstances.</li>
 
             <p><strong>23.	Paid Prepayment:</strong></p>
             <ol class='definations-list'>
-                <li>The Borrower can any time after the expiry of 6 months from the date of payment of his 1st EMI, pre-pay and foreclose the Loan. Prepayment can happen only with prior approval of Antworks.</li>
+                <li>The Borrower can any time after the expiry of 6 months from the date of payment of his 1st EMI, pre-pay and foreclose the Loan. Prepayment can happen only with prior approval of Antworsk.</li>
                 <li>There will be no foreclosure penalty for such foreclosure. However, the Borrower shall be liable to pay remain bound to pay all interest dues till the date of prepayment and all charges due to Antworks, as the case maybe. Prepayment penalty for foreclosure before 6 months of the due date of 1st EMI would be 5% of the loan amount.</li>
                 <li>The Borrower shall pay a usage service charge of Rs. 500/- (or according to the updated rate as specified in the website <a href='<?= base_url() ?>'><?= $portal_name ?></a> as applicable at the time of such foreclosure) for foreclosure to Antworks.</li>
-                <li>No prepayment is allowed for loans with tenor of less than 6 months. The Borrower is required to pay the entire amount of the instalments (ie. loan principal and full interest for the loan tenor), even if repaid early. However, no prepayment penalty is levied in such loans</li>
+                <li>No prepayment is allowed for loans with tenor of less than 6 months. The Borrower is required to pay the entire amount of the instalments (ie. loan principal and full interest for the loan tenor), even if repaid early.</li>
             </ol>
 
             <p><strong>24.	Termination </strong></p>
@@ -269,15 +265,14 @@ proceedings for such deduction, under any circumstances.</li>
 
             <p><strong>26.	Indemnification by the Lender and Borrower</strong></p>
             <ol class='definations-numlist'>
-                <li>The Lender hereby represents and warrants that he/ she shall hold Antworks(Antworks P2P Financing Private Limited), its associate organizations,its Board of Directors, its Directors, executives, representatives, consultants, legal and other advisors harmless and keep them indemnified for all time to come for any act, deeds or things that he might have done in connection with this Agreement and also shall not hold Antworks responsible for any loss or Damage suffered by him.</li>
-                <li>The Borrower hereby represents and warrants that he/ she shall hold Antworks (Antworks P2P Financing Private Limited), its associate organizations, its Board of Directors, its Directors, executives, legal and other advisors harmless and keep them indemnified for all time to come for any act, deeds or things that he might have done in connection with this Agreement and shall not hold Antworks responsible for any loss or Damage suffered by him.</li>
+                <li>The Lender hereby represents and warrants that he/ she shall hold Antworks(Antworks P2P Financing Private Limited), its associate organizations (including Antworks Capital LLP),its Board of Directors, its Directors, executives, representatives, consultants, legal and other advisors harmless and keep them indemnified for all time to come for any act, deeds or things that he might have done in connection with this Agreement and also shall not hold Antworks responsible for any loss or Damage suffered by him.</li>
+                <li>The Borrower hereby represents and warrants that he/ she shall hold Antworks (Antworks P2P Financing Private Limited), its associate organizations (including Antworks Capital LLP),its Board of Directors, its Directors, executives, legal and other advisors harmless and keep them indemnified for all time to come for any act, deeds or things that he might have done in connection with this Agreement and shall not hold Antworks responsible for any loss or Damage suffered by him.</li>
             </ol>
 
             <p><strong>27.	Assignment</strong></p>
             <ol class='definations-list'>
                 <li>The Borrower shall not assign or transfer any of its rights or obligations under this Agreement. </li>
-                <li>Subject to the applicable laws and the validity and enforceability of this Loan Agreement not being affected adversely in any manner, the Lender(including Assigned Lender) may at any time with prior consent of Antworks may transfer all or any part of its rights, benefits and obligations under this Agreement to any one or more persons by executing a Deed of Assignment or any other valid documents for assignment inter se, without requiring any reference to the Borrower. Any such Person(s) to which the Loan has been transferred / novated in accordance with this Section is referred to as the 'Assigned Lender(s)'.</li>
-                <li>Subject to the applicable laws and the validity and enforceability of this Loan Agreement not being affected adversely in any manner, the Lender(including Assigned Lender) may at any time with prior consent of Antworks may transfer all or any part of its rights, benefits and obligations under this Agreement to any one or more persons by executing a Deed of Assignment or any other valid documents for assignment inter se, without requiring any reference to the Borrower. Any such Person(s) to which the Loan has been transferred / novated in accordance with this Section is referred to as the 'Assigned Lender(s)'.</li>
+                <li>Subject to the applicable laws and the validity and enforceability of this Loan Agreement not being affected adversely in any manner, the Lender(including Assigned Lender) may at any time with prior consent of Antworks may transfer all or any part of its rights, benefits and obligations under this Agreement to any one or more persons by executing a Deed of Assignment or any other valid documents for assignment inter se, without requiring any reference to the Borrower.Any such Person(s) to which the Loan has been transferred / novated in accordance with this Section is referred to as the 'Assigned Lender(s)'.</li>
                 <li>The Borrower hereby gives his unconditional consent to any number of assignments as referred to above and accordingly all or any of the Lender may at any time transfer all or any part of its rights, benefits and obligations under this Agreement to any one or more persons without requiring any reference to the Borrower.</li>
                 <li>The Assigned Lender shall, upon such assignment, as the case may be, acquire the same rights and assume the same obligations as regards the Borrower as it would have acquired and assumed had the Assigned Lender been an original party to this Agreement and shall abide by the terms, conditions and obligations of the Lender as stipulated in this Agreement.</li>
                 <li>The Assigned Lender would immediately intimate Antworks, Borrower and other Lender about the assignment. Upon such assignment, as the case may be, the Borrower would provide fresh PDC to the Assigned Lender and new DPN for the Loan in return of the previous PDC and DPN of the previous Lender assigning or novating or transferring his loan would be returned to the Borrower by him.</li>
@@ -288,7 +283,7 @@ proceedings for such deduction, under any circumstances.</li>
             <p>This Agreement constitutes the entire agreement between the Parties and revokes and supersedes all previous discussions/correspondences and agreements between the Parties, oral or implied.</p>
 
             <p><strong>29.	Partial Validity</strong></p>
-            <p>If any provision of this Agreement or the application thereof to any circumstance shall be invalid, void or unenforceable to any extent, the remainder of this Agreement and the application of such provisions shall continue to be effective and each such provision of this Agreement shall be valid and enforceable to the fullest extent permitted by law. Notwithstanding anything contained hereinabove, if the Platform or services provided by Antworks becomes illegal due to any legal imposition or change in law, then in such a situation the Borrower shall be liable to refund the then outstanding amount to the Lender or may enter into a separate loan agreement with the Lender and in neither case Antworks shall be responsible / liable in any manner whatsoever.</p>
+            <p>If any provision of this Agreement or the application thereof to any circumstance shall be invalid, void or unenforceable to any extent, the remainder of this Agreement and the application of such provisions shall continue to be effective and each such provision of this Agreement shall be valid and enforceable to the fullest extent permitted by law. Notwithstanding anything contained hereinabove, if the Platform or services provided by Antworksbecomes illegal due to any legal imposition or change in law, then in such a situation the Borrower shall be liable to refund the then outstanding amount to the Lender or may enter into a separate loan agreement with the Lender and in neither case Antworks shall be responsible / liable in any manner whatsoever.</p>
 
             <p><strong>30.	Alternative</strong></p>
             <p>If any provision of this Agreement or the application thereof to any circumstance shall be invalid, void or unenforceable to any extent, the remainder of this Agreement and the application of such provisions shall continue to be effective and each such provision of this Agreement shall be valid and enforceable to the fullest extent permitted by law. Notwithstanding anything contained hereinabove, if the Platform or services provided by Antworks becomes illegal due to any legal imposition or change in law, then in such a situation the Borrower shall be liable to refund the then outstanding amount to the Lender or may enter into a separate loan agreement with the Lender and. In neither case Antworks shall be responsible / liable in any manner whatsoever.</p>
@@ -307,7 +302,7 @@ proceedings for such deduction, under any circumstances.</li>
             <p>Save as otherwise provided elsewhere in this Agreement, no amendment or modification of this Agreement or any part hereof shall be valid and effective unless it is by an instrument in writing executed by the Parties or their authorized representative and expressly referring to this Agreement.</p>
 
             <p><strong>34.	Governance</strong></p>
-            <p>The validity, interpretation, implementation and resolution of disputes arising out of or in connection with this Agreement shall be governed by Indian law. The Parties agree that all matters arising out of this Agreement shall be subject to the jurisdiction of the courts or tribunals at Gurgaon, India</p>
+            <p>This Agreement shall be Governed by the Laws of India.</p>
 
             <p><strong>35.	Mode of Service</strong></p>
             <p>Any notice or other communication required or permitted hereunder shall be in writing and shall be addressed and delivered to in the respective address of the Parties herein as mentioned in the nomenclature clause - </p>
@@ -316,7 +311,7 @@ proceedings for such deduction, under any circumstances.</li>
             <p>Any dispute or claim arising from or in connection with this Agreement or breach, termination or invalidity thereof, shall be finally settled by arbitration in accordance with the Arbitration and Conciliation Act, 1996, as amended and/or enacted from time to time. The arbitration tribunal shall consist of one arbitrator, chosen by the parties in accordance with the said Act. The proceeding will be conducted in English and shall take place in Delhi. The award of the arbitrator shall be final and binding on all the Parties.</p>
 
             <h4>IN WITNESS WHEREOF THE PARTIES HERETO HAVE EXECUTED THIS AGREEMENT FOR LOANON THE DAY MONTH AND YEAR FIRST ABOVE WRITTEN.</h4>
-            <div class='table-responsive'>
+            <div class='table-responsive my-table'>
                 <table class='table table-bordered'>
                     <tr>
                         <td>Borrower</td>
@@ -329,10 +324,7 @@ proceedings for such deduction, under any circumstances.</li>
                     </tr>
                     <tr height='100px'>
                         <td class='col-md-4'>(<?=  $result['BORROWERNAME'] ?>)</td>
-                        <td class='col-md-4'>(The Lender)</td>
-						<td class='col-md-4'>(E Sign details as per Schedule 2)</td>
-						<td class='col-md-4'>(Antworks P2P Financing Private Limited)</td>
-						<td class='col-md-4'>(E-sign by Authorized representative)</td>
+                        <td class='col-md-4'>(<?= $result['LENDER_fNAME'] ?>)</td>
 
                     </tr>
 
@@ -399,12 +391,12 @@ proceedings for such deduction, under any circumstances.</li>
                     </tr>
                     <tr>
                         <td>1.</td>
-                        <td>Lender ID</td>
+                        <td>Name</td>
                         <td><?=  $result['LENDER_fNAME'] ?></td>
                     </tr>
                     <tr>
                         <td>6.</td>
-                        <td>Loan Amount</td>
+                        <td>E-mail ID</td>
                         <td><?=  $result['LENDER_email'] ?></td>
                     </tr>
                 </table>
@@ -449,14 +441,13 @@ proceedings for such deduction, under any circumstances.</li>
             </div>
 
             <p>On demand, I, Mr./Miss/Mrs. <?=  $result['LENDER_fNAME'] ?> (Hereinafter the 'Borrower') hereby promise to pay to
-                the lender the sum of Rs. <?=  $loan_amount ?>(Rupees <?=  $loan_amount_inword ?> only) in <?=  $result['TENORMONTHS'] ?> monthly instalments, to be paid every month together with interest at the rate of <?=  $result['LOAN_Interest_rate'] ?>% per annum, from the date of these presents, payable in any part of India for value received.</p>
+                Mr./Mrs./Miss <?=  $result['BORROWERNAME'] ?>, (referred to as the Lender in the Loan Agreement Dated <?=  $borrower_signature_date; ?> inter-alia between me as Borrower and the Lender) the sum of Rs. <?=  $loan_amount ?>(Rupees <?=  $loan_amount_inword ?> only) in <?=  $result['TENORMONTHS'] ?> monthly instalments, to be paid every month together with interest at the rate of <?=  $result['LOAN_Interest_rate'] ?>% per annum, from the date of these presents, payable in any part of India for value received.</p>
             <p>In the event I default in making payment hereunder in any manner whatsoever, the entire balance then remaining outstanding shall immediately become due and payable.</p>
             <div>
                 <p class='text-left'><strong>Borrower Name & Signature</strong></p>	<p class='text-right'><strong>Date</strong></p>
-				<p>E-Sign OTP</p>
+
             </div>
             <p>………………………………………………………</p>
-			
             <pagebreak />
             <div class='text-center'>
                 <h2 class='agrmnt-hd'>FIFTH SCHEDULE</h2>
@@ -465,7 +456,8 @@ proceedings for such deduction, under any circumstances.</li>
             <p>I, Sri <?=  $result['BORROWERNAME'] ?>(PAN: <?=  $result['BORROWERR_pan'] ?>), S/o <?=  $result['BORROWERFATHERNAME'] ?>, residing at do hereby undertake as under:</p>
 
             <ol class='definations-numbrlist'>
-                <li>THAT I have taken a Loan of an amount Rs. <?=  $loan_amount ?>./- (Rupees <?=  $loan_amount_inword ?>) for a tenure of <?=  $result['TENORMONTHS'] ?>.months from Sri <?=  $result['LENDER_fNAME'] ?> from the lender by virtue of Loan Agreement No. LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?></li>
+                <li>THAT I have taken a Loan of an amount Rs. <?=  $loan_amount ?>./- (Rupees <?=  $loan_amount_inword ?>) for a tenure of <?=  $result['TENORMONTHS'] ?>.months from Sri <?=  $result['LENDER_fNAME'] ?> by virtue of Loan Agreement No. LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?></li>
+                <li>THAT in the said Agreement Sri <?=  $result['LENDER_fNAME'] ?> has been identified as the Lender and myself as Borrower and <a href='<?= base_url() ?>'><?= $portal_name ?></a> as Antworks</li>
                 <li>THAT the personal data furnished by me to <a href='<?= base_url() ?>'><?= $portal_name ?></a> are true and correct at the time of submission</li>
                 <li>THAT any change in my variable personal data like communication address etc. shall be intimated to the Lender and Antworks within 7 days from such change.</li>
                 <li>THAT I shall not use the loan for any purpose other than the purpose mentioned in this agreement</li>
@@ -492,14 +484,14 @@ proceedings for such deduction, under any circumstances.</li>
 
             <p>NO DUES CERTIFICATE</p>
 
-            <p>This has reference to the Loan of Rs <?=  $loan_amount ?>. for the tenure <?=  $result['TENORMONTHS'] ?>at the rate of interest of <?=  $result['LOAN_Interest_rate'] ?>% p.a. taken by you ('Borrower') from me ('Lender') by virtue of a Loan Agreement vide LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?> ('the Loan') through <a href='<?= base_url() ?>'><?= $portal_name ?></a>.</p>
+            <p>This has reference to the Loan of Rs <?=  $loan_amount ?>.for the tenure <?=  $result['TENORMONTHS'] ?>at the rate of interest of <?=  $result['LOAN_Interest_rate'] ?>% taken by you ('Borrower') from me ('Lender') by virtue of a Loan Agreement vide LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?> ('the Loan') through <a href='<?= base_url() ?>'><?= $portal_name ?></a>.</p>
 
-            <p>We hereby confirm that lender have received all sums payable by you to me in connection with the Loan and I have no further claim whatsoever in connection with the aforesaid Loan.</p>
+            <p>I hereby confirm that I have received all sums payable by you to me in connection with the Loan and I have no further claim whatsoever in connection with the aforesaid Loan.</p>
 
             <p>Thanking you,</p>
 
             <p>Yours faithfully,</p>
-            <p>(For Antworks P2P Financing Private limited)</p>
+            <p>(…………………….)</p>
             <pagebreak />
             <div class='text-center'>
                 <h2 class='agrmnt-hd'>SEVENTH SCHEDULE</h2>
@@ -514,14 +506,14 @@ proceedings for such deduction, under any circumstances.</li>
 
             <p><strong>Clearance Certificate</strong></p>
 
-            <p>This has reference to the Loan of Rs <?=  $loan_amount ?> for the tenure <?=  $result['TENORMONTHS'] ?> at the rate of interest of <?=  $result['LOAN_Interest_rate'] ?>% p.a, taken by you ('Borrower') from <?=  $result['LENDER_fNAME'] ?> by virtue of a Loan Agreement vide LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?> ('the Loan') through us <a href='<?= base_url() ?>'><?= $portal_name ?></a>.</p>
+            <p>This has reference to the Loan of Rs <?=  $loan_amount ?> for the tenure <?=  $result['TENORMONTHS'] ?> at the rate of interest of <?=  $result['LOAN_Interest_rate'] ?>% taken by you ('Borrower') from <?=  $result['LENDER_fNAME'] ?> ('Lender') by virtue of a Loan Agreement vide LAN <?=  $result['loan_no'] ?> dated <?=  $borrower_signature_date; ?> ('the Loan') through us <a href='<?= base_url() ?>'><?= $portal_name ?></a>.</p>
 
             <p>We hereby confirm that there stands no amount payable by to us by you and we have no further claim whatsoever in connection with the aforesaid Loan.</p>
 
             <p>Thanking you,</p>
 
             <p>Yours faithfully,</p>
-            <p>(Antworks P2P Financing Private limited)</p>
+            <p>(…………………….)</p>
 
 
 

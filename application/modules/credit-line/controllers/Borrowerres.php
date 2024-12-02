@@ -8,6 +8,8 @@ class Borrowerres extends REST_Controller
     public function __construct($config = 'rest')
     {
         parent::__construct($config);
+		// Prevent session cookies from being set
+        header_remove('Set-Cookie');
         $this->load->library('form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('Borrowermodel', 'Borroweraddmodel'));
@@ -98,6 +100,10 @@ class Borrowerres extends REST_Controller
     }
 	public function get_borrower_details_post()
     {
+		// Custom cookie setting without 'Expires'
+    setcookie('p2p_2018_2019_session', session_id(), 0, "/", ".antworksp2p.com", true, true);
+
+        
         /* $auth = $this->middleware->auth();
         if ($auth) { */
             $_POST = json_decode(file_get_contents('php://input'), true);
@@ -109,6 +115,7 @@ class Borrowerres extends REST_Controller
                 return;
             } else {
                 $errmsg = array("error_msg" => validation_errors());
+				
                 $this->set_response($errmsg, REST_Controller::HTTP_OK);
                 return;
             }

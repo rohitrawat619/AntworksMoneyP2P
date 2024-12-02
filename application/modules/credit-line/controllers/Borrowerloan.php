@@ -86,8 +86,9 @@ class Borrowerloan extends REST_Controller
                     $data['agreement_date'] = date("d-m-Y");
                     //
 
-
+					
                     $aggrement_result = $this->load->view('loan-aggrement-borrower', $data, true);
+				//	$aggrement_result .= "<style>".file_get_contents($_SERVER["DOCUMENT_ROOT"].'/assets/css/loan-aggrement.css')."</style>";
                     $msg = array('status' => 1,
                         'agreement' => $aggrement_result,
                     );

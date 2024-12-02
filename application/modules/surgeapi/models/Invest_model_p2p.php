@@ -7,6 +7,43 @@ class Invest_model_p2p extends CI_Model{
 		//$this->cldb = $this->load->database('credit-line', TRUE);
     }
 	
+	
+	
+	public function getLoanDetailsByInvestmentId(){ //  Dated: 2024-aug-29
+    {		//	print_r($this->input->post()); die();
+        /* $query = $this->db->select('*')->get_where('lendsocial_lender_statement',
+		array(
+		'refrence'=>$this->input->post('investment_no'),
+		'reference_type'=>'investment_no',
+		'transaction_type'=>'disbursedAmount'
+		));
+		 */
+		
+		$this->db->select('lendsocial_lender_statement.*,b.disburse_amount, b.disbursement_date, b.borrower_id, c.name as borrower_name, (b.disbursement_date + INTERVAL 1 MONTH) as repayment_date');
+				$this->db->from('lendsocial_lender_statement');
+				$this->db->join('p2p_loan_list as b', 'b.loan_no = lendsocial_lender_statement.loan_no', 'left');
+				$this->db->join('p2p_borrowers_list as c', 'c.id = b.borrower_id', 'left');
+				$this->db->where('refrence', $this->input->post('investment_no'));
+				$this->db->where('reference_type','investment_no');
+				$this->db->where('transaction_type','disbursedAmount');
+					
+				$this->db->group_by('b.loan_no');			
+				
+				$query = $this->db->get();
+		
+        if($this->db->affected_rows()>0)
+        {
+            $respData =  $query->result_array();
+			
+			return $respData;
+        }
+        else
+        {
+            return false;
+        }
+    }
+	}
+	
 				public function getLastLenderStatementbalance($lender_id, $partner_id)
 			{
 				$this->db->select('balance');

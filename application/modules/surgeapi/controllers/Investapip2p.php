@@ -16,9 +16,48 @@ class Investapip2p extends REST_Controller{
         $this->load->model(array('Requestmodel', 'Smssetting', 'Commonapimodel','Invest_model_p2p','Communication_model'));
     }
 	
-	public function all_schemes_post()
+		public function getLoanDetailsByInvestmentId_post()
     {
          
+                $_POST = json_decode(file_get_contents('php://input'),true);
+						$this->form_validation->set_rules('investment_no', 'Investment No', 'trim|required|alpha_numeric');
+
+				if ($this->form_validation->run() == TRUE) {
+					$respData = $this->Invest_model_p2p->getLoanDetailsByInvestmentId();
+					
+					if($respData)
+					{
+						$response = array(
+							'status'=>1,
+							'msg'=>"",
+							'data'=> $respData,
+							
+						);
+						$this->set_response($response, REST_Controller::HTTP_OK);
+						return;
+					}
+					else{
+						$response = array(
+							'status'=>0,
+							'msg'=>'Not found',
+							'data'=> '',
+													);
+						$this->set_response($response, REST_Controller::HTTP_OK);
+						return;
+					}
+				}else {
+					$errmsg = array("error_msg" => validation_errors());
+					$this->set_response($errmsg, REST_Controller::HTTP_OK);
+					return;
+                }
+           
+    }
+	
+	public function all_schemes_post()
+    {
+              // Custom cookie setting without 'Expires'
+    setcookie('p2p_2018_2019_session', session_id(), 0, "/", ".antworksp2p.com", true, true);
+	
                 $_POST = json_decode(file_get_contents('php://input'),true);
 				$this->form_validation->set_rules('phone', 'Mobile No', 'trim|required|regex_match[/^[6-9]\d{9}$/]');
 				if ($this->form_validation->run() == TRUE) {
@@ -119,6 +158,8 @@ class Investapip2p extends REST_Controller{
 				   if($this->db->affected_rows()>0){
 					   $investment_no = $this->Invest_model_p2p->create_investment_no();
 						   $result = (array)$query->row();
+								$currentDate = date('Y-m-d'); // Current date in 'YYYY-MM-DD' format
+								$system_generated_redemption_date = date('Y-m-d', strtotime($currentDate . ' +30 days'));
 						   $investData = array(
 									'investment_No' => $investment_no,
 									'lender_id' => $this->input->post('lender_id'),
@@ -133,6 +174,8 @@ class Investapip2p extends REST_Controller{
 									'product' => $this->input->post('product'),
 									'tenure' => $result['Tenure'], // added new field 2024-june-19
 									'lockin_period' => $result['tenure'], // added new field 2024-june-19
+									'system_generated_redemption_date' => $system_generated_redemption_date,
+									
 								);
 								
 							
